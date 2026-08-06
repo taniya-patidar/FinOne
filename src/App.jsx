@@ -1,44 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import  Sidebar from './components/Layout/Sidebar';
-import Header from './components/Layout/Header';
 import Dashboard from './pages/Dashboard/Dashboard';
-import ChartsSection from './pages/Dashboard/components/ChartsSection';
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import DashboardLayout from "./components/Layout/DashboardLayout";
 
 
 const App = () => {
+  return(
 
-  const [collapsed,setCollapsed]=useState(false);
-  const [currentPage, setCurrentPage]=useState('dashboard');
-  const [darkMode, setDarkMode]=useState('true');
+  <Routes>
+    <Route path='/' element={<Login/>}/>
+    <Route path='/register' element={<Register/>}/>
+     <Route element={<DashboardLayout />}>
 
-  useEffect(()=>{
-    if(darkMode){
-      document.documentElement.classList.add('dark');
-    }
-    else{
-      document.documentElement.classList.remove('dark');
-    }
-  },[darkMode]);
-  return (
-    <div className='app-container'>
-      <Sidebar 
-      collapsed={collapsed}
-      setCollapsed={setCollapsed}
-      currentPage={currentPage}
-      onPageChange={setCurrentPage}/>
-      <div className='main-wrapper'>
-      <Header
-      onToggleSidebar={()=> setCollapsed(!collapsed)}
-      darkMode={darkMode}
-      setDarkMode={setDarkMode}
-      
-      />
-      <Dashboard/>
-      <ChartsSection/>
-      </div>
-      
-    </div>
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+      </Route>
+  </Routes>
+
   )
+  
 }
 
 export default App

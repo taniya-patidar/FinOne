@@ -1,118 +1,117 @@
 import React from 'react';
+import LoanApplicationChart from './components/LoanApplicationChart';
 import {
-  Users,
-  FileText,
-  CheckCircle,
-  Clock,
-  XCircle,
-  CreditCard
-} from 'lucide-react';
-import './Dashboard.css';
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  Label,
+  ResponsiveContainer
+} from 'recharts';
 
-const today = new Date();
-
-const formattedDate = today.toLocaleDateString('en-GB', {
-  day: '2-digit',
-  month: 'long',
-  year: 'numeric'
-});
-
-const stats = [
-    {
-      id: 1,
-      title: 'Total Customers',
-      value: '1,250',
-      icon: Users
-    },
-    {
-      id: 2,
-      title: 'Loan Applications',
-      value: '328',
-      icon: FileText
-    },
-    {
-      id: 3,
-      title: 'Approved Loans',
-      value: '215',
-      icon: CheckCircle
-    },
-    {
-      id: 4,
-      title: 'Pending Loans',
-      value: '72',
-      icon: Clock
-    },
-    {
-      id: 5,
-      title: 'Rejected Loans',
-      value: '41',
-      icon: XCircle
-    },
-    {
-      id: 6,
-      title: 'Active Loans',
-      value: '186',
-      icon: CreditCard
-    }
-  ];
+import './components/ChartsSection.css';
+import DisbursementAndCollection from './components/DisbursementAndCollection';
+import LoanDistributionChart from './components/LoanDistributionChart';
+import TopLoanPRoducts from './components/TopLoanPRoducts';
+import RecentLoanTable from './components/RecentLoanTable';
+import RecentEmiPayment from './components/RecentEmiPayment';
+import RecentNotification from './components/RecentNotification';
+import DashboardTop from './components/DashboardTop';
 
 const Dashboard = () => {
+
+  // Loan Status Data
+  const loanStatusData = [
+    { name: 'Approved', value: 215 },
+    { name: 'Pending', value: 72 },
+    { name: 'Rejected', value: 41 }
+  ];
+
+  // Colors for each status
+  const COLORS = [
+    '#22c55e', // Approved
+    '#f59e0b', // Pending
+    '#ef4444'  // Rejected
+  ];
+
   return (
-    <main className="dashboard">
-      
-      <section className="welcome-card">
-        
-        <div className="welcome-content">
-          <h1>Good Morning, Admin 👋</h1>
-          <p>Welcome back! Here's your loan portfolio overview.</p>
+    <section className="charts-section">
+      <div className="DandC">
+        <DashboardTop/>
+      </div>
+      <LoanApplicationChart/>
+    
+
+      {/* Loan Status Chart */}
+      <div className="chart-card">
+
+        <div className="chart-header">
+          <h2>Loan Status</h2>
+          <p>Current loan application status</p>
         </div>
 
-        <div className="welcome-info">
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height={300}>
+          <PieChart width={350} height={300}>
 
-    <div className="info-item">
-      <span>Today</span>
-      <strong>{formattedDate}</strong>
+            <Pie
+              data={loanStatusData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              innerRadius={70}
+              outerRadius={100}
+              paddingAngle={3}
+            >
+
+              {loanStatusData.map((entry, index) => (
+                <Cell
+                  key={entry.name}
+                  fill={COLORS[index]}
+                />
+              ))}
+
+              <Label
+                value="328"
+                position="center"
+                fill="#111827"
+                fontSize={24}
+                fontWeight="700"
+              />
+
+            </Pie>
+
+            <Tooltip />
+
+            <Legend />
+
+          </PieChart>
+          </ResponsiveContainer>
+      
+
+        </div>
+
+      </div>
+
+      <div className="DandC">
+        <DisbursementAndCollection/>
+      </div>
+     
+        <LoanDistributionChart/>
+        <TopLoanPRoducts/>
+     
+     <div className="tables-container">
+    <RecentLoanTable />
+
+    <div className="right-side">
+        <RecentEmiPayment />
+        <RecentNotification />
     </div>
+</div>
 
-    <div className="info-item">
-      <span>Last Login</span>
-      <strong>Today, 10:42 AM</strong>
-    </div>
-
-    </div>
-
-      </section>
-
-       {/* 6 Cards Section */}
-      <section className="stats-container">
-
-        {stats.map((item) => {
-
-          const Icon = item.icon;
-
-          return (
-            <div className="stat-card" key={item.id}>
-
-              <div className="stat-icon">
-                <Icon />
-              </div>
-
-              <div className="stat-content">
-                <span className="stat-title">
-                  {item.title}
-                </span>
-
-                <strong className="stat-value">
-                  {item.value}
-                </strong>
-              </div>
-
-            </div>
-          );
-        })}
-        </section>
-
-    </main>
+    </section>
   );
 };
 

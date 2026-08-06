@@ -1,0 +1,174 @@
+.recent-loan-table{
+    background:#fff;
+    border-radius:14px;
+    padding:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    width:100%;
+    overflow:auto;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:auto;   /* fixed mat rakhna */
+}
+
+th,
+td{
+    padding:7px 5px;
+    font-size:11px;
+    white-space:nowrap;
+}
+
+th{
+    font-size:11px;
+    font-weight:600;
+}
+
+.customer-info{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.customer-info img{
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.status{
+    padding:2px 6px;
+    font-size:10px;
+}
+.action-btn svg{
+    width:14px;
+    height:14px;
+}
+
+.table-header h3{
+    font-size:15px;
+}
+
+.view-all-btn{
+    padding:5px 10px;
+    font-size:11px;
+}
+.dark .recent-loan-table{
+    background:#1e293b;
+}
+
+/* Header */
+
+.table-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+}
+
+.table-header h3{
+    font-size:1rem;
+    margin:0;
+    color:#1e293b;
+}
+
+.dark .table-header h3{
+    color:#fff;
+}
+
+.view-all-btn{
+    border:none;
+    background:#2563eb;
+    color:#fff;
+    padding:6px 12px;
+    border-radius:6px;
+    font-size:.8rem;
+    cursor:pointer;
+}
+
+/* Table */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+}
+
+th,
+td{
+    padding:10px 8px;
+    font-size:.8rem;
+    text-align:left;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.dark th,
+.dark td{
+    color:#e5e7eb;
+    border-bottom:1px solid #374151;
+}
+
+thead{
+    background:#f8fafc;
+}
+
+.dark thead{
+    background:#334155;
+}
+
+/* Customer */
+
+.customer-info{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.customer-info img{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    object-fit:cover;
+    flex-shrink:0;
+}
+
+/* Status */
+
+.status{
+    padding:4px 8px;
+    border-radius:20px;
+    font-size:.72rem;
+    font-weight:600;
+}
+
+.status.paid{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.status.pending{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.status.overdue{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+/* Action */
+
+.action-btn{
+    border:none;
+    background:transparent;
+    cursor:pointer;
+    color:#2563eb;
+}

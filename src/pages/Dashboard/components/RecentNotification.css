@@ -1,0 +1,165 @@
+.notification-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.dark .notification-card {
+  background: #1e293b;
+}
+
+/* Header */
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.notification-header h3 {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.dark .notification-header h3 {
+  color: #fff;
+}
+
+.view-all-btn {
+  background: transparent;
+  border: none;
+  color: #2563eb;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.view-all-btn:hover {
+  color: #1d4ed8;
+}
+
+/* List */
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Item */
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 5px 6px;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.notification-item:hover {
+  background: #f8fafc;
+}
+
+.dark .notification-item:hover {
+  background: #334155;
+}
+
+/* Icon */
+
+.notification-icon {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.notification-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+
+
+.notification-icon.success {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.notification-icon.warning {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.notification-icon.info {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.notification-icon.danger {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.notification-icon.primary {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+/* Content */
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-content h4 {
+  margin-bottom:1px;
+    line-height:1.2;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.dark .notification-content h4 {
+  color: #fff;
+}
+
+.notification-content p {
+  margin: 0;
+  font-size:0.5rem;
+  line-height:1.2;
+  color: #64748b;
+  
+}
+
+.dark .notification-content p {
+  color: #cbd5e1;
+}
+
+/* Time */
+
+.notification-time {
+  font-size: 0.6rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  margin-left: 6px;
+}
+.notification-content p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.view-all-btn{
+    font-size:0.75rem;
+    padding:4px 8px;
+}

@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import './ChartsSection.css';
 
+
 const loanTypeData = [
   { type: "Personal", loans: 120 },
   { type: "Home", loans: 90 },
@@ -22,7 +23,8 @@ const loanTypeData = [
 
 const LoanDistributionChart = () => {
   return (
-    <div className="chart-card">
+    <section className="chart-section">
+      <div className="chart-card">
       <div className="chart-header">
         <h2>Loan Distribution by Type</h2>
         <p>Loan categories overview</p>
@@ -60,6 +62,11 @@ const LoanDistributionChart = () => {
         </ResponsiveContainer>
       </div>
     </div>
+
+    
+     
+   
+    </section>
   );
 };
 
