@@ -5,7 +5,6 @@
 }
 
 
-/* Welcome Card */
 .welcome-card {
   width: 100%;
   padding: 28px 32px;
@@ -17,7 +16,7 @@
 }
 
 
-/* Heading */
+
 .welcome-content h1 {
   margin: 0;
 
@@ -28,7 +27,7 @@
 }
 
 
-/* Paragraph */
+
 .welcome-content p {
   margin: 8px 0 0;
 
@@ -38,9 +37,6 @@
 }
 
 
-/* =========================
-   Dark Mode
-========================= */
 
 .dark .dashboard {
   background-color: #0f172a;
@@ -105,39 +101,26 @@
 
 
 
-/* =========================
-   Statistics Cards
-========================= */
+
 
 .stats-container {
   display: grid;
-
-  /* 6 cards in one row */
   grid-template-columns: repeat(6, 1fr);
-
   gap: 16px;
-
   margin-top: 24px;
- 
 }
 
 
 .stat-card {
   display: flex;
   align-items: center;
-   gap: 12px;
-
+  gap: 12px;
   min-width: 0;
-
   padding: 18px;
-
   background-color: #ffffff;
-
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-
   transition: transform 0.2s ease,
               box-shadow 0.2s ease;
 
@@ -145,7 +128,7 @@
 }
 
 
-/* Hover Effect */
+/* Hover */
 
 .stat-card:hover {
   transform: translateY(-2px);
@@ -154,7 +137,7 @@
 }
 
 
-/* Icon Box */
+/* Icon */
 
 .stat-icon {
   width: 40px;
@@ -179,7 +162,6 @@
 }
 
 
-/* Card Content */
 
 .stat-content {
   display: flex;
@@ -208,9 +190,7 @@
 }
 
 
-/* =========================
-   Dark Mode
-========================= */
+
 
 .dark .dashboard {
   background-color: #0f172a;
@@ -265,12 +245,10 @@
 }
 
 
-/* =========================
-   Responsive Design
-========================= */
+/* Responsive Design */
 
 
-/* Tablet */
+
 
 @media (max-width: 1100px) {
 
@@ -281,7 +259,7 @@
 }
 
 
-/* Mobile / Small Tablet */
+
 
 @media (max-width: 700px) {
 
@@ -314,7 +292,7 @@
 }
 
 
-/* Small Mobile */
+
 
 @media (max-width: 450px) {
 

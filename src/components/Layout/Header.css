@@ -11,13 +11,13 @@
   transition: background-color 0.2s, border-color 0.2s;
 }
 
-/* Dark Mode Header */
+
 .dark .header {
   background-color: #0f172a;
   border-bottom-color: #1e293b;
 }
 
-/* Header Sections */
+
 .header-left, 
 .header-right {
   display: flex;
@@ -32,7 +32,7 @@
   gap: 0.75rem;
 }
 
-/* Common Icon Buttons */
+
 .icon-btn {
   padding: 0.5rem;
   border-radius: 0.5rem;
@@ -57,7 +57,7 @@
   background-color: #1e293b;
 }
 
-/* Search Box Container */
+
 .search-container {
   position: relative;
   display: none;
@@ -103,7 +103,7 @@
   color: #e2e8f0;
 }
 
-/* Icons styling */
+
 .icon {
   width: 1.25rem;
   height: 1.25rem;
@@ -113,7 +113,7 @@
   color: #f59e0b;
 }
 
-/* Notification Badge */
+
 .notification-btn {
   position: relative;
 }
@@ -128,7 +128,7 @@
   border-radius: 50%;
 }
 
-/* User Profile Section */
+
 .user-profile {
   display: flex;
   align-items: center;

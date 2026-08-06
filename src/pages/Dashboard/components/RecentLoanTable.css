@@ -11,13 +11,13 @@
  
 }
 
-/* Dark Mode */
+
 .dark .loan-table-card {
   background: #1f2937;
   color: #ffffff;
 }
 
-/* Header */
+
 
 .table-header {
   display: flex;
@@ -36,7 +36,7 @@
   color: white;
 }
 
-/* View Button */
+
 
 .view-btn {
   border: none;
@@ -53,7 +53,6 @@
   background: #1d4ed8;
 }
 
-/* Table */
 
 .table-wrapper {
   width: 100%;
@@ -95,7 +94,7 @@ td {
   color: #e5e7eb;
 }
 
-/* Hover Effect */
+
 
 tbody tr {
   transition: 0.3s;
@@ -109,7 +108,7 @@ tbody tr:hover {
   background: #374151;
 }
 
-/* Status Badges */
+
 
 .status {
   padding: 6px 14px;
@@ -133,7 +132,6 @@ tbody tr:hover {
   color: #dc2626;
 }
 
-/* Responsive */
 
 @media (max-width: 768px) {
 
@@ -167,7 +165,7 @@ tbody tr:hover {
 }
 
 
-/* changes */
+
 
 .table-wrapper{
   width: 100%;

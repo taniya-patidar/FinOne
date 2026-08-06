@@ -33,7 +33,7 @@ const DashboardLayout = () => {
           setDarkMode={setDarkMode}
         />
 
-        {/* Yahan Dashboard, CustomerList, LoanApplication etc. render honge */}
+        
         <Outlet />
       </div>
     </div>

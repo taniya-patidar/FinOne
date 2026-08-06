@@ -58,7 +58,7 @@ th{
     background:#1e293b;
 }
 
-/* Header */
+
 
 .table-header{
     display:flex;
@@ -87,7 +87,7 @@ th{
     cursor:pointer;
 }
 
-/* Table */
+
 
 .table-wrapper{
     overflow-x:auto;
@@ -124,7 +124,7 @@ thead{
     background:#334155;
 }
 
-/* Customer */
+
 
 .customer-info{
     display:flex;
@@ -140,7 +140,6 @@ thead{
     flex-shrink:0;
 }
 
-/* Status */
 
 .status{
     padding:4px 8px;
@@ -164,7 +163,7 @@ thead{
     color:#dc2626;
 }
 
-/* Action */
+
 
 .action-btn{
     border:none;
