@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Dark Mode Background */
+.dark .app-container {
+  background-color: #020617;
+}
+
+/* Main Area Wrapper */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}

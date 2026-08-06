@@ -1,0 +1,329 @@
+.dashboard {
+  padding: 24px;
+  min-height: 70vh;
+  background-color: #f8fafc;
+}
+
+
+/* Welcome Card */
+.welcome-card {
+  width: 100%;
+  padding: 28px 32px;
+  border-radius: 16px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+
+/* Heading */
+.welcome-content h1 {
+  margin: 0;
+
+  font-size: 26px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+
+/* Paragraph */
+.welcome-content p {
+  margin: 8px 0 0;
+
+  font-size: 14px;
+
+  color: #64748b;
+}
+
+
+/* =========================
+   Dark Mode
+========================= */
+
+.dark .dashboard {
+  background-color: #0f172a;
+}
+
+.dark .welcome-card {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.dark .welcome-content h1 {
+  color: #ffffff;
+}
+
+.dark .welcome-content p {
+  color: #cbd5e1;
+}
+
+
+
+.welcome-info {
+  display: flex;
+  gap: 16rem;
+
+  margin-top: 24px;
+  padding-top: 18px;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  background-color: #edecf0;
+  border: 1px solid #f7f5f5;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 4px 15px rgba(233, 27, 27, 0);
+}
+
+.dark .info-item{
+     background-color: #150e2f;
+     border: 1px solid #828080;
+}
+
+.dark .info-item span,
+.dark .info-item strong{
+    color: white;
+}
+
+.info-item span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.info-item strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+
+
+/* =========================
+   Statistics Cards
+========================= */
+
+.stats-container {
+  display: grid;
+
+  /* 6 cards in one row */
+  grid-template-columns: repeat(6, 1fr);
+
+  gap: 16px;
+
+  margin-top: 24px;
+ 
+}
+
+
+.stat-card {
+  display: flex;
+  align-items: center;
+   gap: 12px;
+
+  min-width: 0;
+
+  padding: 18px;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+
+  
+}
+
+
+/* Hover Effect */
+
+.stat-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Icon Box */
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background-color: #eff6ff;
+
+  color: #2563eb;
+}
+
+.stat-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* Card Content */
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.stat-title {
+  font-size: 12px;
+
+  color: #64748b;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-value {
+  margin-top: 4px;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+
+/* =========================
+   Dark Mode
+========================= */
+
+.dark .dashboard {
+  background-color: #0f172a;
+}
+
+.dark .welcome-card {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.dark .welcome-content h1 {
+  color: #ffffff;
+}
+
+.dark .welcome-content p {
+  color: #cbd5e1;
+}
+
+.dark .welcome-info {
+  border-top-color: #334155;
+}
+
+.dark .info-item {
+  background-color: #334155;
+  border-color: #475569;
+}
+
+.dark .info-item span {
+  color: #94a3b8;
+}
+
+.dark .info-item strong {
+  color: #ffffff;
+}
+
+.dark .stat-card {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.dark .stat-title {
+  color: #94a3b8;
+}
+
+.dark .stat-value {
+  color: #ffffff;
+}
+
+.dark .stat-icon {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+
+/* =========================
+   Responsive Design
+========================= */
+
+
+/* Tablet */
+
+@media (max-width: 1100px) {
+
+  .stats-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+
+/* Mobile / Small Tablet */
+
+@media (max-width: 700px) {
+
+  .dashboard {
+    padding: 16px;
+  }
+
+  .welcome-card {
+    padding: 22px;
+  }
+
+  .welcome-content h1 {
+    font-size: 22px;
+  }
+
+  .welcome-info {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 14px;
+  }
+
+}
+
+
+/* Small Mobile */
+
+@media (max-width: 450px) {
+
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    width: 100%;
+  }
+
+}

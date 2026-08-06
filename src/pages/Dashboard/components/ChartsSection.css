@@ -1,0 +1,139 @@
+.charts-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin-top: 24px;
+}
+.charts-sectionsss {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 24px;
+}
+
+.DandC{
+    grid-column: span 2;
+    /* margin-top:20px; */
+    width:100%;
+}
+
+.chart-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.chart-header h2 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.chart-header p {
+  margin: 5px 0 0;
+
+  font-size: 13px;
+  color: #64748b;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 10px;
+}
+
+
+/* Dark Mode */
+
+.dark .chart-card {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.dark .chart-header h2 {
+  color: #ffffff;
+}
+
+.dark .chart-header p {
+  color: #94a3b8;
+}
+
+
+/* Responsive */
+
+@media (max-width: 500px) {
+
+  .chart-card {
+    padding: 16px;
+  }
+
+  .chart-container {
+    overflow-x: auto;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* ============================
+   Loan Distribution Chart
+============================ */
+
+.loan-distribution-card {
+  height: 100%;
+}
+
+.loan-distribution-card .chart-container {
+  width: 100%;
+  height: 320px;
+}
+
+/* Chart Title */
+
+.loan-distribution-card .chart-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.loan-distribution-card .chart-header p {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Dark Mode */
+
+.dark .loan-distribution-card .chart-header h2 {
+  color: #f8fafc;
+}
+
+.dark .loan-distribution-card .chart-header p {
+  color: #94a3b8;
+}
+
+/* Responsive */
+
+@media (max-width:768px){
+
+.loan-distribution-card .chart-container{
+    height:280px;
+}
+
+}

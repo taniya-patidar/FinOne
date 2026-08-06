@@ -1,0 +1,138 @@
+/* ===========================
+   Disbursement vs Collection
+=========================== */
+
+.charts-sectionsss {
+  width: 100%;
+  margin-top: 24px;
+}
+
+.charts-sectionsss .chart-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+  transition: all 0.3s ease;
+}
+
+.charts-sectionsss .chart-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px rgba(37, 99, 235, 0.12);
+}
+
+.charts-sectionsss .chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-bottom: 22px; */
+}
+
+.charts-sectionsss .chart-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.charts-sectionsss .chart-container {
+  width: 100%;
+  height: 420px;
+}
+
+/* ===========================
+   Dark Mode
+=========================== */
+
+.dark .charts-sectionsss .chart-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+.dark .charts-sectionsss .chart-card:hover {
+  box-shadow: 0 16px 35px rgba(59, 130, 246, 0.25);
+}
+
+.dark .charts-sectionsss .chart-header h2 {
+  color: #ffffff;
+}
+
+/* ===========================
+   Tablet
+=========================== */
+
+@media (max-width: 992px) {
+
+  .charts-sectionsss .chart-card {
+    padding: 20px;
+  }
+
+  .charts-sectionsss .chart-header h2 {
+    font-size: 20px;
+  }
+
+  .charts-sectionsss .chart-container {
+    height: 360px;
+  }
+}
+
+/* ===========================
+   Mobile
+=========================== */
+
+@media (max-width: 768px) {
+
+  .charts-sectionsss {
+    margin-top: 18px;
+  }
+
+  .charts-sectionsss .chart-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .charts-sectionsss .chart-header {
+    margin-bottom: 16px;
+  }
+
+  .charts-sectionsss .chart-header h2 {
+    font-size: 17px;
+  }
+
+  .charts-sectionsss .chart-container {
+    width: 100%;
+    height: 300px;
+    overflow-x: auto;
+  }
+}
+
+/* ===========================
+   Small Mobile
+=========================== */
+
+@media (max-width: 480px) {
+
+  .charts-sectionsss .chart-card {
+    padding: 14px;
+  }
+
+  .charts-sectionsss .chart-header h2 {
+    font-size: 16px;
+  }
+
+  .charts-sectionsss .chart-container {
+    height: 260px;
+  }
+}
+
+.chart-header p {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.dark .chart-header p {
+  color: #94a3b8;
+}
