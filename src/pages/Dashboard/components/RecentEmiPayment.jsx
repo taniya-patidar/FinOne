@@ -1,4 +1,5 @@
 import './RecentEmiPayment.css'
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -35,12 +36,13 @@ const emiPayments = [
 ];
 
 function RecentEmiPayment() {
+  const navigate = useNavigate();
   return (
     <div className="recent-loan-table">
       <div className="table-header">
         <h3>Recent EMI Payments</h3>
 
-        <button className="view-all-btn">
+        <button className="view-all-btn" onClick={()=> navigate('/EmiSchedule')}>
           View All
         </button>
       </div>

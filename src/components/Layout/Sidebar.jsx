@@ -6,7 +6,8 @@ import {
   LogOut, 
   FileText,
   ShieldCheck,
-  BarChart3
+  BarChart3,
+  Bell
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -18,6 +19,7 @@ const Sidebar = ({ collapsed, currentPage, onPageChange }) => {
     { id: 'loanApproval', label: 'Loan Approval', icon: ShieldCheck },
     { id: 'emiSchedule', label: 'EMI Schedule', icon: FileText },
     { id: 'reports', label: 'Reports & Charts', icon: BarChart3 },
+    { id: 'notification', label: 'Notification', icon:Bell},
     { id: 'profile', label: 'Profile & settings', icon: Settings },
   ];
 

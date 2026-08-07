@@ -1,5 +1,6 @@
 import "./RecentLoanTable.css";
 import { Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import user1 from "../../../assets/users/user1.jpg";
 import user2 from "../../../assets/users/user2.jpg";
@@ -82,14 +83,17 @@ const loanData = [
   
 ];
 
+
+
 function RecentLoanTable() {
+  const navigate = useNavigate();
   return (
     <section className="loan-table-card">
 
       <div className="table-header">
         <h2>Recent Loan Applications</h2>
 
-        <button className="view-btn">
+        <button className="view-btn"  onClick={() => navigate("/LoanApplication")}>
           View All
         </button>
       </div>

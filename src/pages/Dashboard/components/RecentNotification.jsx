@@ -1,4 +1,5 @@
 import "./RecentNotification.css";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import {
   CheckCircle,
@@ -52,12 +53,13 @@ const notifications = [
 ];
 
 function RecentNotification() {
+  const navigate = useNavigate();
   return (
     <div className="notification-card">
       <div className="notification-header">
         <h3>Recent Notifications</h3>
 
-        <button className="view-all-btn">
+        <button className="view-all-btn" onClick={()=> navigate('/Notification')}>
           View All
         </button>
       </div>
