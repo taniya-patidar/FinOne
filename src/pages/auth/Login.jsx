@@ -5,6 +5,7 @@ import "./Login.css";
 
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
   useEffect(()=>{
@@ -107,6 +108,16 @@ const Login = () => {
 
     navigate("/dashboard");
   };
+
+  const handleGoogleSuccess = (credentialResponse) => {
+  console.log("Google Login Success:", credentialResponse);
+
+  navigate("/dashboard");
+};
+
+const handleGoogleError = () => {
+  console.log("Google Login Failed");
+};
 
   return (
     <div className="login-page">
@@ -271,7 +282,7 @@ const Login = () => {
 
           
 
-          <button
+          {/* <button
             type="button"
             className="google-btn"
           >
@@ -282,11 +293,14 @@ const Login = () => {
             <span>
               Login with Google
             </span>
-          </button>
+          </button> */}
+
+          <div className="google-login-container">
+          <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
+          </div>
 
 
           <div className="register-link">
-
             <span>
               Don't have an account?
             </span>
