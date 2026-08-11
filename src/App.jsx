@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import LoanApplication from "./pages/LoanApplication/LoanApplication";
 import Notification from "./Pages/Notification/Notification";
 import EmiSchedule from "./pages/EmiSchedule/EmiSchedule";
+import CustomerList from "./pages/CustomerManagement/CustomerList";
 
 const App = () => {
   return (
@@ -50,6 +51,10 @@ const App = () => {
         <Route
           path="/EmiSchedule"
           element={<EmiSchedule />}
+        />
+         <Route
+          path="/customers"
+          element={<CustomerList />}
         />
 
       </Route>
