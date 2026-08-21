@@ -1,0 +1,1201 @@
+/* ======================================================
+   CUSTOMER EDIT PAGE
+====================================================== */
+
+.customer-edit-page {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 30px 32px 50px;
+  box-sizing: border-box;
+  color: #172033;
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.edit-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.edit-back-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 18px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.edit-back-link:hover {
+  color: #2563eb;
+  transform: translateX(-2px);
+}
+
+.edit-title-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.edit-title-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eff6ff;
+  color: #2563eb;
+
+  border: 1px solid #dbeafe;
+}
+
+.edit-title-row h1 {
+  margin: 0 0 5px;
+
+  font-size: 29px;
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+
+  color: #111827;
+}
+
+.edit-title-row p {
+  margin: 0;
+
+  color: #64748b;
+  font-size: 14px;
+}
+
+.edit-header-meta {
+  min-width: 155px;
+  padding: 13px 17px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.edit-header-meta span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.edit-header-meta strong {
+  color: #334155;
+  font-size: 14px;
+}
+
+/* ======================================================
+   SUCCESS / ERROR
+====================================================== */
+
+.edit-success-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 13px 16px;
+  margin-bottom: 20px;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 11px;
+
+  background: #f0fdf4;
+  color: #15803d;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.edit-general-error {
+  padding: 13px 16px;
+  margin-bottom: 20px;
+
+  border: 1px solid #fecaca;
+  border-radius: 11px;
+
+  background: #fef2f2;
+  color: #dc2626;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ======================================================
+   CARD
+====================================================== */
+
+.edit-card {
+  margin-bottom: 20px;
+  padding: 25px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.035);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.edit-card:hover {
+  border-color: #dbe3ef;
+
+  box-shadow:
+    0 5px 18px rgba(15, 23, 42, 0.045);
+}
+
+/* ======================================================
+   SECTION HEADER
+====================================================== */
+
+.edit-section-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding-bottom: 20px;
+  margin-bottom: 23px;
+
+  border-bottom: 1px solid #eef2f7;
+}
+
+.edit-section-icon {
+  width: 39px;
+  height: 39px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #f8fafc;
+  color: #2563eb;
+
+  border: 1px solid #e2e8f0;
+}
+
+.edit-section-header h2 {
+  margin: 0 0 3px;
+
+  color: #1e293b;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.edit-section-header p {
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+/* ======================================================
+   FORM GRID
+====================================================== */
+
+.edit-form-grid {
+  display: grid;
+  gap: 19px;
+
+  margin-bottom: 19px;
+}
+
+.edit-form-grid:last-child {
+  margin-bottom: 0;
+}
+
+.edit-form-grid.two {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+}
+
+.edit-form-grid.three {
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+}
+
+/* ======================================================
+   INPUT GROUP
+====================================================== */
+
+.edit-input-group {
+  min-width: 0;
+}
+
+.edit-input-group label {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 7px;
+
+  color: #334155;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.required {
+  margin-left: 4px;
+  color: #ef4444;
+}
+
+.edit-input-group input,
+.edit-input-group select {
+  width: 100%;
+  height: 43px;
+
+  box-sizing: border-box;
+
+  padding: 0 13px;
+
+  border: 1px solid #dbe2ea;
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #1e293b;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.edit-input-group input::placeholder {
+  color: #a8b1bd;
+}
+
+.edit-input-group input:hover,
+.edit-input-group select:hover {
+  border-color: #cbd5e1;
+}
+
+.edit-input-group input:focus,
+.edit-input-group select:focus {
+  border-color: #60a5fa;
+
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.10);
+
+  background: #ffffff;
+}
+
+.edit-input-group select {
+  cursor: pointer;
+}
+
+/* ======================================================
+   HINT
+====================================================== */
+
+.edit-hint {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+}
+
+/* ======================================================
+   ERROR
+====================================================== */
+
+.error {
+  margin: 6px 0 0;
+
+  color: #dc2626;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ======================================================
+   MONEY INPUT
+====================================================== */
+
+.edit-money-input {
+  position: relative;
+}
+
+.edit-money-input > span {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #64748b;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  z-index: 1;
+}
+
+.edit-money-input input {
+  padding-left: 31px;
+}
+
+/* ======================================================
+   DOCUMENT GRID
+====================================================== */
+
+.edit-file-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.edit-file-group {
+  min-width: 0;
+}
+
+.edit-file-label {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 8px;
+
+  color: #334155;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* ======================================================
+   UPLOAD BOX
+====================================================== */
+
+.edit-upload-box {
+  min-height: 92px;
+
+  box-sizing: border-box;
+
+  padding: 17px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 11px;
+
+  background: #fafcff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.edit-upload-box:hover {
+  border-color: #60a5fa;
+  background: #f8fbff;
+
+  transform: translateY(-1px);
+}
+
+.edit-upload-box input {
+  display: none;
+}
+
+.upload-icon {
+  width: 39px;
+  height: 39px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.edit-upload-box strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #334155;
+
+  font-size: 13px;
+}
+
+.edit-upload-box small {
+  display: block;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+}
+
+/* ======================================================
+   SELECTED FILE
+====================================================== */
+
+.edit-selected-file {
+  min-height: 92px;
+
+  box-sizing: border-box;
+
+  padding: 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 11px;
+
+  background: #f0fdf4;
+}
+
+.edit-file-info {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.file-check {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.edit-file-info strong {
+  display: block;
+
+  max-width: 230px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #166534;
+
+  font-size: 12px;
+}
+
+.edit-file-info small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #65a30d;
+
+  font-size: 10px;
+}
+
+.edit-selected-file > button {
+  width: 31px;
+  height: 31px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #64748b;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.edit-selected-file > button:hover {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* ======================================================
+   BOTTOM BAR
+====================================================== */
+
+.edit-bottom-bar {
+  position: sticky;
+  bottom: 0;
+
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 11px;
+
+  margin-top: 8px;
+  padding: 16px 0 4px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(248, 250, 252, 0),
+      #f8fafc 30%
+    );
+}
+
+.edit-cancel-button,
+.edit-save-button {
+  min-height: 42px;
+
+  padding: 0 18px;
+
+  border-radius: 9px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.edit-cancel-button {
+  border: 1px solid #dbe2ea;
+
+  background: #ffffff;
+  color: #475569;
+}
+
+.edit-cancel-button:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.edit-save-button {
+  border: 1px solid #2563eb;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  box-shadow:
+    0 3px 8px rgba(37, 99, 235, 0.18);
+}
+
+.edit-save-button:hover {
+  background: #1d4ed8;
+
+  box-shadow:
+    0 5px 12px rgba(37, 99, 235, 0.23);
+
+  transform: translateY(-1px);
+}
+
+.edit-cancel-button:disabled,
+.edit-save-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ======================================================
+   LOADING
+====================================================== */
+
+.edit-loading {
+  min-height: 450px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: #64748b;
+}
+
+.loading-spinner {
+  width: 31px;
+  height: 31px;
+
+  margin-bottom: 14px;
+
+  border: 3px solid #e2e8f0;
+  border-top-color: #2563eb;
+
+  border-radius: 50%;
+
+  animation:
+    editSpin 0.8s linear infinite;
+}
+
+.edit-loading p {
+  margin: 0;
+
+  font-size: 13px;
+}
+
+@keyframes editSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ======================================================
+   BUTTON SPINNER
+====================================================== */
+
+.button-spinner {
+  width: 14px;
+  height: 14px;
+
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation:
+    editSpin 0.7s linear infinite;
+}
+
+/* ======================================================
+   NOT FOUND
+====================================================== */
+
+.edit-not-found {
+  min-height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.not-found-icon {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 16px;
+
+  border-radius: 16px;
+
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.edit-not-found h2 {
+  margin: 0 0 7px;
+
+  color: #1e293b;
+
+  font-size: 22px;
+}
+
+.edit-not-found p {
+  margin: 0 0 20px;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.edit-back-button {
+  min-height: 40px;
+
+  padding: 0 15px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  border: 1px solid #dbe2ea;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #475569;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.edit-back-button:hover {
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 1000px) {
+  .customer-edit-page {
+    padding: 25px 20px 45px;
+  }
+
+  .edit-form-grid.three {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .customer-edit-page {
+    padding: 20px 15px 40px;
+  }
+
+  .edit-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .edit-header-meta {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .edit-card {
+    padding: 19px;
+  }
+
+  .edit-form-grid.two,
+  .edit-form-grid.three,
+  .edit-file-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-bottom-bar {
+    position: static;
+
+    padding-top: 10px;
+
+    background: transparent;
+  }
+
+  .edit-cancel-button,
+  .edit-save-button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-title-row h1 {
+    font-size: 24px;
+  }
+
+  .edit-title-row {
+    align-items: flex-start;
+  }
+
+  .edit-title-icon {
+    width: 41px;
+    height: 41px;
+  }
+
+  .edit-card {
+    padding: 16px;
+    border-radius: 13px;
+  }
+
+  .edit-section-header {
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+  }
+
+  .edit-section-icon {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* =========================================================
+   DARK MODE — CUSTOMER EDIT
+   ========================================================= */
+
+.dark .customer-edit-page {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+/* Header */
+
+.dark .customer-edit-page h1 {
+  color: #f8fafc;
+}
+
+.dark .customer-edit-page p {
+  color: #94a3b8;
+}
+
+/* Back Button */
+
+.dark .customer-edit-page .back-button {
+  color: #cbd5e1;
+  background: transparent;
+  border-color: #334155;
+}
+
+.dark .customer-edit-page .back-button:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+/* Main Cards */
+
+.dark .customer-edit-page .edit-card,
+.dark .customer-edit-page .form-card,
+.dark .customer-edit-page .customer-form-card {
+  background: #111827;
+  border-color: #1e293b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Section headings */
+
+.dark .customer-edit-page h2 {
+  color: #f8fafc;
+}
+
+.dark .customer-edit-page h3 {
+  color: #e5e7eb;
+}
+
+/* Labels */
+
+.dark .customer-edit-page label {
+  color: #cbd5e1;
+}
+
+/* Inputs */
+
+.dark .customer-edit-page input,
+.dark .customer-edit-page select,
+.dark .customer-edit-page textarea {
+  background: #0f172a;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+.dark .customer-edit-page input::placeholder,
+.dark .customer-edit-page textarea::placeholder {
+  color: #64748b;
+}
+
+.dark .customer-edit-page input:focus,
+.dark .customer-edit-page select:focus,
+.dark .customer-edit-page textarea:focus {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  outline: none;
+}
+
+/* Select option */
+
+.dark .customer-edit-page select option {
+  background: #111827;
+  color: #f8fafc;
+}
+
+/* Input disabled */
+
+.dark .customer-edit-page input:disabled,
+.dark .customer-edit-page select:disabled,
+.dark .customer-edit-page textarea:disabled {
+  background: #1e293b;
+  color: #64748b;
+  border-color: #334155;
+}
+
+/* Error text */
+
+.dark .customer-edit-page .error-message,
+.dark .customer-edit-page .field-error {
+  color: #f87171;
+}
+
+/* Helper text */
+
+.dark .customer-edit-page .helper-text {
+  color: #64748b;
+}
+
+/* Customer ID / readonly fields */
+
+.dark .customer-edit-page .readonly-field {
+  background: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+/* Buttons */
+
+.dark .customer-edit-page .cancel-button {
+  background: #1e293b;
+  color: #cbd5e1;
+  border-color: #334155;
+}
+
+.dark .customer-edit-page .cancel-button:hover {
+  background: #334155;
+  color: #ffffff;
+}
+
+.dark .customer-edit-page .save-button {
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.dark .customer-edit-page .save-button:hover {
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+}
+
+/* Form bottom area */
+
+.dark .customer-edit-page .form-actions,
+.dark .customer-edit-page .edit-actions {
+  border-color: #1e293b;
+}
+
+/* Divider */
+
+.dark .customer-edit-page hr {
+  border-color: #1e293b;
+}
+
+/* File upload */
+
+.dark .customer-edit-page .file-upload,
+.dark .customer-edit-page .upload-box {
+  background: #0f172a;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.dark .customer-edit-page .file-upload:hover,
+.dark .customer-edit-page .upload-box:hover {
+  background: #1e293b;
+  border-color: #6366f1;
+}
+
+/* Document names */
+
+.dark .customer-edit-page .document-name {
+  color: #e5e7eb;
+}
+
+.dark .customer-edit-page .document-item {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+/* Status badges */
+
+.dark .customer-edit-page .status-badge {
+  background: #172554;
+  color: #93c5fd;
+}
+
+/* Scrollbar */
+
+.dark .customer-edit-page ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark .customer-edit-page ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark .customer-edit-page ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+
+.dark .customer-edit-page ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+.dark .edit-bottom-bar{
+    background: #0f172a !important;
+}
+
+/* =========================================================
+   EXTRA RESPONSIVE — CUSTOMER EDIT
+========================================================= */
+
+@media (max-width: 760px) {
+  .customer-edit-page {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .edit-title-row {
+    width: 100%;
+  }
+
+  .edit-title-row > div:last-child {
+    min-width: 0;
+  }
+
+  .edit-title-row h1 {
+    word-break: break-word;
+  }
+
+  .edit-header-meta {
+    margin-top: 2px;
+  }
+
+  .edit-input-group input,
+  .edit-input-group select,
+  .edit-input-group textarea {
+    max-width: 100%;
+  }
+
+  .edit-upload-box,
+  .edit-selected-file {
+    width: 100%;
+  }
+
+  .edit-file-info {
+    min-width: 0;
+  }
+
+  .edit-file-info strong {
+    max-width: calc(100vw - 130px);
+  }
+
+  .edit-bottom-bar {
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit-page-header {
+    gap: 12px;
+  }
+
+  .edit-back-link {
+    margin-bottom: 12px;
+  }
+
+  .edit-title-row {
+    gap: 10px;
+  }
+
+  .edit-title-row p {
+    font-size: 11px;
+  }
+
+  .edit-header-meta {
+    padding: 11px 13px;
+  }
+
+  .edit-header-meta strong {
+    font-size: 13px;
+  }
+
+  .edit-upload-box {
+    padding: 14px;
+  }
+
+  .edit-selected-file {
+    padding: 13px;
+  }
+
+  .edit-bottom-bar {
+    gap: 8px;
+  }
+
+  .edit-cancel-button,
+  .edit-save-button {
+    min-height: 40px;
+    padding: 0 13px;
+    font-size: 12px;
+  }
+}

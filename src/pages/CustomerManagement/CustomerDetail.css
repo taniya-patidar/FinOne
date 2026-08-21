@@ -1,0 +1,831 @@
+/* =========================================================
+   CUSTOMER DETAIL PAGE
+========================================================= */
+
+.customer-detail-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 32px 50px;
+  box-sizing: border-box;
+  color: #172033;
+  background: #f8fafc;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.detail-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 26px;
+}
+
+.detail-header h1 {
+  margin: 16px 0 5px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.5px;
+}
+
+.detail-header p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.back-button,
+.edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.back-button {
+  padding: 9px 14px;
+  border: 1px solid #dbe1ea;
+  background: #ffffff;
+  color: #374151;
+}
+
+.back-button:hover {
+  background: #f3f6fa;
+  border-color: #cbd5e1;
+}
+
+.edit-button {
+  padding: 10px 17px;
+  border: 1px solid #1769e8;
+  background: #1769e8;
+  color: white;
+  box-shadow: 0 2px 5px rgba(23, 105, 232, 0.18);
+}
+
+.edit-button:hover {
+  background: #0f5ed7;
+  border-color: #0f5ed7;
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   CUSTOMER PROFILE
+========================================================= */
+
+.customer-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 24px;
+  margin-bottom: 22px;
+  background: #ffffff;
+  border: 1px solid #e4e8ee;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eaf2ff;
+  color: #1769e8;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-info h2 {
+  margin: 0 0 7px;
+  font-size: 21px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.profile-info p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.profile-info strong {
+  color: #1769e8;
+  font-weight: 700;
+}
+
+.profile-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.customer-status,
+.kyc-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.customer-status {
+  background: #eaf8ef;
+  color: #16803c;
+}
+
+.kyc-status {
+  background: #eaf2ff;
+  color: #1769e8;
+}
+
+
+/* =========================================================
+   DETAIL CARD
+========================================================= */
+
+.detail-card {
+  background: #ffffff;
+  border: 1px solid #e4e8ee;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  padding: 24px 26px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+}
+
+
+/* =========================================================
+   CARD HEADING
+========================================================= */
+
+.detail-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding-bottom: 18px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.detail-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+  background: #edf4ff;
+  color: #1769e8;
+}
+
+.detail-heading h2 {
+  margin: 0 0 3px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #172033;
+}
+
+.detail-heading p {
+  margin: 0;
+  font-size: 13px;
+  color: #8a93a3;
+}
+
+
+/* =========================================================
+   INFORMATION GRID
+========================================================= */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 70px;
+  row-gap: 20px;
+}
+
+
+/*
+   IMPORTANT:
+   label + value ek dusre ke paas rahenge.
+   Bahut zyada distance nahi hoga.
+*/
+
+.detail-item {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 15px;
+  min-height: 30px;
+}
+
+.detail-item span {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.detail-item strong {
+  color: #172033;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.detail-full {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   DOCUMENTS
+========================================================= */
+
+.document-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.document-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding: 15px 17px;
+
+  border: 1px solid #e7ebf0;
+  border-radius: 9px;
+  background: #fafbfc;
+}
+
+.document-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.document-item strong {
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.document-item span {
+  color: #8992a2;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.document-item svg {
+  flex-shrink: 0;
+  color: #20a45a;
+}
+
+
+/* =========================================================
+   BOTTOM ACTIONS
+========================================================= */
+
+.detail-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 4px;
+}
+
+
+/* =========================================================
+   NOT FOUND
+========================================================= */
+
+.detail-not-found {
+  max-width: 500px;
+  margin: 100px auto;
+  padding: 40px;
+  text-align: center;
+
+  background: #ffffff;
+  border: 1px solid #e4e8ee;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.06);
+}
+
+.detail-not-found h2 {
+  margin: 0 0 8px;
+  color: #111827;
+}
+
+.detail-not-found p {
+  margin: 0 0 22px;
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .customer-detail-page {
+    padding: 22px 20px 40px;
+  }
+
+  .detail-header {
+    align-items: flex-start;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
+  .detail-full {
+    grid-column: auto;
+  }
+
+  .document-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .customer-detail-page {
+    padding: 18px 14px 35px;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .detail-header h1 {
+    font-size: 24px;
+  }
+
+  .detail-header .edit-button {
+    align-self: flex-start;
+  }
+
+  .customer-profile-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 18px;
+  }
+
+  .profile-status {
+    width: 100%;
+    margin-left: 92px;
+  }
+
+  .detail-card {
+    padding: 20px 17px;
+  }
+
+  .detail-item {
+    grid-template-columns: 125px minmax(0, 1fr);
+    column-gap: 10px;
+  }
+
+  .detail-bottom {
+    gap: 10px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .detail-bottom button {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — CUSTOMER DETAIL
+========================================================= */
+
+@media (max-width: 1000px) {
+  .customer-detail-page {
+    padding: 25px 20px 45px;
+  }
+
+  .detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detail-full {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 760px) {
+  .customer-detail-page {
+    padding: 20px 15px 35px;
+  }
+
+  /* Header */
+
+  .detail-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .detail-header h1 {
+    font-size: 24px;
+  }
+
+  .detail-header .edit-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Profile */
+
+  .customer-profile-card {
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .profile-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .profile-info h2 {
+    font-size: 18px;
+  }
+
+  .profile-status {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 4px;
+  }
+
+  /* Detail cards */
+
+  .detail-card {
+    padding: 19px;
+    border-radius: 13px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .detail-full {
+    grid-column: auto;
+  }
+
+  /* Bottom buttons */
+
+  .detail-bottom {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .detail-bottom button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .customer-detail-page {
+    padding: 16px 11px 30px;
+  }
+
+  .detail-header h1 {
+    font-size: 22px;
+  }
+
+  .detail-header p {
+    font-size: 12px;
+  }
+
+  .customer-profile-card {
+    padding: 15px;
+  }
+
+  .profile-avatar {
+    width: 42px;
+    height: 42px;
+  }
+
+  .profile-info h2 {
+    font-size: 16px;
+  }
+
+  .profile-info p {
+    font-size: 11px;
+  }
+
+  .profile-status {
+    flex-wrap: wrap;
+  }
+
+  .detail-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .detail-heading {
+    gap: 10px;
+    padding-bottom: 16px;
+    margin-bottom: 18px;
+  }
+
+  .detail-heading h2 {
+    font-size: 16px;
+  }
+
+  .detail-heading p {
+    font-size: 11px;
+  }
+
+  .detail-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .detail-item span {
+    font-size: 11px;
+  }
+
+  .detail-item strong {
+    font-size: 13px;
+    word-break: break-word;
+  }
+
+  .document-list {
+    gap: 10px;
+  }
+
+  .document-item {
+    padding: 13px;
+  }
+}
+
+/* =========================================================
+   DARK MODE — CUSTOMER DETAIL
+========================================================= */
+
+.dark .customer-detail-page {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.dark .customer-detail-page h1 {
+  color: #f8fafc;
+}
+
+.dark .customer-detail-page .detail-header p {
+  color: #94a3b8;
+}
+
+.dark .customer-detail-page .back-button {
+  color: #cbd5e1;
+  background: transparent;
+}
+
+.dark .customer-detail-page .back-button:hover {
+  color: #ffffff;
+  background: #1e293b;
+}
+
+/* =========================================================
+   EDIT BUTTON
+========================================================= */
+
+.dark .customer-detail-page .edit-button {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.dark .customer-detail-page .edit-button:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* =========================================================
+   CUSTOMER PROFILE
+========================================================= */
+
+.dark .customer-detail-page .customer-profile-card {
+  background: #111827;
+  border-color: #1e293b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.dark .customer-detail-page .profile-avatar {
+  background: #1e293b;
+  color: #93c5fd;
+}
+
+.dark .customer-detail-page .profile-info h2 {
+  color: #f8fafc;
+}
+
+.dark .customer-detail-page .profile-info p {
+  color: #94a3b8;
+}
+
+.dark .customer-detail-page .profile-info strong {
+  color: #cbd5e1;
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.dark .customer-detail-page .customer-status {
+  background: #14532d;
+  color: #86efac;
+}
+
+.dark .customer-detail-page .kyc-status {
+  background: #172554;
+  color: #93c5fd;
+}
+
+/* Pending */
+
+.dark .customer-detail-page .kyc-status.pending {
+  background: #422006;
+  color: #fcd34d;
+}
+
+/* Inactive */
+
+.dark .customer-detail-page .customer-status.inactive {
+  background: #3f3f46;
+  color: #d4d4d8;
+}
+
+/* =========================================================
+   DETAIL CARDS
+========================================================= */
+
+.dark .customer-detail-page .detail-card {
+  background: #111827;
+  border-color: #1e293b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+}
+
+.dark .customer-detail-page .detail-card:hover {
+  border-color: #334155;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.dark .customer-detail-page .detail-heading {
+  border-bottom-color: #1e293b;
+}
+
+.dark .customer-detail-page .detail-icon {
+  background: #0f172a;
+  color: #60a5fa;
+  border-color: #334155;
+}
+
+.dark .customer-detail-page .detail-heading h2 {
+  color: #f8fafc;
+}
+
+.dark .customer-detail-page .detail-heading p {
+  color: #64748b;
+}
+
+/* =========================================================
+   DETAIL ITEMS
+========================================================= */
+
+.dark .customer-detail-page .detail-item span {
+  color: #94a3b8;
+}
+
+.dark .customer-detail-page .detail-item strong {
+  color: #e5e7eb;
+}
+
+/* =========================================================
+   DOCUMENTS
+========================================================= */
+
+.dark .customer-detail-page .document-item {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+.dark .customer-detail-page .document-item strong {
+  color: #e5e7eb;
+}
+
+.dark .customer-detail-page .document-item span {
+  color: #94a3b8;
+}
+
+.dark .customer-detail-page .document-item svg {
+  color: #4ade80;
+}
+
+/* =========================================================
+   BOTTOM AREA
+========================================================= */
+
+.dark .customer-detail-page .detail-bottom {
+  border-color: #1e293b;
+}
+
+.dark .customer-detail-page .detail-bottom .back-button {
+  background: #111827;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.dark .customer-detail-page .detail-bottom .back-button:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+/* =========================================================
+   NOT FOUND
+========================================================= */
+
+.dark .customer-detail-page .detail-not-found h2 {
+  color: #f8fafc;
+}
+
+.dark .customer-detail-page .detail-not-found p {
+  color: #94a3b8;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.dark .customer-detail-page ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark .customer-detail-page ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark .customer-detail-page ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+
+.dark .customer-detail-page ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}

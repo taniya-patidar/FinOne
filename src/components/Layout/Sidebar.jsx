@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Users, 
@@ -12,6 +13,7 @@ import {
 import './Sidebar.css';
 
 const Sidebar = ({ collapsed, currentPage, onPageChange }) => {
+  const navigate= useNavigate();
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'customers', label: 'Customer Management', icon: Users },
@@ -42,7 +44,20 @@ const Sidebar = ({ collapsed, currentPage, onPageChange }) => {
             return (
               <button
                 key={item.id}
-                onClick={() => onPageChange(item.id)}
+                onClick={() => {onPageChange(item.id);
+                  if(item.id==='customers'){
+                    navigate('/customers');
+                  }
+                  if(item.id==='dashboard'){
+                    navigate('/dashboard');
+                  }
+                  if(item.id==='loanApplication'){
+                    navigate('loanApplication');
+                  }
+                  if(item.id==='loanApproval'){
+                    navigate('/loan-approval')
+                  }
+                }}
                 className={`nav-item ${isActive ? 'active' : ''}`}
                 title={collapsed ? item.label : ''}
               >

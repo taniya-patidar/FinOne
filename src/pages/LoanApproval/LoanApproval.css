@@ -1,0 +1,574 @@
+:root {
+  --primary-blue: #2563eb;
+  --bg-page: #f8fafc;
+  --card-bg: #ffffff;
+  --border-light: #e2e8f0;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+}
+
+.finone-container {
+  background-color: var(--bg-page);
+  padding: 24px 32px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-dark);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.page-header p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 4px 0 0 0;
+}
+
+.btn-export {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+/* Metrics Cards Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.bg-orange { background: #fff7ed; color: #ea580c; }
+.bg-blue { background: #eff6ff; color: #2563eb; }
+.bg-green { background: #f0fdf4; color: #16a34a; }
+.bg-red { background: #fef2f2; color: #dc2626; }
+.bg-purple { background: #faf5ff; color: #9333ea; }
+
+.metric-title {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+}
+
+.metric-header h2 {
+  margin: 2px 0 0 0;
+  font-size: 20px;
+}
+
+.metric-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Control Bar */
+.filters-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  flex: 1;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 13px;
+}
+
+.dropdown-group {
+  display: flex;
+  gap: 10px;
+}
+
+.dropdown-group select {
+  border: 1px solid var(--border-light);
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-dark);
+  background: white;
+}
+
+.btn-filter-more {
+  border: 1px solid var(--border-light);
+  background: white;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+/* Tabs */
+.tabs-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.tab-btn.active {
+  background: white;
+  color: var(--primary-blue);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.pill-count {
+  background: #e2e8f0;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  margin-left: 6px;
+}
+
+.pill-count.warning { background: #ffedd5; color: #c2410c; }
+.pill-count.info { background: #dbeafe; color: #1e40af; }
+.pill-count.danger { background: #fce7f3; color: #9d174d; }
+
+/* Table Wrapper Fix */
+.table-wrapper {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  position: relative;
+  overflow: visible !important; /* CRITICAL FIX: Stops clipping dropdowns */
+}
+
+.finone-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.finone-table th {
+  background: #f8fafc;
+  padding: 12px 16px;
+  color: var(--text-muted);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.finone-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.id-text {
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+.applicant-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar-chip {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.applicant-name { font-weight: 600; }
+.sub-text { font-size: 11px; color: var(--text-muted); }
+
+.loan-type-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.amount-text { font-weight: 700; }
+
+/* Credit Badges */
+.credit-cell { display: flex; align-items: center; gap: 6px; }
+.score-num { font-weight: 600; }
+
+.credit-badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.badge-good { background: #dcfce7; color: #15803d; }
+.badge-fair { background: #fef9c3; color: #a16207; }
+.badge-poor { background: #fee2e2; color: #b91c1c; }
+
+/* Risk Levels */
+.risk-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.risk-low { color: #16a34a; background: #f0fdf4; }
+.risk-medium { color: #d97706; background: #fffbe2; }
+.risk-high { color: #dc2626; background: #fef2f2; }
+
+/* Stages */
+.stage-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.stage-pending { background: #fff7ed; color: #ea580c; }
+.stage-review { background: #eff6ff; color: #2563eb; }
+.stage-approved { background: #f0fdf4; color: #16a34a; }
+.stage-rejected { background: #fef2f2; color: #dc2626; }
+
+/* Actions Column Position Fix */
+.actions-cell-wrapper {
+  position: relative; /* Local anchoring for absolute menu */
+}
+
+.actions-cell { 
+  display: flex; 
+  gap: 6px; 
+  align-items: center;
+}
+
+.btn-review {
+  border: 1px solid var(--border-light);
+  background: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-more {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+/* Action Dropdown Menu Fix */
+.action-dropdown-menu {
+  position: absolute;
+  right: 12px;
+  top: calc(100% + 4px); /* Dropdown appears right below the action button */
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  min-width: 170px;
+  padding: 6px 0;
+}
+
+/* Dropup for last two table rows */
+.action-dropdown-menu.dropup {
+  top: auto;
+  bottom: calc(100% + 4px); /* Opens upwards */
+}
+
+.action-dropdown-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: #334155;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.action-dropdown-menu button:hover {
+  background: #f1f5f9;
+}
+
+.action-dropdown-menu button.text-red {
+  color: #ef4444;
+}
+
+.action-dropdown-menu button.text-red:hover {
+  background: #fef2f2;
+}
+
+.text-green { color: #16a34a; }
+.text-blue { color: #2563eb; }
+
+/* Footer Pagination */
+.table-footer {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-light);
+}
+
+.pagination { display: flex; gap: 4px; }
+
+.page-num, .page-nav {
+  border: 1px solid var(--border-light);
+  background: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.page-num.active {
+  background: var(--primary-blue);
+  color: white;
+  border-color: var(--primary-blue);
+}
+
+/* Table Cell Alignment & Padding Fix */
+.finone-table td:last-child {
+  padding-right: 20px !important; /* Row ke end se safe distance */
+  text-align: right;
+}
+
+/* Actions Column Wrapper & Inner Alignment */
+.actions-cell-wrapper {
+  position: relative;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Right side properly align karega */
+  gap: 10px; /* Approve aur More button ke beech me space */
+}
+
+/* More Button Touch Area & Spacing Improvement */
+.btn-more {
+  border: none;
+  background: #f8fafc; /* Light subtle background taaki button properly visible ho */
+  border: 1px solid #e2e8f0;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-more:hover {
+  background: #e2e8f0;
+  color: var(--text-dark);
+}
+
+/* Dropdown Menu Alignment Shift */
+.action-dropdown-menu {
+  position: absolute;
+  right: 0; /* Padding ke according right boundary par align hoga */
+  top: calc(100% + 6px);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  min-width: 170px;
+  padding: 6px 0;
+}
+
+/* Dropup for last two rows */
+.action-dropdown-menu.dropup {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+/* 
+/* Table Layout Fix for Proper Widths */
+.finone-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+  table-layout: fixed; /* Column widths ko strictly control karne ke liye */
+}
+
+/* Action Header & Cell Width Increase */
+.finone-table th:last-child,
+.finone-table td:last-child {
+  width: 180px; /* Action column ki width bada di h (Pehle ~100-120px thi) */
+  min-width: 180px;
+  padding-right: 24px !important;
+  text-align: right;
+}
+
+/* Actions Cell Alignment & Spacing */
+.actions-cell-wrapper {
+  position: relative;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px; /* Approve aur More button ke beech proper gap */
+}
+
+/* Approve Button Styling */
+.btn-review {
+  border: 1px solid var(--border-light);
+  background: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-review:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* More Button Styling */
+.btn-more {
+  border: 1px solid var(--border-light);
+  background: #f8fafc;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-more:hover {
+  background: #e2e8f0;
+  color: var(--text-dark);
+}
+
+/* Action Dropdown Popup Width Matching */
+.action-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px; /* Dropdown menu width matched to column */
+  padding: 6px 0;
+}
+
+.action-dropdown-menu.dropup {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+/*
+
+/* Applicant Name Font Size Reduction */
+.applicant-name {
+  font-weight: 600;
+  font-size: 13px; /* Pehle browser ka default font size (~15px-16px) tha, ise 12px ya 13px kar dein */
+  line-height: 1.2;
+}
+
+/* Optional: Subtext (Mobile number) ko bhi thoda proportional rakhne ke liye */
+.sub-text {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+
+

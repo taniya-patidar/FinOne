@@ -232,6 +232,7 @@
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
+  overflow-y: visible;
 }
 
 .customer-table-card table {
@@ -625,4 +626,634 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  gap: 8px;
+
+  padding: 16px 20px;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+.pagination button {
+  height: 34px;
+  min-width: 34px;
+
+  padding: 0 10px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  background: #ffffff;
+  color: #334155;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination .active-page {
+  background: #1473ea;
+  color: white;
+  border-color: #1473ea;
+}
+
+.pagination-info {
+  margin-right: auto;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   RESPONSIVE — CUSTOMER LIST
+========================================================= */
+
+@media (max-width: 1100px) {
+  .customer-page {
+    padding: 25px 20px 40px;
+  }
+
+  .customer-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .customer-filters {
+    flex-wrap: wrap;
+  }
+
+  .customer-search {
+    flex: 1 1 100%;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-wrapper table {
+    min-width: 1000px;
+  }
+}
+
+@media (max-width: 760px) {
+  .customer-page {
+    padding: 20px 15px 35px;
+  }
+
+  /* Header */
+
+  .customer-page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .customer-page-header h1 {
+    font-size: 24px;
+  }
+
+  .add-customer-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Summary */
+
+  .customer-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .summary-card {
+    padding: 16px;
+  }
+
+  .summary-card h2 {
+    font-size: 22px;
+  }
+
+  /* Filters */
+
+  .customer-filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .customer-search,
+  .customer-filters select {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  /* Table card */
+
+  .customer-table-card {
+    border-radius: 12px;
+  }
+
+  .table-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 17px;
+  }
+
+  .table-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .table-action-btn {
+    justify-content: center;
+  }
+
+  .columns-wrapper {
+    width: 100%;
+  }
+
+  .columns-wrapper .table-action-btn {
+    width: 100%;
+  }
+
+  .columns-menu {
+    right: 0;
+    left: auto;
+    max-width: calc(100vw - 40px);
+  }
+
+  /* Horizontal table scroll */
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .table-wrapper table {
+    min-width: 950px;
+  }
+
+  /* Pagination */
+
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px;
+  }
+
+  .pagination button {
+    min-width: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .customer-page {
+    padding: 16px 11px 30px;
+  }
+
+  .customer-page-header h1 {
+    font-size: 22px;
+  }
+
+  .customer-page-header p {
+    font-size: 12px;
+  }
+
+  /* Summary becomes single column */
+
+  .customer-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card {
+    padding: 15px;
+  }
+
+  /* Table actions */
+
+  .table-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .table-top h2 {
+    font-size: 17px;
+  }
+
+  .table-top p {
+    font-size: 12px;
+  }
+
+  /* Pagination */
+
+  .pagination button {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   DARK MODE — CUSTOMER LIST
+========================================================= */
+
+.dark .customer-page {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.dark .customer-page-header h1 {
+  color: #f8fafc;
+}
+
+.dark .customer-page-header p {
+  color: #94a3b8;
+}
+
+/* =========================================================
+   ADD CUSTOMER BUTTON
+========================================================= */
+
+.dark .customer-page .add-customer-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.dark .customer-page .add-customer-btn:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.dark .customer-page .summary-card {
+  background: #111827;
+  border-color: #1e293b;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+}
+
+.dark .customer-page .summary-card span {
+  color: #94a3b8;
+}
+
+.dark .customer-page .summary-card h2 {
+  color: #f8fafc;
+}
+
+.dark .customer-page .summary-card p {
+  color: #64748b;
+}
+
+/* =========================================================
+   SEARCH + FILTERS
+========================================================= */
+
+.dark .customer-page .customer-search {
+  background: #111827;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.dark .customer-page .customer-search svg {
+  color: #64748b;
+}
+
+.dark .customer-page .customer-search input {
+  background: transparent;
+  color: #f8fafc;
+}
+
+.dark .customer-page .customer-search input::placeholder {
+  color: #64748b;
+}
+
+.dark .customer-page .customer-filters select {
+  background: #111827;
+  color: #e5e7eb;
+  border-color: #334155;
+}
+
+.dark .customer-page .customer-filters select:focus {
+  border-color: #6366f1;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.dark .customer-page .customer-filters select option {
+  background: #111827;
+  color: #f8fafc;
+}
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.dark .customer-page .customer-table-card {
+  background: #111827;
+  border-color: #1e293b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================================
+   TABLE TOP
+========================================================= */
+
+.dark .customer-page .table-top {
+  border-bottom-color: #1e293b;
+}
+
+.dark .customer-page .table-top h2 {
+  color: #f8fafc;
+}
+
+.dark .customer-page .table-top p {
+  color: #64748b;
+}
+
+/* =========================================================
+   TABLE ACTION BUTTONS
+========================================================= */
+
+.dark .customer-page .table-action-btn {
+  background: #0f172a;
+  color: #cbd5e1;
+  border-color: #334155;
+}
+
+.dark .customer-page .table-action-btn:hover {
+  background: #1e293b;
+  border-color: #475569;
+  color: #ffffff;
+}
+
+/* =========================================================
+   COLUMNS MENU
+========================================================= */
+
+.dark .customer-page .columns-menu {
+  background: #111827;
+  border-color: #334155;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.dark .customer-page .columns-menu-header {
+  border-bottom-color: #1e293b;
+  color: #f8fafc;
+}
+
+.dark .customer-page .columns-menu label {
+  color: #cbd5e1;
+}
+
+.dark .customer-page .columns-menu label:hover {
+  background: #1e293b;
+}
+
+.dark .customer-page .columns-menu input {
+  accent-color: #2563eb;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.dark .customer-page .table-wrapper {
+  background: #111827;
+}
+
+.dark .customer-page table {
+  color: #e5e7eb;
+}
+
+.dark .customer-page thead {
+  background: #0f172a;
+}
+
+.dark .customer-page th {
+  color: #94a3b8;
+  border-bottom-color: #1e293b;
+}
+
+.dark .customer-page td {
+  color: #cbd5e1;
+  border-bottom-color: #1e293b;
+}
+
+.dark .customer-page tbody tr:hover {
+  background: #172033;
+}
+
+/* =========================================================
+   CUSTOMER ID
+========================================================= */
+
+.dark .customer-page .customer-id {
+  color: #93c5fd;
+}
+
+/* =========================================================
+   CUSTOMER NAME + AVATAR
+========================================================= */
+
+.dark .customer-page .customer-name span {
+  color: #f1f5f9;
+}
+
+.dark .customer-page .customer-avatar {
+  background: #1e293b;
+  color: #93c5fd;
+}
+
+/* =========================================================
+   LOAN TYPE
+========================================================= */
+
+.dark .customer-page .loan-type {
+  color: #cbd5e1;
+}
+
+/* =========================================================
+   KYC STATUS
+========================================================= */
+
+.dark .customer-page .kyc-status {
+  background: #172554;
+  color: #93c5fd;
+}
+
+.dark .customer-page .kyc-status.pending {
+  background: #422006;
+  color: #fcd34d;
+}
+
+/* =========================================================
+   CUSTOMER STATUS
+========================================================= */
+
+.dark .customer-page .customer-status {
+  background: #14532d;
+  color: #86efac;
+}
+
+.dark .customer-page .customer-status.inactive {
+  background: #3f3f46;
+  color: #d4d4d8;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.dark .customer-page .customer-actions button {
+  background: #0f172a;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+.dark .customer-page .customer-actions button:hover {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #475569;
+}
+
+/* =========================================================
+   LOADING / EMPTY
+========================================================= */
+
+.dark .customer-page .table-loading {
+  color: #94a3b8;
+  background: #111827;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.dark .customer-page .pagination {
+  border-top-color: #1e293b;
+}
+
+.dark .customer-page .pagination button {
+  background: #0f172a;
+  color: #cbd5e1;
+  border-color: #334155;
+}
+
+.dark .customer-page .pagination button:hover:not(:disabled) {
+  background: #1e293b;
+  color: #ffffff;
+  border-color: #475569;
+}
+
+.dark .customer-page .pagination button.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.dark .customer-page .pagination button:disabled {
+  background: #111827;
+  color: #475569;
+  border-color: #1e293b;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.dark .customer-page ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark .customer-page ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark .customer-page ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+
+.dark .customer-page ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+.dark .customer-filters{
+  background: #0f172a ;
+  border-color:  #3d495a;
+}
+
+
+
+
+.dark table th,
+.dark .table-wrapper th {
+  background-color: #18191a !important;
+  color: #e4e6eb !important;
+  border-bottom: 1px solid #2f3336 !important;
+}
+
+
+.dark .loan-type {
+  background-color: #242526 !important;
+  color: #e4e6eb !important;
+  border: 1px solid #3a3b3c !important;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.dark table td {
+  background-color: #121212 !important;
+  color: #e4e6eb !important;
+  border-bottom: 1px solid #2f3336 !important;
+}
+
+.action-btn.delete-btn {
+  color: #ef4444;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn.delete-btn:hover {
+  background-color: #dc2626;
+  color: #ffffff;
 }
