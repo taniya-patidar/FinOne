@@ -28,14 +28,18 @@ const getLoanDefaults = (loanType = "") => {
   return { rate: 10.5, tenure: 36 };
 };
 
-// Helper Function: Dynamic EMI Schedule Payload Generator
+// Helper Function: Dynamic EMI Schedule Payload Generator (Fixed Key Extraction)
 const createEMISchedulePayload = (app) => {
-  const rawAmt = String(app.loanAmount || "0").replace(/[^0-9]/g, "");
+  const rawAmt = String(app.loanAmount || app.amount || "0").replace(/[^0-9]/g, "");
   const P = Number(rawAmt) || 500000;
 
   const defaults = getLoanDefaults(app.loanType);
-  const rAnnual = app.interestRate || defaults.rate;
-  const tenureMonths = app.tenureMonths || defaults.tenure;
+  const rAnnual = Number(app.interestRate || app.rate || defaults.rate);
+  
+  // FIX: Dynamic Key Extraction for Tenure (Checks all possible key names)
+  const tenureMonths = Number(
+    app.tenure || app.tenureMonths || app.loanTenure || app.tenureInMonths || defaults.tenure
+  );
 
   const r = rAnnual / 12 / 100;
   const emiAmount =
@@ -44,9 +48,8 @@ const createEMISchedulePayload = (app) => {
       : Math.round(P / tenureMonths);
 
   const monthlyInterest = Math.round(P * r);
-  const monthlyPrincipal = emiAmount - monthlyInterest;
+  const monthlyPrincipal = Math.max(0, emiAmount - monthlyInterest);
 
-  // Due date calculation (Current date + 15 days as first due date)
   const today = new Date();
   const dueDate = new Date(today.setDate(today.getDate() + 15)).toISOString().split("T")[0];
 
@@ -58,7 +61,8 @@ const createEMISchedulePayload = (app) => {
     loanType: app.loanType || "Personal Loan",
     loanAmount: P,
     interestRate: rAnnual,
-    tenureMonths: tenureMonths,
+    tenure: tenureMonths,           // Saved as tenure
+    tenureMonths: tenureMonths,     // Saved as tenureMonths
     emiAmount: emiAmount,
     dueDate: app.dueDate || dueDate,
     principal: monthlyPrincipal > 0 ? monthlyPrincipal : Math.round(emiAmount * 0.7),
@@ -177,11 +181,17 @@ const LoanApproval = () => {
     return matchesTab && matchesSearch;
   });
 
-  const handleReviewClick = (app, creditScore) => {
+ const handleReviewClick = (app, creditScore) => {
+    const selectedTenure = Number(
+      app.tenure || app.tenureMonths || app.loanTenure || getLoanDefaults(app.loanType).tenure
+    );
+
     const applicationDataWithDetails = {
       ...app,
       creditScore: app.creditScore || creditScore,
       loanType: app.loanType || "Home Loan",
+      tenure: selectedTenure,
+      tenureMonths: selectedTenure,
     };
 
     navigate(`/loan-details/${app.id || app.applicationId}`, {

@@ -23,10 +23,10 @@ const EMIDetails = ({ loanData, onBack }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  // Fallback / Dummy Data Setup if loanData properties are missing
+  // 1. Dynamic Customer Bio
   const customer = {
     name: loanData?.customerName || "Rahul Sharma",
-    id: loanData?.customerId || "CUST-1001",
+    id: loanData?.customerId || loanData?.id ? `CUST-${loanData?.id}` : "CUST-1001",
     phone: loanData?.phone || "9876543210",
     email: loanData?.email || "rahul@gmail.com",
     initials: loanData?.customerName
@@ -34,30 +34,39 @@ const EMIDetails = ({ loanData, onBack }) => {
       : "RS",
   };
 
-  const loanInfo = {
-    id: loanData?.id || "LA-10021",
-    type: loanData?.loanType || "Home Loan",
-    amount: Number(loanData?.loanAmount) || 1000000,
-    rate: loanData?.interestRate || "10.50",
-    tenure: loanData?.tenureMonths || 24,
-    startDate: loanData?.startDate || "21 Jan 2025",
-    disbursementDate: loanData?.disbursementDate || "21 Jan 2025",
-    status: loanData?.status || "Active",
-    emiAmount: Number(loanData?.emiAmount) || 48750,
-  };
+  // 2. Dynamic Loan Basic Information
+ // 2. Dynamic Loan Basic Information (Safe Fallback keys for Loan Approval Data)
+  const loanInfo = useMemo(() => {
+    return {
+      id: loanData?.id || loanData?.loanId || "LA-10021",
+      type: loanData?.loanType || loanData?.type || "Home Loan",
+      amount: Number(loanData?.loanAmount || loanData?.amount) || 1000000,
+      rate: Number(loanData?.interestRate || loanData?.rate) || 10.50,
+      // Dynamic Pickup: Checks loanTenure, tenureMonths, tenure & tenureInMonths
+      tenure: Number(loanData?.loanTenure || loanData?.tenureMonths || loanData?.tenure || loanData?.tenureInMonths) || 24,
+      startDate: loanData?.startDate || loanData?.approvalDate || "21 Jan 2025",
+      disbursementDate: loanData?.disbursementDate || loanData?.startDate || "21 Jan 2025",
+      status: loanData?.status || "Active",
+      emiAmount: Number(loanData?.emiAmount || loanData?.emi) || 48750,
+    };
+  }, [loanData]);
 
-  // Dynamic Generation of 24 EMI Rows based on loan info
+  // 3. Dynamic Schedule Generation based on exact Loan Data
   const emiScheduleList = useMemo(() => {
     const list = [];
     const totalTenure = loanInfo.tenure;
-    const paidCount = loanData?.paidEmis || 8; // Default mock 8 paid EMIs
-    const baseDate = new Date(2025, 0, 21); // Jan 21, 2025
+    const paidCount = loanData?.paidEmis !== undefined ? Number(loanData.paidEmis) : 0;
+    
+    // Parse start date safely
+    const parsedStartDate = new Date(loanInfo.startDate);
+    const baseDate = isNaN(parsedStartDate.getTime()) ? new Date(2025, 0, 21) : parsedStartDate;
 
     let currentPrincipal = loanInfo.amount;
+    const monthlyRate = loanInfo.rate / 12 / 100;
 
     for (let i = 1; i <= totalTenure; i++) {
-      const dueDateObj = new Date(baseDate);
-      dueDateObj.setMonth(baseDate.getMonth() + (i - 1));
+      // Correct Month Addition Logic for JS Date
+      const dueDateObj = new Date(baseDate.getFullYear(), baseDate.getMonth() + (i - 1), baseDate.getDate());
 
       const dueDateFormatted = dueDateObj.toLocaleDateString("en-IN", {
         day: "2-digit",
@@ -66,45 +75,74 @@ const EMIDetails = ({ loanData, onBack }) => {
       });
 
       const isPaid = i <= paidCount;
-      const interestComp = Math.round((currentPrincipal * (10.5 / 100)) / 12);
-      const principalComp = loanInfo.emiAmount - interestComp;
+      const interestComp = Math.round(currentPrincipal * monthlyRate);
+      const principalComp = Math.max(0, loanInfo.emiAmount - interestComp);
 
       list.push({
         emiNo: String(i).padStart(2, "0"),
         dueDate: dueDateFormatted,
-        principal: principalComp > 0 ? principalComp : 32500 + i * 200,
-        interest: interestComp > 0 ? interestComp : 16250 - i * 200,
+        principal: principalComp,
+        interest: interestComp,
         amount: loanInfo.emiAmount,
         status: isPaid ? "Paid" : "Upcoming",
         paymentDate: isPaid ? dueDateFormatted : "-",
+        dueDateObj: dueDateObj
       });
 
-      currentPrincipal -= principalComp;
+      currentPrincipal = Math.max(0, currentPrincipal - principalComp);
     }
     return list;
   }, [loanInfo, loanData]);
 
-  // Derived KPI Metrics
+  // 4. Dynamic Derived Metrics & Payment Summary
   const paidEMIs = emiScheduleList.filter((e) => e.status === "Paid").length;
   const remainingEMIs = loanInfo.tenure - paidEMIs;
-  const totalPaidAmount = paidEMIs * loanInfo.emiAmount;
-  const outstandingAmount = loanInfo.amount - totalPaidAmount > 0 ? loanInfo.amount - totalPaidAmount : 0;
+
+  // Exact Paid Amounts Summary
+  const totalPaymentMade = paidEMIs * loanInfo.emiAmount;
+  const totalInterestPaid = emiScheduleList
+    .slice(0, paidEMIs)
+    .reduce((sum, item) => sum + item.interest, 0);
+  const totalPrincipalPaid = emiScheduleList
+    .slice(0, paidEMIs)
+    .reduce((sum, item) => sum + item.principal, 0);
+
+  const remainingPrincipal = Math.max(0, loanInfo.amount - totalPrincipalPaid);
+  const outstandingAmount = remainingPrincipal;
+
+  // Dynamic Next Due EMI Info
+  const nextEMIRow = emiScheduleList.find((e) => e.status === "Upcoming") || emiScheduleList[emiScheduleList.length - 1];
+  const nextDueDateStr = nextEMIRow ? nextEMIRow.dueDate : "-";
+  
+  const calculateDaysRemaining = (dueDateObj) => {
+    if (!dueDateObj) return "0 Days";
+    const today = new Date();
+    const diffTime = dueDateObj - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? `${diffDays} Days` : "Overdue / Due Today";
+  };
+
+  const daysRemainingText = nextEMIRow ? calculateDaysRemaining(nextEMIRow.dueDateObj) : "-";
 
   // Pagination Logic
-  const totalPages = Math.ceil(emiScheduleList.length / rowsPerPage);
+  const totalPages = Math.max(1, Math.ceil(emiScheduleList.length / rowsPerPage));
   const paginatedSchedule = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
     return emiScheduleList.slice(start, start + rowsPerPage);
   }, [emiScheduleList, currentPage]);
 
-  // Mock Payment History Ledger
-  const paymentHistory = [
-    { date: "21 Jul 2025", amount: loanInfo.emiAmount, method: "UPI", ref: "UPI5123698" },
-    { date: "21 Jun 2025", amount: loanInfo.emiAmount, method: "NEFT", ref: "NEFT4587963" },
-    { date: "21 May 2025", amount: loanInfo.emiAmount, method: "UPI", ref: "UPI4587962" },
-    { date: "21 Apr 2025", amount: loanInfo.emiAmount, method: "IMPS", ref: "IMPS3256987" },
-    { date: "21 Mar 2025", amount: loanInfo.emiAmount, method: "NEFT", ref: "NEFT1256987" },
-  ];
+  // Dynamic Mock Payment History Ledger matching actual Paid EMIs
+  const paymentHistory = useMemo(() => {
+    const paidList = emiScheduleList.filter((e) => e.status === "Paid").reverse();
+    const methods = ["UPI", "NEFT", "IMPS", "Auto-Debit"];
+    
+    return paidList.slice(0, 5).map((item, idx) => ({
+      date: item.paymentDate,
+      amount: item.amount,
+      method: methods[idx % methods.length],
+      ref: `${methods[idx % methods.length]}${Math.floor(1000000 + Math.random() * 9000000)}`,
+    }));
+  }, [emiScheduleList]);
 
   return (
     <div className="emi-details-wrapper">
@@ -252,8 +290,8 @@ const EMIDetails = ({ loanData, onBack }) => {
           <div className="kpi-icon-wrapper cyan-icon"><Calendar size={20} /></div>
           <div>
             <span className="kpi-label">Next EMI Due</span>
-            <h3 className="kpi-value">21 Aug 2025</h3>
-            <span className="kpi-subtext">In 5 days</span>
+            <h3 className="kpi-value">{nextDueDateStr}</h3>
+            <span className="kpi-subtext">{daysRemainingText}</span>
           </div>
         </div>
       </div>
@@ -278,126 +316,172 @@ const EMIDetails = ({ loanData, onBack }) => {
             </button>
           </div>
 
-          <h3 className="panel-inner-title">EMI Schedule</h3>
+          <h3 className="panel-inner-title">
+            {activeTab === "schedule" ? "EMI Schedule" : "Payment History Ledger"}
+          </h3>
 
           {/* TABLE */}
-          <div className="table-wrapper">
-            <table className="schedule-table">
-              <thead>
-                <tr>
-                  <th>EMI No.</th>
-                  <th>Due Date</th>
-                  <th>Principal (₹)</th>
-                  <th>Interest (₹)</th>
-                  <th>EMI Amount (₹)</th>
-                  <th>Status</th>
-                  <th>Payment Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedSchedule.map((row) => (
-                  <tr key={row.emiNo}>
-                    <td className="emi-no-col">{row.emiNo}</td>
-                    <td className="date-col">{row.dueDate}</td>
-                    <td className="num-col">₹{row.principal.toLocaleString("en-IN")}</td>
-                    <td className="num-col">₹{row.interest.toLocaleString("en-IN")}</td>
-                    <td className="num-col bold">₹{row.amount.toLocaleString("en-IN")}</td>
-                    <td>
-                      <span className={`status-pill ${row.status.toLowerCase()}`}>
-                        {row.status}
-                      </span>
-                    </td>
-                    <td className="date-col">{row.paymentDate}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {activeTab === "schedule" ? (
+            <>
+              <div className="table-wrapper">
+                <table className="schedule-table">
+                  <thead>
+                    <tr>
+                      <th>EMI No.</th>
+                      <th>Due Date</th>
+                      <th>Principal (₹)</th>
+                      <th>Interest (₹)</th>
+                      <th>EMI Amount (₹)</th>
+                      <th>Status</th>
+                      <th>Payment Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginatedSchedule.map((row) => (
+                      <tr key={row.emiNo}>
+                        <td className="emi-no-col">{row.emiNo}</td>
+                        <td className="date-col">{row.dueDate}</td>
+                        <td className="num-col">₹{row.principal.toLocaleString("en-IN")}</td>
+                        <td className="num-col">₹{row.interest.toLocaleString("en-IN")}</td>
+                        <td className="num-col bold">₹{row.amount.toLocaleString("en-IN")}</td>
+                        <td>
+                          <span className={`status-pill ${row.status.toLowerCase()}`}>
+                            {row.status}
+                          </span>
+                        </td>
+                        <td className="date-col">{row.paymentDate}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-          {/* TABLE PAGINATION */}
-          <div className="sub-pagination">
-            <span>
-              Showing {(currentPage - 1) * rowsPerPage + 1} to{" "}
-              {Math.min(currentPage * rowsPerPage, emiScheduleList.length)} of{" "}
-              {emiScheduleList.length} EMIs
-            </span>
-            <div className="p-arrows">
-              <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage((p) => p - 1)}
-              >
-                <ChevronLeft size={16} />
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  className={`p-num ${currentPage === p ? "active" : ""}`}
-                  onClick={() => setCurrentPage(p)}
-                >
-                  {p}
-                </button>
-              ))}
-              <button
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage((p) => p + 1)}
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: SUMMARY & HISTORY PANELS */}
-        <div className="right-panel-stack">
-          {/* PAYMENT SUMMARY BOX */}
-          <div className="side-card">
-            <h3 className="side-card-title">Payment Summary</h3>
-            <div className="summary-list">
-              <div className="summary-row">
-                <span>Total Payment Made</span>
-                <strong className="text-green">₹3,90,000</strong>
+              {/* TABLE PAGINATION */}
+              <div className="sub-pagination">
+                <span>
+                  Showing {(currentPage - 1) * rowsPerPage + 1} to{" "}
+                  {Math.min(currentPage * rowsPerPage, emiScheduleList.length)} of{" "}
+                  {emiScheduleList.length} EMIs
+                </span>
+                <div className="p-arrows">
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage((p) => p - 1)}
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                    <button
+                      key={p}
+                      className={`p-num ${currentPage === p ? "active" : ""}`}
+                      onClick={() => setCurrentPage(p)}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage((p) => p + 1)}
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
               </div>
-              <div className="summary-row">
-                <span>Total Interest Paid</span>
-                <strong className="text-purple">₹1,10,000</strong>
-              </div>
-              <div className="summary-row">
-                <span>Principal Paid</span>
-                <strong className="text-blue">₹2,80,000</strong>
-              </div>
-              <div className="summary-row">
-                <span>Remaining Principal</span>
-                <strong className="text-orange">₹7,20,000</strong>
-              </div>
-              <div className="summary-row">
-                <span>Next EMI Due</span>
-                <strong className="text-blue">21 Aug 2025</strong>
-              </div>
-              <div className="summary-row">
-                <span>Days Remaining</span>
-                <strong className="text-red">5 Days</strong>
-              </div>
-            </div>
-          </div>
-
-          {/* PAYMENT HISTORY BOX */}
-          <div className="side-card">
-            <div className="side-card-header">
-              <h3 className="side-card-title">Payment History</h3>
-              <button className="btn-link">View All</button>
-            </div>
-            <div className="history-table-wrapper">
-              <table className="history-table">
+            </>
+          ) : (
+            /* Tab 2: FULL PAYMENT HISTORY TABLE */
+            <div className="table-wrapper">
+              <table className="schedule-table">
                 <thead>
                   <tr>
                     <th>Payment Date</th>
                     <th>Amount (₹)</th>
                     <th>Method</th>
                     <th>Reference No.</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {paymentHistory.map((h, index) => (
+                  {paymentHistory.length > 0 ? (
+                    paymentHistory.map((h, index) => (
+                      <tr key={index}>
+                        <td>{h.date}</td>
+                        <td className="bold">₹{h.amount.toLocaleString("en-IN")}</td>
+                        <td>
+                          <span className={`method-badge ${h.method.toLowerCase()}`}>
+                            {h.method}
+                          </span>
+                        </td>
+                        <td className="ref-no">{h.ref}</td>
+                        <td><span className="status-pill paid">Successful</span></td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>
+                        No payment history available yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* RIGHT COLUMN: SUMMARY & HISTORY PANELS */}
+        <div className="right-panel-stack">
+          {/* PAYMENT SUMMARY BOX - FULLY DYNAMIC */}
+          <div className="side-card">
+            <h3 className="side-card-title">Payment Summary</h3>
+            <div className="summary-list">
+              <div className="summary-row">
+                <span>Total Payment Made</span>
+                <strong className="text-green">₹{totalPaymentMade.toLocaleString("en-IN")}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Total Interest Paid</span>
+                <strong className="text-purple">₹{totalInterestPaid.toLocaleString("en-IN")}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Principal Paid</span>
+                <strong className="text-blue">₹{totalPrincipalPaid.toLocaleString("en-IN")}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Remaining Principal</span>
+                <strong className="text-orange">₹{remainingPrincipal.toLocaleString("en-IN")}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Next EMI Due</span>
+                <strong className="text-blue">{nextDueDateStr}</strong>
+              </div>
+              <div className="summary-row">
+                <span>Days Remaining</span>
+                <strong className="text-red">{daysRemainingText}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* SIDEBAR PAYMENT HISTORY PREVIEW */}
+          <div className="side-card">
+            <div className="side-card-header">
+              <h3 className="side-card-title">Recent Payments</h3>
+              <button className="btn-link" onClick={() => setActiveTab("history")}>
+                View All
+              </button>
+            </div>
+            <div className="history-table-wrapper">
+              <table className="history-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount (₹)</th>
+                    <th>Method</th>
+                    <th>Ref No.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paymentHistory.slice(0, 4).map((h, index) => (
                     <tr key={index}>
                       <td>{h.date}</td>
                       <td className="bold">₹{h.amount.toLocaleString("en-IN")}</td>

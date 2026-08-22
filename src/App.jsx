@@ -20,6 +20,7 @@ import LoanApplicationView from "./pages/LoanApplication/LoanApplicationView";
 import LoanApproval from "./pages/LoanApproval/LoanApproval";
 import LoanApprovalReview from "./pages/LoanApproval/LoanApprovalReview";
 import LoanApprovalHistory from "./pages/LoanApproval/LoanApprovalHistory";
+import ReportsPage from "./pages/Reports/ReportsPage";
 
 
 const App = () => {
@@ -78,6 +79,7 @@ const App = () => {
         <Route path="/loan-approval" element={<LoanApproval/>} />
         <Route path='loan-details/:id' element={<LoanApprovalReview/>}/>
         <Route path="/loan-approval/history" element={<LoanApprovalHistory/>}/>
+        <Route path="/reports" element={<ReportsPage/>}/>
 
       </Route>
 

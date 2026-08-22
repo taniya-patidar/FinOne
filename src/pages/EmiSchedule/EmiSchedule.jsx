@@ -22,6 +22,7 @@ import {
   FileText,
   CheckCircle,
 } from "lucide-react";
+import EMIDetails from "./EMIDetails";
 import "./EMISchedule.css";
 
 // Helper: Status Computation Logic
@@ -46,6 +47,10 @@ const EMISchedule = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // View Mode Navigation State ('list' vs 'details')
+  const [viewMode, setViewMode] = useState("list");
+  const [selectedLoan, setSelectedLoan] = useState(null);
+
   // Filters & Tabs State
   const [activeTab, setActiveTab] = useState("All EMIs");
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,7 +65,6 @@ const EMISchedule = () => {
 
   // Modals & Active Action Menu State
   const [isCalcOpen, setIsCalcOpen] = useState(false);
-  const [selectedEMIDetails, setSelectedEMIDetails] = useState(null);
   const [activeActionMenuId, setActiveActionMenuId] = useState(null);
 
   // Calculator State
@@ -212,6 +216,12 @@ const EMISchedule = () => {
     }
   };
 
+  // Open Full Dedicated Details Page
+  const handleOpenDetails = (row) => {
+    setSelectedLoan(row);
+    setViewMode("details");
+  };
+
   // CSV Export
   const handleExportCSV = () => {
     if (filteredData.length === 0) {
@@ -272,6 +282,19 @@ const EMISchedule = () => {
     const date = new Date(dateStr);
     return isNaN(date.getTime()) ? "-" : date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
   };
+
+  // Render Dedicated EMI Details View if active
+  if (viewMode === "details") {
+    return (
+      <EMIDetails
+        loanData={selectedLoan}
+        onBack={() => {
+          setViewMode("list");
+          setSelectedLoan(null);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="emi-schedule-container">
@@ -473,11 +496,11 @@ const EMISchedule = () => {
                     <td>{getStatusBadge(row.computedStatus)}</td>
                     <td className="date-cell">{formatDate(row.paymentDate)}</td>
                     <td className="action-cell">
-                      {/* Direct Eye Action Button */}
+                      {/* Direct Eye Action Button to open Full Details Page */}
                       <button
                         className="btn-icon-action btn-eye"
                         title="View Details"
-                        onClick={() => setSelectedEMIDetails(row)}
+                        onClick={() => handleOpenDetails(row)}
                       >
                         <Eye size={18} />
                       </button>
@@ -600,101 +623,6 @@ const EMISchedule = () => {
                 <div className="res-row highlight">
                   <span>Total Repayment:</span>
                   <strong>₹{calcResult.total.toLocaleString("en-IN")}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* DRAWER / MODAL 2: VIEW EMI DETAILS */}
-      {selectedEMIDetails && (
-        <div className="modal-overlay" onClick={() => setSelectedEMIDetails(null)}>
-          <div className="details-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <div>
-                <h2>{selectedEMIDetails.id} Details</h2>
-                <span className="drawer-subtitle">{selectedEMIDetails.customerName}</span>
-              </div>
-              <button className="btn-close" onClick={() => setSelectedEMIDetails(null)}>
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="drawer-body">
-              <div className="details-section">
-                <h4>Customer Information</h4>
-                <div className="info-grid">
-                  <div>
-                    <label>Name</label>
-                    <p>{selectedEMIDetails.customerName}</p>
-                  </div>
-                  <div>
-                    <label>Phone</label>
-                    <p>{selectedEMIDetails.phone}</p>
-                  </div>
-                  <div>
-                    <label>Email</label>
-                    <p>{selectedEMIDetails.email || "N/A"}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="details-section">
-                <h4>Loan Information</h4>
-                <div className="info-grid">
-                  <div>
-                    <label>Loan Type</label>
-                    <p>{selectedEMIDetails.loanType}</p>
-                  </div>
-                  <div>
-                    <label>Principal Amount</label>
-                    <p>₹{Number(selectedEMIDetails.loanAmount || 0).toLocaleString("en-IN")}</p>
-                  </div>
-                  <div>
-                    <label>Interest Rate</label>
-                    <p>{selectedEMIDetails.interestRate || "10.5"}% p.a.</p>
-                  </div>
-                  <div>
-                    <label>Tenure</label>
-                    <p>{selectedEMIDetails.tenureMonths || "24"} Months</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="details-section">
-                <h4>Current Installment Status</h4>
-                <div className="info-grid">
-                  <div>
-                    <label>EMI Amount</label>
-                    <p className="bold-text">₹{Number(selectedEMIDetails.emiAmount || 0).toLocaleString("en-IN")}</p>
-                  </div>
-                  <div>
-                    <label>Due Date</label>
-                    <p>{formatDate(selectedEMIDetails.dueDate)}</p>
-                  </div>
-                  <div>
-                    <label>Status</label>
-                    <div>{getStatusBadge(selectedEMIDetails.computedStatus)}</div>
-                  </div>
-                  <div>
-                    <label>Payment Date</label>
-                    <p>{formatDate(selectedEMIDetails.paymentDate)}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="details-section">
-                <h4>Installment Component Breakdown</h4>
-                <div className="breakdown-card">
-                  <div className="b-row">
-                    <span>Principal Component:</span>
-                    <strong>₹{Number(selectedEMIDetails.principal || 0).toLocaleString("en-IN")}</strong>
-                  </div>
-                  <div className="b-row">
-                    <span>Interest Component:</span>
-                    <strong>₹{Number(selectedEMIDetails.interest || 0).toLocaleString("en-IN")}</strong>
-                  </div>
                 </div>
               </div>
             </div>

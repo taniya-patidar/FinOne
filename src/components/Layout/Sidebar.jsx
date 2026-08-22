@@ -57,6 +57,12 @@ const Sidebar = ({ collapsed, currentPage, onPageChange }) => {
                   if(item.id==='loanApproval'){
                     navigate('/loan-approval')
                   }
+                  if(item.id==='emiSchedule'){
+                    navigate('/EmiSchedule')
+                  }
+                  if(item.id==='reports'){
+                    navigate('/reports')
+                  }
                 }}
                 className={`nav-item ${isActive ? 'active' : ''}`}
                 title={collapsed ? item.label : ''}
