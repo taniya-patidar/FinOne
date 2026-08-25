@@ -86,6 +86,9 @@ const EMISchedule = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+
+  
+
   // Auto-Sync Effect with localStorage & Window Focus
   useEffect(() => {
     const loadApprovedEMIs = () => {

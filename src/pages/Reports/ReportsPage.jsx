@@ -1,3 +1,4 @@
+// src/pages/Reports/ReportsPage.jsx
 import React, { useState, useEffect } from 'react';
 import ReportFilters from './components/ReportFilters';
 import MetricCards from './components/MetricCards';
@@ -11,8 +12,12 @@ const ReportsPage = () => {
 
   useEffect(() => {
     const savedApps = JSON.parse(localStorage.getItem("loanApplications")) || [];
-    setRawData(savedApps);
-    setFilteredData(savedApps);
+    
+    // Sirf wahi array elements filter karo jinke paas valid loan ID hai (e.g. LA-10301)
+    const validApplicationsOnly = savedApps.filter(app => app.id && app.id.startsWith("LA-"));
+
+    setRawData(validApplicationsOnly);
+    setFilteredData(validApplicationsOnly);
   }, []);
 
   return (

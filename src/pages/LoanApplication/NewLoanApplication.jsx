@@ -145,6 +145,34 @@ const NewLoanApplication = () => {
     }
   };
 
+  // NewLoanApplications.jsx ke andar:
+const handleStatusUpdate = (applicationId, newStatus) => {
+  const existingLoans = JSON.parse(localStorage.getItem("loanApplications")) || [];
+
+  const todayDate = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  const updatedLoans = existingLoans.map((loan) => {
+    if (loan.id === applicationId) {
+      return {
+        ...loan,
+        status: newStatus,
+        updatedOn: todayDate,     // Action lene ki date update ho jayegi
+        actionDate: todayDate,
+        approvalDate: newStatus === "Approved" ? todayDate : loan.approvalDate,
+        rejectionDate: newStatus === "Rejected" ? todayDate : loan.rejectionDate,
+      };
+    }
+    return loan;
+  });
+
+  localStorage.setItem("loanApplications", JSON.stringify(updatedLoans));
+  // State update karke table/list re-render kar dein
+};
+
   // Live EMI Calculation Logic
   useEffect(() => {
     const P = parseFloat(formData.loanAmount);

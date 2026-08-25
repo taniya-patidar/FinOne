@@ -1,71 +1,51 @@
-import React, { useState , useEffect} from "react";
+import { useEffect, useState } from "react";
 import "./Login.css";
 
-// import finoneImage from "../../assets/FinOne.jpg"; 
+import finoneImage from "../../assets/FinOne.jpeg";
 
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
-  useEffect(()=>{
-    document.body.style.overflow = "hidden";
-    return ()=>{
-    document.body.style.overflow = "auto";
-
-    };
-  }, [])
   const navigate = useNavigate();
-
-
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [passwordStrength, setPasswordStrength] = useState("");
+  // Prevent page scrolling on desktop login screen
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
 
- 
+    // Restore original behavior when leaving page
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
-  const checkPasswordStrength = (password) => {
-    if (!password) {
-      setPasswordStrength("");
-      return;
+  // Load remembered username
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("rememberedUsername");
+
+    if (savedUsername) {
+      setUsername(savedUsername);
+      setRememberMe(true);
     }
-
-    // Weak
-    if (password.length < 6) {
-      setPasswordStrength("Weak");
-      return;
-    }
-
-    
-    if (
-      password.length >= 8 &&
-      /[A-Z]/.test(password) &&
-      /[a-z]/.test(password) &&
-      /[0-9]/.test(password) &&
-      /[^A-Za-z0-9]/.test(password)
-    ) {
-      setPasswordStrength("Strong");
-      return;
-    }
-
-   
-    setPasswordStrength("Medium");
-  };
-
+  }, []);
 
   const handleUsernameChange = (e) => {
     const value = e.target.value;
 
     setUsername(value);
 
-   
     if (value.trim()) {
       setUsernameError("");
     }
@@ -76,64 +56,114 @@ const Login = () => {
 
     setPassword(value);
 
-    checkPasswordStrength(value);
-
     if (value.trim()) {
       setPasswordError("");
     }
   };
 
+  const validateForm = () => {
+    let isValid = true;
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-
-    
     setUsernameError("");
     setPasswordError("");
 
-  
-    if (!username.trim()) {
+    const trimmedUsername = username.trim();
+
+    if (!trimmedUsername) {
       setUsernameError("Please enter your username");
-      return;
+      isValid = false;
+    } else if (trimmedUsername.length < 3) {
+      setUsernameError("Username must be at least 3 characters");
+      isValid = false;
     }
 
-  
-    if (!password.trim()) {
+    if (!password) {
       setPasswordError("Please enter your password");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
       return;
     }
 
-    console.log("Username:", username);
-    console.log("Password:", password);
+    setIsLoading(true);
 
-    navigate("/dashboard");
+    try {
+      /*
+        Backend authentication yahan connect hoga.
+
+        Example:
+
+        const response = await loginUser({
+          username: username.trim(),
+          password,
+        });
+
+        Backend successful login ke baad
+        secure authentication/session handle karega.
+      */
+
+      if (rememberMe) {
+        localStorage.setItem(
+          "rememberedUsername",
+          username.trim()
+        );
+      } else {
+        localStorage.removeItem("rememberedUsername");
+      }
+
+      console.log("Username:", username.trim());
+
+      // Temporary frontend navigation
+      // Backend integration ke baad success response ke andar hoga.
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
+
+      setPasswordError(
+        "Unable to login. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleGoogleSuccess = (credentialResponse) => {
-  console.log("Google Login Success:", credentialResponse);
+    console.log(
+      "Google Login Success:",
+      credentialResponse
+    );
 
-  navigate("/dashboard");
-};
+    // Google credential backend ko send hoga.
+    navigate("/dashboard");
+  };
 
-const handleGoogleError = () => {
-  console.log("Google Login Failed");
-};
+  const handleGoogleError = () => {
+    console.error("Google Login Failed");
+  };
 
   return (
     <div className="login-page">
 
-       {/* left side  */}
+      {/* ================= LEFT IMAGE ================= */}
 
       <div className="login-left">
-        {/* <img
+        <img
           src={finoneImage}
           alt="FinOne Loan Management System"
-        /> */}
-        <h1>Finon </h1>
-        <h2>Loan Management System</h2>
+        />
       </div>
 
-      {/* right side  */}
+      {/* ================= RIGHT LOGIN ================= */}
 
       <div className="login-right">
 
@@ -145,11 +175,12 @@ const handleGoogleError = () => {
             Sign in to continue to FinOne
           </p>
 
-          
+          <form
+            onSubmit={handleLogin}
+            noValidate
+          >
 
-          <form onSubmit={handleLogin}>
-
-            
+            {/* USERNAME */}
 
             <div className="form-group">
 
@@ -164,17 +195,27 @@ const handleGoogleError = () => {
                 value={username}
                 onChange={handleUsernameChange}
                 autoComplete="username"
+                aria-invalid={Boolean(usernameError)}
+                aria-describedby={
+                  usernameError
+                    ? "username-error"
+                    : undefined
+                }
               />
 
               {usernameError && (
-                <p className="field-error">
+                <p
+                  id="username-error"
+                  className="field-error"
+                  role="alert"
+                >
                   {usernameError}
                 </p>
               )}
 
             </div>
 
-          
+            {/* PASSWORD */}
 
             <div className="form-group">
 
@@ -186,18 +227,30 @@ const handleGoogleError = () => {
 
                 <input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
                   placeholder="Enter your password"
                   value={password}
                   onChange={handlePasswordChange}
                   autoComplete="current-password"
+                  aria-invalid={Boolean(passwordError)}
+                  aria-describedby={
+                    passwordError
+                      ? "password-error"
+                      : undefined
+                  }
                 />
 
                 <button
                   type="button"
                   className="password-toggle"
                   onClick={() =>
-                    setShowPassword(!showPassword)
+                    setShowPassword(
+                      (previous) => !previous
+                    )
                   }
                   aria-label={
                     showPassword
@@ -214,39 +267,31 @@ const handleGoogleError = () => {
 
               </div>
 
-      
-
-              {passwordStrength && (
-                <p
-                  className={`password-strength ${passwordStrength.toLowerCase()}`}
-                >
-                  {passwordStrength === "Weak" &&
-                    "Weak password"}
-
-                  {passwordStrength === "Medium" &&
-                    "Medium password"}
-
-                  {passwordStrength === "Strong" &&
-                    "Strong password"}
-                </p>
-              )}
-
-
               {passwordError && (
-                <p className="field-error">
+                <p
+                  id="password-error"
+                  className="field-error"
+                  role="alert"
+                >
                   {passwordError}
                 </p>
               )}
 
             </div>
 
-   
+            {/* OPTIONS */}
 
             <div className="login-options">
 
               <label className="remember-me">
 
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) =>
+                    setRememberMe(e.target.checked)
+                  }
+                />
 
                 <span>
                   Remember me
@@ -257,50 +302,48 @@ const handleGoogleError = () => {
               <button
                 type="button"
                 className="forgot-btn"
-                onClick={() => navigate("/forgot-password")}
+                onClick={() =>
+                  navigate("/forgot-password")
+                }
               >
                 Forgot Password?
               </button>
 
             </div>
 
-        
+            {/* LOGIN BUTTON */}
 
             <button
               type="submit"
               className="login-btn"
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? "Signing in..." : "Login"}
             </button>
 
           </form>
 
+          {/* DIVIDER */}
 
           <div className="divider">
             <span>OR</span>
           </div>
 
-          
-
-          {/* <button
-            type="button"
-            className="google-btn"
-          >
-            <span className="google-icon">
-              G
-            </span>
-
-            <span>
-              Login with Google
-            </span>
-          </button> */}
+          {/* GOOGLE LOGIN */}
 
           <div className="google-login-container">
-          <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
+
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+            />
+
           </div>
 
+          {/* REGISTER */}
 
           <div className="register-link">
+
             <span>
               Don't have an account?
             </span>

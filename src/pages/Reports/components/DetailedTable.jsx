@@ -1,12 +1,21 @@
+// src/pages/Reports/components/DetailedTable.jsx
 import React from 'react';
 
-const DetailedTable = ({ data }) => {
+const DetailedTable = ({ data = [] }) => {
+  // Safe Number Parser: "₹ 25,00,000" -> 2500000
+  const parseAmount = (val) => {
+    if (!val) return 0;
+    const cleanNum = String(val).replace(/[^0-9.]/g, '');
+    return Number(cleanNum) || 0;
+  };
+
   const formatCurrency = (val) => {
+    const num = parseAmount(val);
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
       maximumFractionDigits: 0,
-    }).format(Number(val) || 0);
+    }).format(num);
   };
 
   return (
@@ -35,13 +44,14 @@ const DetailedTable = ({ data }) => {
             ) : (
               data.map((row, idx) => {
                 const status = row.status || 'Pending';
+
                 return (
-                  <tr key={row.id || row.applicationId || idx}>
-                    <td className="font-semibold text-blue">{row.id || row.applicationId || `LA-${1000 + idx}`}</td>
-                    <td>{row.name || row.applicantName || 'Applicant'}</td>
-                    <td>{row.loanType || 'Personal Loan'}</td>
-                    <td>{formatCurrency(row.loanAmount || row.amount || 0)}</td>
-                    <td>{row.tenure || row.tenureMonths || 36} Months</td>
+                  <tr key={row.id || idx}>
+                    <td className="font-semibold text-blue">{row.id}</td>
+                    <td>{row.name}</td>
+                    <td>{row.loanType}</td>
+                    <td>{formatCurrency(row.loanAmount)}</td>
+                    <td>{row.tenureMonths || 36} Months</td>
                     <td>
                       <span className={`status-badge ${status.toLowerCase()}`}>
                         {status}

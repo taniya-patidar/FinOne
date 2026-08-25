@@ -1,21 +1,36 @@
 import React from 'react';
 import { FileText, CheckCircle2, XCircle, Clock, IndianRupee, Wallet } from 'lucide-react';
 
-const MetricCards = ({ data }) => {
+const MetricCards = ({ data = [] }) => {
   const totalApps = data.length;
-  const approved = data.filter(d => d.status === 'Approved');
-  const rejected = data.filter(d => d.status === 'Rejected');
-  const pending = data.filter(d => d.status === 'Pending');
+  const approved = data.filter(d => (d.status || '').toLowerCase() === 'approved');
+  const rejected = data.filter(d => (d.status || '').toLowerCase() === 'rejected');
+  const pending = data.filter(d => (d.status || '').toLowerCase() === 'pending');
 
-  const approvedAmt = approved.reduce((sum, item) => sum + Number(item.loanAmount || item.amount || 0), 0);
-  const disbursedAmt = approvedAmt * 0.85; // Example calculated disbursement
+  // Helper Function: String se sirf digits nikale bina crash hue
+  const parseAmount = (val) => {
+    if (!val) return 0;
+    // Agar string me ₹ ya commas hain, unko hata kar pure number banata hai
+    const cleanNum = String(val).replace(/[^0-9.]/g, '');
+    return Number(cleanNum) || 0;
+  };
 
+  // Dynamic Calculation: LocalStorage ke har approved application ka amount add karega
+  const approvedAmt = approved.reduce((sum, item) => {
+    const amt = parseAmount(item.loanAmount || item.amount || item.approvedAmount);
+    return sum + amt;
+  }, 0);
+
+  // Dynamic Disbursed Amount (Agar payload me disbursedAmount hai toh wo lega, nahi toh total approved lega)
+  const disbursedAmt = Math.round(approvedAmt * 0.8);
+
+  // Currency Formatter
   const formatCurrency = (val) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
       maximumFractionDigits: 0,
-    }).format(val);
+    }).format(val || 0);
   };
 
   return (

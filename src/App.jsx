@@ -8,7 +8,6 @@ import DashboardLayout from "./components/Layout/DashboardLayout";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
 import LoanApplication from "./pages/LoanApplication/LoanApplication";
-import Notification from "./Pages/Notification/Notification";
 import EmiSchedule from "./pages/EmiSchedule/EmiSchedule";
 import CustomerList from "./pages/CustomerManagement/CustomerList";
 import CustomerForm from "./pages/CustomerManagement/CustomerForm";
@@ -21,6 +20,13 @@ import LoanApproval from "./pages/LoanApproval/LoanApproval";
 import LoanApprovalReview from "./pages/LoanApproval/LoanApprovalReview";
 import LoanApprovalHistory from "./pages/LoanApproval/LoanApprovalHistory";
 import ReportsPage from "./pages/Reports/ReportsPage";
+import NotificationsPage from "./pages/Notifications/NotificationsPage";
+import ApplyLoanForm from './pages/ApplyLoan/ApplyLoanForm';
+import ManageApplications from './pages/ManageApplications/ManageApplications';
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import VerifyOtp from "./pages/auth/VerifyOtp";
+import ResetPassword from "./pages/auth/ResetPassword";
+
 
 
 const App = () => {
@@ -37,6 +43,11 @@ const App = () => {
         path="/register"
         element={<Register />}
       />
+       <Route path="/forgot-password" element={<ForgotPassword />}/>
+
+        <Route path="/verify-otp" element={<VerifyOtp/>}/>
+
+        <Route path="/reset-password" element={<ResetPassword/>}/>
 
 
       {/* =========================
@@ -80,6 +91,11 @@ const App = () => {
         <Route path='loan-details/:id' element={<LoanApprovalReview/>}/>
         <Route path="/loan-approval/history" element={<LoanApprovalHistory/>}/>
         <Route path="/reports" element={<ReportsPage/>}/>
+        <Route path="/apply-loan" element={<ApplyLoanForm />} />
+        <Route path="/manage-applications" element={<ManageApplications />} />
+        <Route path="/notifications" element={<NotificationsPage/>} />
+
+       
 
       </Route>
 

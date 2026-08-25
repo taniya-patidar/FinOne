@@ -14,7 +14,6 @@ import {
   CheckCircle,
   XCircle,
   FileText,
-  
 } from "lucide-react";
 
 import user1 from "../../assets/users/user1.jpg";
@@ -37,6 +36,7 @@ const defaultLoanApplications = [
     loanAmount: "₹ 25,00,000",
     status: "Pending",
     appliedOn: "17 May 2024",
+    updatedOn: "17 May 2024",
   },
   {
     id: "LA-10302",
@@ -49,6 +49,7 @@ const defaultLoanApplications = [
     loanAmount: "₹ 5,00,000",
     status: "Under Review",
     appliedOn: "16 May 2024",
+    updatedOn: "16 May 2024",
   },
   {
     id: "LA-10303",
@@ -61,6 +62,8 @@ const defaultLoanApplications = [
     loanAmount: "₹ 15,00,000",
     status: "Approved",
     appliedOn: "15 May 2024",
+    updatedOn: "15 May 2024",
+    approvalDate: "15 May 2024",
   },
   {
     id: "LA-10304",
@@ -73,6 +76,8 @@ const defaultLoanApplications = [
     loanAmount: "₹ 30,00,000",
     status: "Rejected",
     appliedOn: "14 May 2024",
+    updatedOn: "14 May 2024",
+    rejectionDate: "14 May 2024",
   },
   {
     id: "LA-10305",
@@ -85,12 +90,13 @@ const defaultLoanApplications = [
     loanAmount: "₹ 8,00,000",
     status: "Pending",
     appliedOn: "12 May 2024",
+    updatedOn: "12 May 2024",
   },
 ];
 
 const LoanApplication = () => {
   const navigate = useNavigate();
-  
+
   const [customers, setCustomers] = useState([]);
 
   // Primary State
@@ -118,22 +124,39 @@ const LoanApplication = () => {
     actions: true,
   });
 
+  // UPDATED: Format Loan Item with dynamic date support
   const formatLoanItem = (item) => {
     const rawName = item.name || item.fullName || item.applicantName || "N/A";
     const rawAmount = item.loanAmount || item.amount || item.requestedAmount || "₹ 0";
     const rawType = item.loanType || item.type || "Personal Loan";
     const rawStatus = item.status || "Pending";
-    const rawDate = item.appliedOn || item.createdAt || new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
+    const todayFormatted = new Date().toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
+    const rawAppliedDate = item.appliedOn || item.createdAt || todayFormatted;
+    const rawUpdatedDate = item.updatedOn || rawAppliedDate;
 
     return {
       ...item,
       id: item.id || `LA-${Math.floor(10000 + Math.random() * 90000)}`,
       name: rawName,
       email: item.email || `${rawName.toLowerCase().replace(/\s+/g, ".")}@example.com`,
-      loanAmount: typeof rawAmount === "number" ? `₹ ${rawAmount.toLocaleString("en-IN")}` : rawAmount.startsWith("₹") ? rawAmount : `₹ ${rawAmount}`,
+      loanAmount:
+        typeof rawAmount === "number"
+          ? `₹ ${rawAmount.toLocaleString("en-IN")}`
+          : rawAmount.startsWith("₹")
+          ? rawAmount
+          : `₹ ${rawAmount}`,
       loanType: rawType,
       status: rawStatus,
-      appliedOn: rawDate,
+      appliedOn: rawAppliedDate,
+      updatedOn: rawUpdatedDate,
+      actionDate: item.actionDate || rawUpdatedDate,
+      approvalDate: item.approvalDate || (rawStatus === "Approved" ? rawUpdatedDate : null),
+      rejectionDate: item.rejectionDate || (rawStatus === "Rejected" ? rawUpdatedDate : null),
       mobile: item.mobile || item.phone || item.contact || "",
     };
   };
@@ -142,10 +165,10 @@ const LoanApplication = () => {
     try {
       const savedCustomersRaw = localStorage.getItem("customers");
       if (savedCustomersRaw) {
-      setCustomers(JSON.parse(savedCustomersRaw));
-    }
+        setCustomers(JSON.parse(savedCustomersRaw));
+      }
       const savedLoansRaw = localStorage.getItem("loanApplications");
-      
+
       if (!savedLoansRaw) {
         localStorage.setItem("loanApplications", JSON.stringify(defaultLoanApplications));
         setLoans(defaultLoanApplications);
@@ -164,18 +187,14 @@ const LoanApplication = () => {
     }
   };
 
-  // Helper function to get customer's updated avatar
-const getCustomerAvatar = (app) => {
-  // customerId ya email se match dhoondhein
-  const matchedCustomer = customers.find(
-    (c) =>
-      (c.id && app.customerId && String(c.id) === String(app.customerId)) ||
-      (c.email && app.email && c.email.toLowerCase() === app.email.toLowerCase())
-  );
-
-  // Match milne par uski photo/avatar, nahi to fallback to app.avatar ya default user1
-  return matchedCustomer?.avatar || matchedCustomer?.photo || app.avatar ;
-};
+  const getCustomerAvatar = (app) => {
+    const matchedCustomer = customers.find(
+      (c) =>
+        (c.id && app.customerId && String(c.id) === String(app.customerId)) ||
+        (c.email && app.email && c.email.toLowerCase() === app.email.toLowerCase())
+    );
+    return matchedCustomer?.avatar || matchedCustomer?.photo || app.avatar;
+  };
 
   useEffect(() => {
     loadLoanApplications();
@@ -185,7 +204,6 @@ const getCustomerAvatar = (app) => {
     return () => window.removeEventListener("focus", handleFocus);
   }, []);
 
-  // Close More menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -249,15 +267,32 @@ const getCustomerAvatar = (app) => {
   const handleViewDetails = (id) => navigate(`/loans/${id}`);
   const handleEditDetails = (id) => navigate(`/loans/${id}/edit`);
 
-  // Dropdown Menu Dynamic Handlers
   const toggleMoreMenu = (id) => {
     setActiveMenuId(activeMenuId === id ? null : id);
   };
 
+  // UPDATED: Dynamic status update with current date handling
   const handleUpdateStatus = (id, newStatus) => {
-    const updated = loans.map((item) =>
-      String(item.id) === String(id) ? { ...item, status: newStatus } : item
-    );
+    const todayDate = new Date().toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
+    const updated = loans.map((item) => {
+      if (String(item.id) === String(id)) {
+        return {
+          ...item,
+          status: newStatus,
+          updatedOn: todayDate,
+          actionDate: todayDate,
+          approvalDate: newStatus === "Approved" ? todayDate : item.approvalDate,
+          rejectionDate: newStatus === "Rejected" ? todayDate : item.rejectionDate,
+        };
+      }
+      return item;
+    });
+
     setLoans(updated);
     localStorage.setItem("loanApplications", JSON.stringify(updated));
     setActiveMenuId(null);
@@ -285,6 +320,8 @@ Loan Category  : ${app.loanType}
 Requested Amt  : ${app.loanAmount}
 Current Status : ${app.status}
 Applied Date   : ${app.appliedOn}
+Last Updated   : ${app.updatedOn || "N/A"}
+Action Date    : ${app.actionDate || "N/A"}
 ========================================
 Generated On   : ${new Date().toLocaleString()}
     `;
@@ -301,22 +338,21 @@ Generated On   : ${new Date().toLocaleString()}
     setActiveMenuId(null);
   };
 
-  const handleSendEmail = (app) => {
-    const subject = encodeURIComponent(`Update regarding Loan Application ${app.id}`);
-    const body = encodeURIComponent(
-      `Hello ${app.name},\n\nThis is an official update regarding your ${app.loanType} application (${app.id}).\nCurrent Status: ${app.status}.\n\nRegards,\nLoan Approval Team`
-    );
-    window.location.href = `mailto:${app.email}?subject=${subject}&body=${body}`;
-    setActiveMenuId(null);
-  };
-
   const handleExport = () => {
     if (filteredLoans.length === 0) {
       alert("No data available to export.");
       return;
     }
 
-    const headers = ["Application ID", "Customer Name", "Loan Type", "Loan Amount", "Status", "Applied Date"];
+    const headers = [
+      "Application ID",
+      "Customer Name",
+      "Loan Type",
+      "Loan Amount",
+      "Status",
+      "Applied Date",
+      "Updated On",
+    ];
     const rows = filteredLoans.map((app) => [
       app.id || "",
       app.name || "",
@@ -324,6 +360,7 @@ Generated On   : ${new Date().toLocaleString()}
       app.loanAmount || "",
       app.status || "",
       app.appliedOn || "",
+      app.updatedOn || "",
     ]);
 
     const csvContent = [headers, ...rows]
@@ -503,25 +540,28 @@ Generated On   : ${new Date().toLocaleString()}
                     )}
 
                     {visibleColumns.customer && (
-                     <td>
-                      <div className="customer-info">
-                       {getCustomerAvatar(app) ? (
-                      <img src={getCustomerAvatar(app)} alt={app.name}className="user-avatar-img"
-                      />
-                       ) : (
-                      <div className="user-avatar-placeholder">
-                      {(app.name || "U").charAt(0).toUpperCase()}
-                     </div>
-                     )}
-                      <div className="customer-meta">
-                      <span className="customer-name-text">{app.name}</span>
-                      {app.mobile && (
-                      <span className="customer-sub-text">{app.mobile}</span>
-                      )}
-                      </div>
-                     </div>
-                     </td>
-)}
+                      <td>
+                        <div className="customer-info">
+                          {getCustomerAvatar(app) ? (
+                            <img
+                              src={getCustomerAvatar(app)}
+                              alt={app.name}
+                              className="user-avatar-img"
+                            />
+                          ) : (
+                            <div className="user-avatar-placeholder">
+                              {(app.name || "U").charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          <div className="customer-meta">
+                            <span className="customer-name-text">{app.name}</span>
+                            {app.mobile && (
+                              <span className="customer-sub-text">{app.mobile}</span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                    )}
 
                     {visibleColumns.loanType && <td>{app.loanType}</td>}
                     {visibleColumns.loanAmount && (
@@ -543,74 +583,74 @@ Generated On   : ${new Date().toLocaleString()}
                     {visibleColumns.appliedOn && <td>{app.appliedOn}</td>}
 
                     {visibleColumns.actions && (
-  <td className="actions-cell-wrapper">
-    <div className="table-actions-inline">
-      {/* FIXED: 'application.id' changed to 'app.id' */}
-      <button
-        title="View Details"
-        onClick={() => handleViewDetails(app.id)}
-      >
-        <Eye size={17} />
-      </button>
+                      <td className="actions-cell-wrapper">
+                        <div className="table-actions-inline">
+                          <button
+                            title="View Details"
+                            onClick={() => handleViewDetails(app.id)}
+                          >
+                            <Eye size={17} />
+                          </button>
 
-      <button
-        title="Edit"
-        onClick={() => handleEditDetails(app.id)}
-      >
-        <Pencil size={17} />
-      </button>
+                          <button
+                            title="Edit"
+                            onClick={() => handleEditDetails(app.id)}
+                          >
+                            <Pencil size={17} />
+                          </button>
 
-      {/* More Options Dropdown */}
-      <div 
-        className="more-action-container" 
-        ref={activeMenuId === app.id ? menuRef : null}
-      >
-        <button
-          title="More Options"
-          className={`more-btn ${activeMenuId === app.id ? "active" : ""}`}
-          onClick={() => toggleMoreMenu(app.id)}
-        >
-          <MoreVertical size={17} />
-        </button>
+                          <div
+                            className="more-action-container"
+                            ref={activeMenuId === app.id ? menuRef : null}
+                          >
+                            <button
+                              title="More Options"
+                              className={`more-btn ${
+                                activeMenuId === app.id ? "active" : ""
+                              }`}
+                              onClick={() => toggleMoreMenu(app.id)}
+                            >
+                              <MoreVertical size={17} />
+                            </button>
 
-        {activeMenuId === app.id && (
-          <div className="actions-dropdown-menu">
-            <button
-              className="dropdown-item"
-              onClick={() => handleUpdateStatus(app.id, "Approved")}
-            >
-              <CheckCircle size={15} className="text-success" />
-              <span>Mark Approved</span>
-            </button>
-            <button
-              className="dropdown-item"
-              onClick={() => handleUpdateStatus(app.id, "Rejected")}
-            >
-              <XCircle size={15} className="text-danger" />
-              <span>Mark Rejected</span>
-            </button>
-            <button
-              className="dropdown-item"
-              onClick={() => handleDownloadReceipt(app)}
-            >
-              <FileText size={15} />
-              <span>Download Summary</span>
-            </button>
-            
-            <div className="dropdown-divider"></div>
-            <button
-              className="dropdown-item delete-item"
-              onClick={() => handleDelete(app.id)}
-            >
-              <Trash2 size={15} />
-              <span>Delete Application</span>
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  </td>
-)}
+                            {activeMenuId === app.id && (
+                              <div className="actions-dropdown-menu">
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => handleUpdateStatus(app.id, "Approved")}
+                                >
+                                  <CheckCircle size={15} className="text-success" />
+                                  <span>Mark Approved</span>
+                                </button>
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => handleUpdateStatus(app.id, "Rejected")}
+                                >
+                                  <XCircle size={15} className="text-danger" />
+                                  <span>Mark Rejected</span>
+                                </button>
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => handleDownloadReceipt(app)}
+                                >
+                                  <FileText size={15} />
+                                  <span>Download Summary</span>
+                                </button>
+
+                                <div className="dropdown-divider"></div>
+                                <button
+                                  className="dropdown-item delete-item"
+                                  onClick={() => handleDelete(app.id)}
+                                >
+                                  <Trash2 size={15} />
+                                  <span>Delete Application</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))
               )}

@@ -1,48 +1,55 @@
-import './RecentEmiPayment.css'
-import { useNavigate } from 'react-router-dom';
-
-
-
-const emiPayments = [
-  {
-    customerName: "Rahul Sharma",
-    loanId: "LN1001",
-    amount: "₹25,000",
-    date: "15 May 2025",
-    status: "Paid",
-  },
-  {
-    customerName: "Priya Patel",
-    loanId: "LN1002",
-    amount: "₹18,500",
-    date: "14 May 2025",
-    status: "Pending",
-  },
-  {
-    customerName: "Aman Verma",
-    loanId: "LN1003",
-    amount: "₹12,000",
-    date: "13 May 2025",
-    status: "Overdue",
-  },
-  {
-    customerName: "Neha Singh",
-    loanId: "LN1004",
-    amount: "₹30,000",
-    date: "12 May 2025",
-    status: "Paid",
-  },
-  
-];
+import React, { useState, useEffect } from "react";
+import "./RecentEmiPayment.css";
+import { useNavigate } from "react-router-dom";
 
 function RecentEmiPayment() {
   const navigate = useNavigate();
+  const [emiPayments, setEmiPayments] = useState([]);
+
+  const loadEmiData = () => {
+    const savedSchedules = JSON.parse(localStorage.getItem("approvedEMISchedules") || "[]");
+
+    if (savedSchedules.length > 0) {
+      const formattedData = savedSchedules.map((item, index) => {
+        let status = "Pending";
+        if (item.paymentDate) {
+          status = "Paid";
+        } else if (item.dueDate && new Date(item.dueDate) < new Date()) {
+          status = "Overdue";
+        }
+
+        return {
+          customerName: item.customerName || "Customer",
+          loanId: item.id || `LN100${index + 1}`,
+          amount: typeof item.emiAmount === "number" ? `₹${item.emiAmount.toLocaleString("en-IN")}` : item.emiAmount || "₹0",
+          date: item.dueDate || "N/A",
+          status: status
+        };
+      });
+
+      // Strictly top 5 starting rows fetch hongi
+      setEmiPayments(formattedData.slice(0, 5));
+    } else {
+      setEmiPayments([]);
+    }
+  };
+
+  useEffect(() => {
+    loadEmiData();
+    window.addEventListener("storage", loadEmiData);
+    window.addEventListener("focus", loadEmiData);
+
+    return () => {
+      window.removeEventListener("storage", loadEmiData);
+      window.removeEventListener("focus", loadEmiData);
+    };
+  }, []);
+
   return (
     <div className="recent-loan-table">
       <div className="table-header">
         <h3>Recent EMI Payments</h3>
-
-        <button className="view-all-btn" onClick={()=> navigate('/EmiSchedule')}>
+        <button className="view-all-btn" onClick={() => navigate("/EmiSchedule")}>
           View All
         </button>
       </div>
@@ -50,45 +57,39 @@ function RecentEmiPayment() {
       <table>
         <thead>
           <tr>
-           
             <th>Customer</th>
             <th>Loan ID</th>
             <th>EMI Amount</th>
             <th>Payment Date</th>
             <th>Status</th>
-           
           </tr>
         </thead>
-
         <tbody>
-          {emiPayments.map((emi) => (
-            <tr key={emi.loanId}>
-              
-
-              <td>
-                <div className="customer-info">
-
-                  <span>{emi.customerName}</span>
-                </div>
+          {emiPayments.length > 0 ? (
+            emiPayments.slice(0, 5).map((emi, index) => (
+              <tr key={emi.loanId || index}>
+                <td>
+                  <div className="customer-info">
+                    <span>{emi.customerName}</span>
+                  </div>
+                </td>
+                <td>{emi.loanId}</td>
+                <td>{emi.amount}</td>
+                <td>{emi.date}</td>
+                <td>
+                  <span className={`status ${emi.status.toLowerCase()}`}>
+                    {emi.status}
+                  </span>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" style={{ textAlign: "center", padding: "15px", color: "#888" }}>
+                No EMI data available
               </td>
-
-              <td>{emi.loanId}</td>
-
-              <td>{emi.amount}</td>
-
-              <td>{emi.date}</td>
-
-              <td>
-                <span
-                  className={`status ${emi.status.toLowerCase()}`}
-                >
-                  {emi.status}
-                </span>
-              </td>
-
-             
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
