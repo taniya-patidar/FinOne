@@ -634,3 +634,376 @@
   flex-direction: column;
   gap: 2px;
 }
+
+/* ======================================================
+   EMI SCHEDULE CONTAINER - DARK MODE OVERRIDES (.dark)
+   ====================================================== */
+
+/* Main Container Background & Base Text */
+.dark .emi-schedule-container {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* Header & Action Buttons */
+.dark .page-title {
+  color: #f8fafc !important;
+}
+
+.dark .page-subtitle {
+  color: #94a3b8 !important;
+}
+
+.dark .btn-secondary {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .btn-secondary:hover {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
+}
+
+.dark .btn-primary {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-primary:hover {
+  background: #1d4ed8 !important;
+}
+
+/* Metric Cards Grid */
+.dark .metric-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .metric-label {
+  color: #94a3b8 !important;
+}
+
+.dark .metric-value {
+  color: #f8fafc !important;
+}
+
+.dark .metric-subtext {
+  color: #64748b !important;
+}
+
+/* Metric Icon Backgrounds (Dark Glow Effects) */
+.dark .icon-blue { background: rgba(37, 99, 235, 0.15) !important; color: #60a5fa !important; }
+.dark .icon-green { background: rgba(22, 163, 74, 0.15) !important; color: #4ade80 !important; }
+.dark .icon-amber { background: rgba(217, 119, 6, 0.15) !important; color: #fbbf24 !important; }
+.dark .icon-red { background: rgba(220, 38, 38, 0.15) !important; color: #f87171 !important; }
+.dark .icon-purple { background: rgba(147, 51, 234, 0.15) !important; color: #c084fc !important; }
+.dark .icon-cyan { background: rgba(6, 182, 212, 0.15) !important; color: #22d3ee !important; }
+
+.dark .green-text { color: #4ade80 !important; }
+.dark .red-text { color: #f87171 !important; }
+.dark .purple-text { color: #c084fc !important; }
+
+/* Filter Bar & Controls */
+.dark .filters-bar {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .search-icon {
+  color: #64748b !important;
+}
+
+.dark .search-box input {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark .search-box input::placeholder {
+  color: #64748b !important;
+}
+
+.dark .filter-group label {
+  color: #94a3b8 !important;
+}
+
+.dark .filter-group select,
+.dark .date-picker-mock,
+.dark .btn-filter-icon {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Table Card Container & Tabs */
+.dark .table-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .table-tabs {
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .tab-btn {
+  color: #94a3b8 !important;
+}
+
+.dark .tab-btn.active {
+  color: #60a5fa !important;
+  border-bottom-color: #60a5fa !important;
+}
+
+/* Main Table Styling (Deep Black Header + Dark Slate Body) */
+.dark .emi-main-table {
+  color: #cbd5e1 !important;
+}
+
+.dark .emi-main-table th {
+  background: #020617 !important; /* Deep Dark Black Header */
+  color: #f8fafc !important;
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .emi-main-table td {
+  background: #111827 !important; /* Subtle Dark Slate Grey Body */
+  border-bottom-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .emi-main-table tbody tr:hover td {
+  background: #1e293b !important;
+}
+
+.dark .loan-id-cell {
+  color: #60a5fa !important;
+}
+
+.dark .cust-name {
+  color: #f8fafc !important;
+}
+
+.dark .cust-phone {
+  color: #64748b !important;
+}
+
+.dark .loan-type-pill {
+  color: #cbd5e1 !important;
+}
+
+.dark .amount-cell {
+  color: #f8fafc !important;
+}
+
+.dark .sub-amount {
+  color: #94a3b8 !important;
+}
+
+.dark .date-cell {
+  color: #94a3b8 !important;
+}
+
+/* Status Badges */
+.dark .badge-paid {
+  background: rgba(22, 163, 74, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+.dark .badge-upcoming {
+  background: rgba(37, 99, 235, 0.2) !important;
+  color: #93c5fd !important;
+}
+
+.dark .badge-pending {
+  background: rgba(217, 119, 6, 0.2) !important;
+  color: #fbbf24 !important;
+}
+
+.dark .badge-overdue {
+  background: rgba(220, 38, 38, 0.2) !important;
+  color: #f87171 !important;
+}
+
+/* Table Action Buttons & Dropdowns */
+.dark .btn-view {
+  background: #1e293b !important;
+  color: #60a5fa !important;
+}
+
+.dark .btn-view:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-icon-action {
+  color: #94a3b8 !important;
+}
+
+.dark .btn-eye:hover {
+  color: #60a5fa !important;
+  background-color: rgba(37, 99, 235, 0.2) !important;
+}
+
+.dark .btn-more:hover,
+.dark .btn-more.active {
+  color: #f8fafc !important;
+  background-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+.dark .action-dropdown-menu {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .action-dropdown-menu button {
+  color: #cbd5e1 !important;
+}
+
+.dark .action-dropdown-menu button:hover {
+  background: #334155 !important;
+  color: #60a5fa !important;
+}
+
+/* Pagination Footer */
+.dark .table-pagination {
+  background: #111827 !important;
+  border-top: 1px solid #1e293b !important;
+}
+
+.dark .pagination-info {
+  color: #94a3b8 !important;
+}
+
+.dark .page-num,
+.dark .page-arrow {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .page-num:hover,
+.dark .page-arrow:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+.dark .page-num.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
+
+.dark .per-page select {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Modals & Overlays */
+.dark .modal-overlay {
+  background: rgba(2, 6, 23, 0.7) !important;
+}
+
+.dark .calc-modal {
+  background: #111827 !important;
+  border: 1px solid #1e293b !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .modal-header h3,
+.dark .modal-header h2 {
+  color: #f8fafc !important;
+}
+
+.dark .btn-close {
+  color: #94a3b8 !important;
+}
+
+.dark .btn-close:hover {
+  color: #f8fafc !important;
+}
+
+.dark .calc-input-field label {
+  color: #94a3b8 !important;
+}
+
+.dark .calc-input-field input {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark .btn-calc-submit {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-calc-submit:hover {
+  background: #1d4ed8 !important;
+}
+
+.dark .calc-results-box {
+  background: #0f172a !important;
+  border: 1px solid #1e293b !important;
+}
+
+.dark .res-row {
+  color: #cbd5e1 !important;
+}
+
+.dark .res-row.highlight {
+  color: #f8fafc !important;
+  border-top-color: #1e293b !important;
+}
+
+/* Details Drawer Side-Panel */
+.dark .details-drawer {
+  background: #111827 !important;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5) !important;
+  border-left: 1px solid #1e293b !important;
+}
+
+.dark .drawer-subtitle {
+  color: #94a3b8 !important;
+}
+
+.dark .details-section {
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .details-section h4 {
+  color: #94a3b8 !important;
+}
+
+.dark .info-grid label {
+  color: #64748b !important;
+}
+
+.dark .info-grid p {
+  color: #f8fafc !important;
+}
+
+.dark .bold-text {
+  color: #60a5fa !important;
+}
+
+.dark .breakdown-card {
+  background: #0f172a !important;
+  border: 1px solid #1e293b !important;
+}
+
+.dark .b-row {
+  color: #cbd5e1 !important;
+}
+
+
+.emi-main-table tr:has(.action-dropdown-menu),
+.action-cell.active-menu,
+.more-menu-wrapper.open {
+  position: relative !important;
+  z-index: 100 !important;
+}

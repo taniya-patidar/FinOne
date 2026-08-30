@@ -167,3 +167,100 @@
   border: 1px solid #e2e8f0;
   color: #94a3b8;
 }
+
+/* ======================================================
+   NOTIFICATIONS PAGE CONTAINER - DARK MODE OVERRIDES (.dark)
+   ====================================================== */
+
+/* Main Page Container & Text */
+.dark .notif-page-container {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* Header & Title Section */
+.dark .notif-title-area h2 {
+  color: #f8fafc !important;
+}
+
+.dark .unread-badge-count {
+  background: rgba(37, 99, 235, 0.2) !important;
+  color: #60a5fa !important;
+}
+
+/* Filter Tabs Bar */
+.dark .notif-filter-bar {
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .filter-tab {
+  color: #94a3b8 !important;
+}
+
+.dark .filter-tab:hover {
+  color: #cbd5e1 !important;
+}
+
+.dark .filter-tab.active {
+  background-color: #1e293b !important;
+  color: #60a5fa !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Notification Cards */
+.dark .notif-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .notif-card:hover {
+  border-color: #334155 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Unread Card Highlight */
+.dark .notif-card.unread {
+  background: #1e293b !important;
+  border-left-color: #3b82f6 !important;
+}
+
+/* Notification Content */
+.dark .notif-content h4 {
+  color: #f8fafc !important;
+}
+
+.dark .notif-content p {
+  color: #cbd5e1 !important;
+}
+
+.dark .notif-time {
+  color: #64748b !important;
+}
+
+.dark .blue-dot {
+  background-color: #60a5fa !important;
+}
+
+/* Icon Box Dark Glow Variations */
+.dark .icon-box.blue { background: rgba(37, 99, 235, 0.15) !important; color: #60a5fa !important; }
+.dark .icon-box.green { background: rgba(22, 163, 74, 0.15) !important; color: #4ade80 !important; }
+.dark .icon-box.red { background: rgba(220, 38, 38, 0.15) !important; color: #f87171 !important; }
+.dark .icon-box.purple { background: rgba(147, 51, 234, 0.15) !important; color: #c084fc !important; }
+
+/* Action Buttons */
+.dark .btn-icon-delete {
+  color: #64748b !important;
+}
+
+.dark .btn-icon-delete:hover {
+  color: #f87171 !important;
+  background: rgba(220, 38, 38, 0.15) !important;
+}
+
+/* Empty State Card */
+.dark .notif-empty-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  color: #64748b !important;
+}

@@ -457,3 +457,231 @@
 .btn-confirm-approve { background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
 .btn-confirm-reject { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
 .btn-confirm-sendback { background: #f59e0b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+
+/* ======================================================
+   APPROVAL REVIEW CONTAINER - DARK MODE OVERRIDES (.dark)
+   ====================================================== */
+
+/* Main Container Background & Text */
+.dark .approval-review-container {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* Header Section */
+.dark .back-link {
+  color: #60a5fa !important;
+}
+
+.dark .back-link:hover {
+  color: #93c5fd !important;
+}
+
+.dark .header-title-bar h1 {
+  color: #f8fafc !important;
+}
+
+.dark .app-id-pill {
+  background: rgba(37, 99, 235, 0.2) !important;
+  color: #93c5fd !important;
+  border-color: #1d4ed8 !important;
+}
+
+.dark .subtitle {
+  color: #94a3b8 !important;
+}
+
+.dark .pending-badge {
+  background: rgba(217, 119, 6, 0.2) !important;
+  color: #fbbf24 !important;
+}
+
+.dark .sub-date {
+  color: #64748b !important;
+}
+
+/* Cards (Financial Cards Outer) */
+.dark .fin-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Profile Card */
+.dark .profile-info-left .avatar {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fcd34d !important;
+}
+
+.dark .profile-info-left h2 {
+  color: #f8fafc !important;
+}
+
+.dark .meta-info {
+  color: #94a3b8 !important;
+}
+
+.dark .meta-col .label {
+  color: #64748b !important;
+}
+
+.dark .meta-col .val {
+  color: #f8fafc !important;
+}
+
+.dark .score-green {
+  color: #34d399 !important;
+}
+
+.dark .score-green .tag {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+/* Sub Grids & Key Value Lists */
+.dark .grid-2col .card-header-icon,
+.dark .grid-3col .card-header-icon {
+  color: #f87171 !important;
+}
+
+.dark .card-header-icon h3,
+.dark .grid-3col .card-header-icon h3 {
+  color: #f8fafc !important;
+}
+
+.dark .kv-row span {
+  color: #94a3b8 !important;
+}
+
+.dark .kv-row strong {
+  color: #f8fafc !important;
+}
+
+/* Documents Section */
+.dark .verified-badge {
+  background: rgba(22, 163, 74, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+.dark .all-verified-footer {
+  border-top-color: #1e293b !important;
+  color: #34d399 !important;
+}
+
+/* Existing Loans Section */
+.dark .active-loan-subtitle {
+  color: #94a3b8 !important;
+}
+
+.dark .existing-loan-box {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+.dark .tag-active {
+  background: rgba(22, 163, 74, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+.dark .history-link {
+  color: #60a5fa !important;
+}
+
+/* Remarks Section */
+.dark .remarks-section textarea {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark .remarks-section textarea:focus {
+  border-color: #60a5fa !important;
+}
+
+.dark .char-count {
+  color: #64748b !important;
+}
+
+/* Action Cards */
+.dark .action-card {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+.dark .action-card p {
+  color: #94a3b8 !important;
+}
+
+.dark .action-card.reject:hover {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+}
+
+.dark .action-card.sendback:hover {
+  border-color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.15) !important;
+}
+
+.dark .action-card.approve:hover {
+  border-color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Gauge & Right Panel Metrics */
+.dark .gauge-center-text .score-val {
+  color: #f8fafc !important;
+}
+
+.dark .gauge-center-text .score-lbl {
+  color: #34d399 !important;
+}
+
+.dark .gauge-axis {
+  color: #64748b !important;
+}
+
+.dark .metric-item {
+  color: #cbd5e1 !important;
+}
+
+.dark .risk-pill-green {
+  background: rgba(22, 163, 74, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+.dark .eligibility-banner {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .eligibility-banner strong {
+  color: #4ade80 !important;
+}
+
+/* Pop-up Modal */
+.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark .modal-box {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark .modal-box textarea {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark .btn-cancel {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .btn-cancel:hover {
+  background: #475569 !important;
+  color: #ffffff !important;
+}

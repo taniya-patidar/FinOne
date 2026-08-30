@@ -444,3 +444,262 @@
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }
+
+/* ======================================================
+   EMI DETAILS WRAPPER - DARK MODE OVERRIDES (.dark)
+   ====================================================== */
+
+/* Main Container Background & Text */
+.dark .emi-details-wrapper {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* Header & Breadcrumb */
+.dark .breadcrumb {
+  color: #94a3b8 !important;
+}
+
+.dark .crumb-link {
+  color: #60a5fa !important;
+}
+
+.dark .crumb-link:hover {
+  color: #93c5fd !important;
+}
+
+.dark .details-title {
+  color: #f8fafc !important;
+}
+
+.dark .details-subtitle {
+  color: #94a3b8 !important;
+}
+
+.dark .btn-back {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .btn-back:hover {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
+}
+
+/* Overview Card & Customer Profile */
+.dark .overview-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .card-section-title {
+  color: #f8fafc !important;
+}
+
+.dark .customer-profile-block {
+  border-right-color: #1e293b !important;
+}
+
+.dark .avatar-circle {
+  background: rgba(37, 99, 235, 0.25) !important;
+  color: #93c5fd !important;
+}
+
+.dark .profile-info h4 {
+  color: #f8fafc !important;
+}
+
+.dark .cust-id-badge {
+  background: rgba(37, 99, 235, 0.2) !important;
+  color: #93c5fd !important;
+}
+
+.dark .profile-info p {
+  color: #94a3b8 !important;
+}
+
+/* Meta Icon Wrappers */
+.dark .info-meta-item label {
+  color: #64748b !important;
+}
+
+.dark .info-meta-item strong {
+  color: #f8fafc !important;
+}
+
+.dark .bg-blue { background: rgba(37, 99, 235, 0.15) !important; color: #60a5fa !important; }
+.dark .bg-slate { background: rgba(51, 65, 85, 0.4) !important; color: #cbd5e1 !important; }
+.dark .bg-green { background: rgba(22, 163, 74, 0.15) !important; color: #4ade80 !important; }
+.dark .bg-indigo { background: rgba(99, 102, 241, 0.15) !important; color: #818cf8 !important; }
+
+.dark .status-tag.active {
+  background: rgba(22, 163, 74, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+/* 6 KPI Mini Cards */
+.dark .kpi-mini-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .blue-icon { background: rgba(37, 99, 235, 0.15) !important; color: #60a5fa !important; }
+.dark .purple-icon { background: rgba(147, 51, 234, 0.15) !important; color: #c084fc !important; }
+.dark .green-icon { background: rgba(22, 163, 74, 0.15) !important; color: #4ade80 !important; }
+.dark .orange-icon { background: rgba(234, 88, 12, 0.15) !important; color: #fb923c !important; }
+.dark .red-icon { background: rgba(220, 38, 38, 0.15) !important; color: #f87171 !important; }
+.dark .cyan-icon { background: rgba(6, 182, 212, 0.15) !important; color: #22d3ee !important; }
+
+.dark .kpi-label {
+  color: #94a3b8 !important;
+}
+
+.dark .kpi-value {
+  color: #f8fafc !important;
+}
+
+.dark .kpi-subtext {
+  color: #4ade80 !important;
+}
+
+/* Split Workspace Panels & Tabs */
+.dark .left-panel-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .detail-tabs {
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .d-tab-btn {
+  color: #94a3b8 !important;
+}
+
+.dark .d-tab-btn.active {
+  color: #60a5fa !important;
+  border-bottom-color: #60a5fa !important;
+}
+
+.dark .panel-inner-title {
+  color: #f8fafc !important;
+}
+
+/* Main Schedule Table (Black Header & Grey Body) */
+.dark .schedule-table {
+  color: #cbd5e1 !important;
+}
+
+.dark .schedule-table th {
+  background: #020617 !important; /* Deep Dark Black Header */
+  color: #f8fafc !important;
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .schedule-table td {
+  background: #111827 !important; /* Subtle Dark Slate Grey Body */
+  border-bottom-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .schedule-table tbody tr:hover td {
+  background: #1e293b !important;
+}
+
+.dark .emi-no-col,
+.dark .num-col.bold {
+  color: #f8fafc !important;
+}
+
+.dark .status-pill.paid {
+  background: rgba(22, 163, 74, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+.dark .status-pill.upcoming {
+  background: rgba(37, 99, 235, 0.2) !important;
+  color: #93c5fd !important;
+}
+
+/* Sub Pagination */
+.dark .sub-pagination {
+  color: #94a3b8 !important;
+}
+
+.dark .p-arrows button {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .p-arrows button:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+.dark .p-arrows button.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
+
+/* Right Panel Stack & Side Cards */
+.dark .side-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .side-card-title {
+  color: #f8fafc !important;
+}
+
+.dark .btn-link {
+  color: #60a5fa !important;
+}
+
+.dark .btn-link:hover {
+  color: #93c5fd !important;
+}
+
+.dark .summary-row {
+  color: #cbd5e1 !important;
+}
+
+.dark .summary-row strong {
+  color: #f8fafc !important;
+}
+
+.dark .text-green { color: #4ade80 !important; }
+.dark .text-purple { color: #c084fc !important; }
+.dark .text-blue { color: #60a5fa !important; }
+.dark .text-orange { color: #fb923c !important; }
+.dark .text-red { color: #f87171 !important; }
+
+/* History Mini Table */
+.dark .history-table th {
+  background: #020617 !important; /* Deep Dark Black Header */
+  color: #f8fafc !important;
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .history-table td {
+  background: #111827 !important; /* Dark Slate Grey Body */
+  border-bottom-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .history-table tbody tr:hover td {
+  background: #1e293b !important;
+}
+
+.dark .method-badge.upi { background: rgba(22, 163, 74, 0.2) !important; color: #4ade80 !important; }
+.dark .method-badge.neft { background: rgba(37, 99, 235, 0.2) !important; color: #93c5fd !important; }
+.dark .method-badge.imps { background: rgba(234, 88, 12, 0.2) !important; color: #fb923c !important; }
+
+.dark .ref-no {
+  color: #64748b !important;
+}

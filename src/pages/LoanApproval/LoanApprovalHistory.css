@@ -524,3 +524,310 @@
   cursor: pointer;
 }
 
+/* ======================================================
+   FINONE HISTORY WRAPPER - DARK MODE OVERRIDES (.dark)
+   ====================================================== */
+
+/* Main Page Container */
+.dark .finone-history-wrapper {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* Page Header & Export Button */
+.dark .back-bread {
+  color: #94a3b8 !important;
+}
+
+.dark .back-bread:hover {
+  color: #60a5fa !important;
+}
+
+.dark .history-page-header h1 {
+  color: #f8fafc !important;
+}
+
+.dark .history-page-header p {
+  color: #94a3b8 !important;
+}
+
+.dark .btn-export-csv {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .btn-export-csv:hover {
+  background: #334155 !important;
+  color: #ffffff !important;
+}
+
+/* History Metrics Cards Grid */
+.dark .hist-metric-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .metric-info .metric-label {
+  color: #94a3b8 !important;
+}
+
+.dark .metric-info h2 {
+  color: #f8fafc !important;
+}
+
+/* Metric Icon Backgrounds (Dark Glow Effects) */
+.dark .bg-green-light { background-color: rgba(22, 163, 74, 0.15) !important; }
+.dark .text-green-dark { color: #4ade80 !important; }
+
+.dark .bg-red-light { background-color: rgba(220, 38, 38, 0.15) !important; }
+.dark .text-red-dark { color: #f87171 !important; }
+
+.dark .bg-amber-light { background-color: rgba(217, 119, 6, 0.15) !important; }
+.dark .text-amber-dark { color: #fbbf24 !important; }
+
+.dark .bg-purple-light { background-color: rgba(147, 51, 234, 0.15) !important; }
+.dark .text-purple-dark { color: #c084fc !important; }
+
+.dark .bg-blue-light { background-color: rgba(37, 99, 235, 0.15) !important; }
+.dark .text-blue-dark { color: #60a5fa !important; }
+
+/* Tabs Bar */
+.dark .tabs-pill-group {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .tab-item {
+  color: #94a3b8 !important;
+}
+
+.dark .tab-item.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.dark .tab-badge {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .tab-badge.green { background: rgba(22, 163, 74, 0.2) !important; color: #4ade80 !important; }
+.dark .tab-badge.red { background: rgba(220, 38, 38, 0.2) !important; color: #f87171 !important; }
+.dark .tab-badge.amber { background: rgba(217, 119, 6, 0.2) !important; color: #fbbf24 !important; }
+
+/* Secondary Filters & Search Box */
+.dark .search-box-sm .s-icon {
+  color: #64748b !important;
+}
+
+.dark .search-box-sm input {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+.dark .search-box-sm input::placeholder {
+  color: #64748b !important;
+}
+
+.dark .select-pill select {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+/* History Data Table Outer Card */
+.dark .history-table-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .history-data-table {
+  color: #cbd5e1 !important;
+}
+
+/* Table Header (Deep Dark Black Contrast) */
+.dark .history-data-table th {
+  background: #020617 !important;
+  color: #f8fafc !important;
+  border-bottom-color: #1e293b !important;
+}
+
+/* Data Row Cells (Subtle Dark Slate Grey) */
+.dark .history-data-table td {
+  background: #111827 !important;
+  border-bottom-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .history-data-table tbody tr:hover td {
+  background: #1e293b !important;
+}
+
+/* Table Content Details */
+.dark .id-link-cell span {
+  color: #60a5fa !important;
+}
+
+.dark .applicant-info .app-name {
+  color: #f8fafc !important;
+}
+
+.dark .applicant-info .app-sub {
+  color: #64748b !important;
+}
+
+.dark .loan-type-box {
+  color: #cbd5e1 !important;
+}
+
+.dark .loan-icon-svg {
+  color: #94a3b8 !important;
+}
+
+.dark .amount-text {
+  color: #f8fafc !important;
+}
+
+/* Avatar Chips */
+.dark .avatar-bg-0 { background: rgba(217, 119, 6, 0.2) !important; color: #fbbf24 !important; }
+.dark .avatar-bg-1 { background: rgba(220, 38, 38, 0.2) !important; color: #f87171 !important; }
+.dark .avatar-bg-2 { background: rgba(22, 163, 74, 0.2) !important; color: #4ade80 !important; }
+.dark .avatar-bg-3 { background: rgba(99, 102, 241, 0.2) !important; color: #818cf8 !important; }
+.dark .avatar-bg-4 { background: rgba(168, 85, 247, 0.2) !important; color: #c084fc !important; }
+
+/* Status Badges */
+.dark .badge-approved { background-color: rgba(22, 163, 74, 0.2) !important; color: #4ade80 !important; }
+.dark .badge-rejected { background-color: rgba(220, 38, 38, 0.2) !important; color: #f87171 !important; }
+.dark .badge-sentback { background-color: rgba(217, 119, 6, 0.2) !important; color: #fbbf24 !important; }
+
+.dark .decision-by-text {
+  color: #e2e8f0 !important;
+}
+
+.dark .date-main {
+  color: #f8fafc !important;
+}
+
+.dark .time-sub {
+  color: #64748b !important;
+}
+
+.dark .table-remarks-text {
+  color: #94a3b8 !important;
+}
+
+/* Action View Button */
+.dark .btn-action-view {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .btn-action-view:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+/* Pagination Footer */
+.dark .table-pagination-footer {
+  background: #111827 !important;
+  border-top-color: #1e293b !important;
+}
+
+.dark .showing-entries-text {
+  color: #94a3b8 !important;
+}
+
+.dark .page-arrow,
+.dark .page-num-btn {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .page-num-btn.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
+
+.dark .per-page-select select {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .no-data-td {
+  color: #64748b !important;
+}
+
+/* Modal / Drawer Side-Panel */
+.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark .modal-drawer {
+  background: #111827 !important;
+  border-left: 1px solid #1e293b !important;
+}
+
+.dark .modal-header {
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .modal-header h2 {
+  color: #f8fafc !important;
+}
+
+.dark .sub-modal-id {
+  color: #60a5fa !important;
+}
+
+.dark .btn-close-modal {
+  color: #94a3b8 !important;
+}
+
+.dark .detail-row-card {
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .detail-row-card .label {
+  color: #94a3b8 !important;
+}
+
+.dark .detail-row-card .val {
+  color: #f8fafc !important;
+}
+
+.dark .detail-row-card .val.amount {
+  color: #60a5fa !important;
+}
+
+.dark .remarks-box-modal {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+.dark .remarks-box-modal label {
+  color: #cbd5e1 !important;
+}
+
+.dark .remarks-box-modal p {
+  color: #94a3b8 !important;
+}
+
+.dark .modal-footer {
+  border-top-color: #1e293b !important;
+}
+
+.dark .btn-full-review {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-full-review:hover {
+  background: #1d4ed8 !important;
+}

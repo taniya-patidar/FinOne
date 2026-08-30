@@ -219,3 +219,156 @@ td {
 .status-badge.approved { background: #dcfce7; color: #15803d; }
 .status-badge.pending { background: #fef3c7; color: #b45309; }
 .status-badge.rejected { background: #fee2e2; color: #b91c1c; }
+
+/* ======================================================
+   REPORTS PAGE CONTAINER - DARK MODE OVERRIDES (.dark)
+   ====================================================== */
+
+/* Main Page Container */
+.dark .reports-page-container {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* Page Header */
+.dark .reports-header h2 {
+  color: #f8fafc !important;
+}
+
+.dark .reports-header p {
+  color: #94a3b8 !important;
+}
+
+/* Filters Card */
+.dark .reports-filter-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .filter-group label {
+  color: #94a3b8 !important;
+}
+
+.dark .filter-group select {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+/* Button Overrides */
+.dark .btn-primary {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-primary:hover {
+  background: #1d4ed8 !important;
+}
+
+.dark .btn-secondary {
+  background: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .btn-secondary:hover {
+  background: #334155 !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-outline {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .btn-outline:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-success {
+  background: #059669 !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-success:hover {
+  background: #047857 !important;
+}
+
+/* Metrics Grid Cards */
+.dark .metric-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .metric-info span {
+  color: #94a3b8 !important;
+}
+
+.dark .metric-info h3 {
+  color: #f8fafc !important;
+}
+
+/* Metric Icon Dark Glow Variations */
+.dark .metric-icon.blue { background: rgba(37, 99, 235, 0.15) !important; color: #60a5fa !important; }
+.dark .metric-icon.green { background: rgba(22, 163, 74, 0.15) !important; color: #4ade80 !important; }
+.dark .metric-icon.red { background: rgba(220, 38, 38, 0.15) !important; color: #f87171 !important; }
+.dark .metric-icon.orange { background: rgba(217, 119, 6, 0.15) !important; color: #fbbf24 !important; }
+.dark .metric-icon.purple { background: rgba(147, 51, 234, 0.15) !important; color: #c084fc !important; }
+.dark .metric-icon.teal { background: rgba(13, 148, 136, 0.15) !important; color: #2dd4bf !important; }
+
+/* Charts & Detailed Table Cards */
+.dark .chart-card,
+.dark .table-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .chart-card h4,
+.dark .table-card h4 {
+  color: #f8fafc !important;
+}
+
+/* Table Styling (Deep Black Header + Dark Slate Body) */
+.dark table {
+  color: #cbd5e1 !important;
+}
+
+.dark th {
+  background-color: #020617 !important; /* Deep Dark Black Header */
+  color: #f8fafc !important;
+  border-bottom-color: #1e293b !important;
+}
+
+.dark td {
+  background-color: #111827 !important; /* Subtle Dark Slate Grey Body */
+  border-bottom-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark tbody tr:hover td {
+  background-color: #1e293b !important;
+}
+
+.dark .text-blue {
+  color: #60a5fa !important;
+}
+
+/* Status Badges */
+.dark .status-badge.approved {
+  background: rgba(22, 163, 74, 0.2) !important;
+  color: #4ade80 !important;
+}
+
+.dark .status-badge.pending {
+  background: rgba(217, 119, 6, 0.2) !important;
+  color: #fbbf24 !important;
+}
+
+.dark .status-badge.rejected {
+  background: rgba(220, 38, 38, 0.2) !important;
+  color: #f87171 !important;
+}

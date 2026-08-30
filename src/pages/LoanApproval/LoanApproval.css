@@ -570,5 +570,247 @@
   color: var(--text-muted);
 }
 
+/* ======================================================
+   DARK MODE OVERRIDES (.dark)
+   ====================================================== */
 
+/* Root Variable Overrides for Dark Mode */
+.dark,
+.dark .finone-container {
+  --bg-page: #0f172a;
+  --card-bg: #111827;
+  --border-light: #1e293b;
+  --text-dark: #f8fafc;
+  --text-muted: #94a3b8;
+  background-color: var(--bg-page) !important;
+  color: var(--text-dark) !important;
+}
+
+/* Page Header */
+.dark .page-header h1 {
+  color: #f1f5f9 !important;
+}
+
+.dark .page-header p {
+  color: var(--text-muted) !important;
+}
+
+.dark .btn-export {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+/* Metrics Cards */
+.dark .metric-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .metric-header h2 {
+  color: #f8fafc !important;
+}
+
+.dark .metric-title,
+.dark .metric-footer {
+  color: #94a3b8 !important;
+}
+
+/* Dynamic Icon Wrapper Backgrounds (Dark Glow) */
+.dark .bg-orange { background: rgba(234, 88, 12, 0.15) !important; color: #fb923c !important; }
+.dark .bg-blue { background: rgba(37, 99, 235, 0.15) !important; color: #60a5fa !important; }
+.dark .bg-green { background: rgba(22, 163, 74, 0.15) !important; color: #4ade80 !important; }
+.dark .bg-red { background: rgba(220, 38, 38, 0.15) !important; color: #f87171 !important; }
+.dark .bg-purple { background: rgba(147, 51, 234, 0.15) !important; color: #c084fc !important; }
+
+/* Control Bar & Filters */
+.dark .filters-card {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .search-bar {
+  background: #0f172a !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark .search-bar input {
+  color: #f8fafc !important;
+}
+
+.dark .search-bar input::placeholder {
+  color: #64748b !important;
+}
+
+.dark .dropdown-group select,
+.dark .btn-filter-more {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .dropdown-group select:hover,
+.dark .btn-filter-more:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+/* Tabs */
+.dark .tab-btn {
+  color: #94a3b8 !important;
+}
+
+.dark .tab-btn.active {
+  background: #1e293b !important;
+  color: #60a5fa !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .pill-count {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .pill-count.warning { background: rgba(234, 88, 12, 0.2) !important; color: #fdba74 !important; }
+.dark .pill-count.info { background: rgba(37, 99, 235, 0.2) !important; color: #93c5fd !important; }
+.dark .pill-count.danger { background: rgba(219, 39, 119, 0.2) !important; color: #f472b6 !important; }
+
+/* Table Outer & Layout */
+.dark .table-wrapper {
+  background: #111827 !important;
+  border-color: #1e293b !important;
+}
+
+.dark .finone-table {
+  color: #cbd5e1 !important;
+}
+
+.dark .finone-table th {
+  background: #020617 !important;
+  color: #f8fafc !important;
+  border-bottom-color: #1e293b !important;
+}
+
+.dark .finone-table td {
+  background: #111827 !important;
+  border-bottom-color: #1e293b !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .finone-table tbody tr:hover td {
+  background: #1e293b !important;
+}
+
+/* Table Content Specifics */
+.dark .id-text {
+  color: #60a5fa !important;
+}
+
+.dark .avatar-chip {
+  background: #1e293b !important;
+  color: #93c5fd !important;
+}
+
+.dark .applicant-name,
+.dark .amount-text,
+.dark .score-num {
+  color: #f8fafc !important;
+}
+
+.dark .sub-text {
+  color: #f8f9fb !important;
+}
+
+/* Credit Badges */
+.dark .badge-good { background: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; }
+.dark .badge-fair { background: rgba(234, 179, 8, 0.15) !important; color: #facc15 !important; }
+.dark .badge-poor { background: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+/* Risk Levels */
+.dark .risk-low { background: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; }
+.dark .risk-medium { background: rgba(245, 158, 11, 0.15) !important; color: #fbbf24 !important; }
+.dark .risk-high { background: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+/* Stage Pills */
+.dark .stage-pending { background: rgba(234, 88, 12, 0.15) !important; color: #fb923c !important; }
+.dark .stage-review { background: rgba(59, 130, 246, 0.15) !important; color: #93c5fd !important; }
+.dark .stage-approved { background: rgba(34, 197, 94, 0.15) !important; color: #4ade80 !important; }
+.dark .stage-rejected { background: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+
+/* Actions & Buttons */
+.dark .btn-review {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .btn-review:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
+}
+
+.dark .btn-more {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+.dark .btn-more:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #475569 !important;
+}
+
+/* Action Dropdown Menu & Dropup */
+.dark .action-dropdown-menu {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dark .action-dropdown-menu button {
+  color: #cbd5e1 !important;
+}
+
+.dark .action-dropdown-menu button:hover {
+  background: #334155 !important;
+  color: #ffffff !important;
+}
+
+.dark .action-dropdown-menu button.text-red {
+  color: #f87171 !important;
+}
+
+.dark .action-dropdown-menu button.text-red:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+}
+
+.dark .text-green { color: #4ade80 !important; }
+.dark .text-blue { color: #60a5fa !important; }
+
+/* Table Footer & Pagination */
+.dark .table-footer {
+  border-top-color: #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+.dark .page-num,
+.dark .page-nav {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .page-num:hover,
+.dark .page-nav:hover {
+  background: #1e293b !important;
+  color: #ffffff !important;
+}
+
+.dark .page-num.active {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: #2563eb !important;
+}
 
