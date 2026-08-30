@@ -44,9 +44,7 @@
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -54,7 +52,6 @@
   background: #0962d5;
   box-shadow: 0 5px 14px 7px rgba(20, 115, 234, 0.2);
 }
-
 
 /* =========================
    SUMMARY CARDS
@@ -96,7 +93,6 @@
   color: #94a3b8;
 }
 
-
 /* =========================
    FILTERS
 ========================= */
@@ -108,7 +104,7 @@
   padding: 16px;
   background: #ffffff;
   border: 1px solid #e5eaf1;
-  border-radius: 10px;   
+  border-radius: 10px;
   margin-bottom: 18px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
 }
@@ -157,19 +153,15 @@
   box-shadow: 0 0 0 3px rgba(20, 115, 234, 0.08);
 }
 
-
 /* =========================
    TABLE CARD
 ========================= */
 
 .customer-table-card {
   background: #ffffff;
-
   border: 1px solid #e5eaf1;
   border-radius: 10px;
-
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-
   overflow: hidden;
 }
 
@@ -177,45 +169,33 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 18px 20px;
-
   border-bottom: 1px solid #edf0f5;
 }
 
 .table-top h2 {
   margin: 0;
-
   font-size: 17px;
   font-weight: 700;
-
   color: #0f172a;
 }
 
 .table-top p {
   margin: 5px 0 0;
-
   font-size: 12px;
   color: #94a3b8;
 }
 
 .export-btn {
   height: 36px;
-
   padding: 0 15px;
-
   border: 1px solid #d9e0ea;
   border-radius: 7px;
-
   background: #ffffff;
-
   color: #475569;
-
   font-size: 13px;
   font-weight: 500;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -224,51 +204,41 @@
   border-color: #b9c3d0;
 }
 
-
 /* =========================
-   TABLE
+   TABLE & RESPONSIVE SCROLL
 ========================= */
 
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
   overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
 }
 
 .customer-table-card table {
   width: 100%;
-  min-width: 1050px;
-
+  min-width: 900px; /* Reduced min-width to avoid unnecessary scroll on medium screens */
   border-collapse: collapse;
 }
 
 .customer-table-card th {
-  padding: 13px 14px;
-
+  padding: 11px 10px; /* Compact padding */
   text-align: left;
-
   background: #f8fafc;
-
   border-bottom: 1px solid #e5eaf1;
-
   color: #475569;
-
   font-size: 12px;
   font-weight: 600;
-
   white-space: nowrap;
 }
 
 .customer-table-card td {
-  padding: 13px 14px;
-
+  padding: 10px 10px; /* Compact padding */
   border-bottom: 1px solid #edf0f5;
-
   color: #334155;
-
   font-size: 12px;
-
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 .customer-table-card tbody tr {
@@ -283,48 +253,45 @@
   border-bottom: none;
 }
 
+/* Optional Sticky End-Column for Actions */
+.customer-table-card th:last-child,
+.customer-table-card td:last-child {
+  position: sticky;
+  right: 0;
+  background: inherit;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.02);
+  z-index: 1;
+}
 
 /* =========================
-   CUSTOMER NAME
+   CUSTOMER NAME & DETAILS
 ========================= */
 
 .customer-name {
   display: flex;
   align-items: center;
-
-  gap: 9px;
-
+  gap: 8px;
   font-weight: 600;
   color: #1e293b;
 }
 
 .customer-avatar {
-  width: 32px;
-  height: 32px;
-
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 50%;
-
   background: #e8f1ff;
   color: #1473ea;
-
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
 }
 
-
-/* =========================
-   CUSTOMER ID
-========================= */
-
 .customer-id {
   color: #1473ea;
-
   font-weight: 600;
-
   cursor: pointer;
 }
 
@@ -332,39 +299,25 @@
   text-decoration: underline;
 }
 
-
 /* =========================
-   LOAN TYPE
+   STATUS BADGES
 ========================= */
 
-.loan-type {
+.loan-type,
+.kyc-status,
+.customer-status {
   display: inline-flex;
-
-  padding: 5px 9px;
-
+  align-items: center;
+  padding: 4px 8px;
   border-radius: 5px;
-
-  background: #edf5ff;
-  color: #1264d8;
-
   font-size: 11px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
-
-/* =========================
-   KYC STATUS
-========================= */
-
-.kyc-status {
-  display: inline-flex;
-
-  padding: 5px 9px;
-
-  border-radius: 5px;
-
-  font-size: 11px;
-  font-weight: 600;
+.loan-type {
+  background: #edf5ff;
+  color: #1264d8;
 }
 
 .kyc-status.verified {
@@ -377,22 +330,6 @@
   color: #b77900;
 }
 
-
-/* =========================
-   CUSTOMER STATUS
-========================= */
-
-.customer-status {
-  display: inline-flex;
-
-  padding: 5px 9px;
-
-  border-radius: 5px;
-
-  font-size: 11px;
-  font-weight: 600;
-}
-
 .customer-status.active {
   background: #e8f8ef;
   color: #15803d;
@@ -403,35 +340,27 @@
   color: #dc2626;
 }
 
-
 /* =========================
-   ACTIONS
+   ACTIONS & BUTTONS
 ========================= */
 
 .customer-actions {
   display: flex;
   align-items: center;
-
   gap: 4px;
 }
 
 .customer-actions button {
-  width: 30px;
-  height: 30px;
-
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-
   border: none;
   border-radius: 6px;
-
   background: transparent;
-
   color: #64748b;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -440,64 +369,20 @@
   color: #1473ea;
 }
 
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 1200px) {
-
-  .customer-summary {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .customer-filters {
-    grid-template-columns: 1fr 1fr;
-  }
-
+.action-btn.delete-btn {
+  color: #ef4444;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 6px;
+  padding: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-@media (max-width: 768px) {
-
-  .customer-page {
-    padding: 16px;
-  }
-
-  .customer-page-header {
-    align-items: flex-start;
-    gap: 15px;
-  }
-
-  .customer-summary {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .customer-filters {
-    grid-template-columns: 1fr;
-  }
-
+.action-btn.delete-btn:hover {
+  background-color: #dc2626;
+  color: #ffffff;
 }
-
-@media (max-width: 500px) {
-
-  .customer-page-header {
-    flex-direction: column;
-  }
-
-  .add-customer-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .customer-summary {
-    grid-template-columns: 1fr;
-  }
-
-}
-
-/* =========================
-   TABLE ACTIONS
-========================= */
 
 .table-actions {
   display: flex;
@@ -507,27 +392,18 @@
 
 .table-action-btn {
   height: 36px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 7px;
-
   padding: 0 12px;
-
   border: 1px solid #d9e0ea;
   border-radius: 7px;
-
   background: #ffffff;
-
   color: #475569;
-
   font-size: 13px;
   font-weight: 500;
-
   cursor: pointer;
-
   transition: all 0.2s ease;
 }
 
@@ -536,7 +412,6 @@
   border-color: #b9c3d0;
   color: #1473ea;
 }
-
 
 /* =========================
    COLUMNS MENU
@@ -548,50 +423,33 @@
 
 .columns-menu {
   position: absolute;
-
   top: calc(100% + 8px);
   right: 0;
-
   width: 210px;
-
   padding: 8px 0;
-
   background: #ffffff;
-
   border: 1px solid #e2e8f0;
   border-radius: 9px;
-
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
-
   z-index: 100;
 }
 
 .columns-menu-header {
   padding: 8px 13px 10px;
-
   border-bottom: 1px solid #edf0f5;
-
   color: #0f172a;
-
   font-size: 12px;
   font-weight: 700;
 }
 
 .columns-menu label {
   display: flex;
-
   align-items: center;
-
   gap: 9px;
-
   padding: 8px 13px;
-
   color: #475569;
-
   font-size: 12px;
-
   cursor: pointer;
-
   transition: background 0.15s ease;
 }
 
@@ -602,9 +460,7 @@
 .columns-menu input[type="checkbox"] {
   width: 15px;
   height: 15px;
-
   accent-color: #1473ea;
-
   cursor: pointer;
 }
 
@@ -614,6 +470,7 @@
   color: #64748b;
   font-size: 14px;
 }
+
 .refresh-spin {
   animation: refreshRotate 0.8s linear infinite;
 }
@@ -622,12 +479,10 @@
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }
 }
-
 
 /* =========================
    PAGINATION
@@ -636,31 +491,23 @@
 .pagination {
   display: flex;
   align-items: center;
-  justify-content:center;
+  justify-content: center;
   gap: 8px;
-
   padding: 16px 20px;
-
   border-top: 1px solid #e2e8f0;
 }
 
 .pagination button {
   height: 34px;
   min-width: 34px;
-
   padding: 0 10px;
-
   border: 1px solid #cbd5e1;
   border-radius: 6px;
-
   background: #ffffff;
   color: #334155;
-
   font-size: 13px;
   font-weight: 500;
-
   cursor: pointer;
-
   transition: all 0.2s ease;
 }
 
@@ -682,58 +529,33 @@
 
 .pagination-info {
   margin-right: auto;
-
   color: #64748b;
-
   font-size: 13px;
 }
 
 /* =========================================================
-   RESPONSIVE — CUSTOMER LIST
+   MEDIA QUERIES (RESPONSIVE BREAKPOINTS)
 ========================================================= */
 
-@media (max-width: 1100px) {
-  .customer-page {
-    padding: 25px 20px 40px;
-  }
-
+@media (max-width: 1200px) {
   .customer-summary {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .customer-filters {
-    flex-wrap: wrap;
-  }
-
-  .customer-search {
-    flex: 1 1 100%;
-  }
-
-  .table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .table-wrapper table {
-    min-width: 1000px;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .customer-page {
-    padding: 20px 15px 35px;
+    padding: 16px;
   }
-
-  /* Header */
 
   .customer-page-header {
     flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
-
-  .customer-page-header h1 {
-    font-size: 24px;
+    align-items: flex-start;
+    gap: 15px;
   }
 
   .add-customer-btn {
@@ -741,47 +563,38 @@
     justify-content: center;
   }
 
-  /* Summary */
-
   .customer-summary {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
 
   .summary-card {
-    padding: 16px;
+    padding: 14px;
   }
 
   .summary-card h2 {
     font-size: 22px;
   }
 
-  /* Filters */
-
   .customer-filters {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: 1fr;
     gap: 10px;
   }
 
   .customer-search,
   .customer-filters select {
     width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
   }
 
-  /* Table card */
-
   .customer-table-card {
-    border-radius: 12px;
+    border-radius: 10px;
   }
 
   .table-top {
     flex-direction: column;
     align-items: stretch;
     gap: 15px;
-    padding: 17px;
+    padding: 15px;
   }
 
   .table-actions {
@@ -805,22 +618,8 @@
 
   .columns-menu {
     right: 0;
-    left: auto;
     max-width: calc(100vw - 40px);
   }
-
-  /* Horizontal table scroll */
-
-  .table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  .table-wrapper table {
-    min-width: 950px;
-  }
-
-  /* Pagination */
 
   .pagination {
     flex-wrap: wrap;
@@ -828,69 +627,39 @@
     gap: 6px;
     padding: 14px;
   }
-
-  .pagination button {
-    min-width: 36px;
-  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 500px) {
   .customer-page {
-    padding: 16px 11px 30px;
+    padding: 12px;
   }
 
   .customer-page-header h1 {
-    font-size: 22px;
+    font-size: 20px;
   }
-
-  .customer-page-header p {
-    font-size: 12px;
-  }
-
-  /* Summary becomes single column */
 
   .customer-summary {
     grid-template-columns: 1fr;
   }
 
-  .summary-card {
-    padding: 15px;
-  }
-
-  /* Table actions */
-
   .table-actions {
     grid-template-columns: 1fr;
   }
 
-  .table-top h2 {
-    font-size: 17px;
-  }
-
-  .table-top p {
-    font-size: 12px;
-  }
-
-  /* Pagination */
-
   .pagination button {
-    padding: 7px 10px;
+    padding: 6px 8px;
     font-size: 12px;
   }
 }
 
 /* =========================================================
-   DARK MODE — CUSTOMER LIST
+   DARK MODE SUPPORTS
 ========================================================= */
 
 .dark .customer-page {
   background: #0f172a;
   color: #e5e7eb;
 }
-
-/* =========================================================
-   PAGE HEADER
-========================================================= */
 
 .dark .customer-page-header h1 {
   color: #f8fafc;
@@ -900,24 +669,14 @@
   color: #94a3b8;
 }
 
-/* =========================================================
-   ADD CUSTOMER BUTTON
-========================================================= */
-
 .dark .customer-page .add-customer-btn {
   background: #2563eb;
   color: #ffffff;
-  border-color: #2563eb;
 }
 
 .dark .customer-page .add-customer-btn:hover {
   background: #1d4ed8;
-  border-color: #1d4ed8;
 }
-
-/* =========================================================
-   SUMMARY CARDS
-========================================================= */
 
 .dark .customer-page .summary-card {
   background: #111827;
@@ -937,9 +696,10 @@
   color: #64748b;
 }
 
-/* =========================================================
-   SEARCH + FILTERS
-========================================================= */
+.dark .customer-filters {
+  background: #0f172a;
+  border-color: #3d495a;
+}
 
 .dark .customer-page .customer-search {
   background: #111827;
@@ -947,12 +707,7 @@
   color: #cbd5e1;
 }
 
-.dark .customer-page .customer-search svg {
-  color: #64748b;
-}
-
 .dark .customer-page .customer-search input {
-  background: transparent;
   color: #f8fafc;
 }
 
@@ -966,30 +721,10 @@
   border-color: #334155;
 }
 
-.dark .customer-page .customer-filters select:focus {
-  border-color: #6366f1;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-}
-
-.dark .customer-page .customer-filters select option {
-  background: #111827;
-  color: #f8fafc;
-}
-
-/* =========================================================
-   TABLE CARD
-========================================================= */
-
 .dark .customer-page .customer-table-card {
   background: #111827;
   border-color: #1e293b;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
-
-/* =========================================================
-   TABLE TOP
-========================================================= */
 
 .dark .customer-page .table-top {
   border-bottom-color: #1e293b;
@@ -999,14 +734,6 @@
   color: #f8fafc;
 }
 
-.dark .customer-page .table-top p {
-  color: #64748b;
-}
-
-/* =========================================================
-   TABLE ACTION BUTTONS
-========================================================= */
-
 .dark .customer-page .table-action-btn {
   background: #0f172a;
   color: #cbd5e1;
@@ -1015,18 +742,12 @@
 
 .dark .customer-page .table-action-btn:hover {
   background: #1e293b;
-  border-color: #475569;
   color: #ffffff;
 }
-
-/* =========================================================
-   COLUMNS MENU
-========================================================= */
 
 .dark .customer-page .columns-menu {
   background: #111827;
   border-color: #334155;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 .dark .customer-page .columns-menu-header {
@@ -1042,14 +763,6 @@
   background: #1e293b;
 }
 
-.dark .customer-page .columns-menu input {
-  accent-color: #2563eb;
-}
-
-/* =========================================================
-   TABLE
-========================================================= */
-
 .dark .customer-page .table-wrapper {
   background: #111827;
 }
@@ -1058,35 +771,27 @@
   color: #e5e7eb;
 }
 
-.dark .customer-page thead {
-  background: #0f172a;
+.dark table th,
+.dark .table-wrapper th {
+  background-color: #18191a !important;
+  color: #e4e6eb !important;
+  border-bottom: 1px solid #2f3336 !important;
 }
 
-.dark .customer-page th {
-  color: #94a3b8;
-  border-bottom-color: #1e293b;
+.dark table td {
+  background-color: #121212 !important;
+  color: #e4e6eb !important;
+  border-bottom: 1px solid #2f3336 !important;
 }
 
-.dark .customer-page td {
-  color: #cbd5e1;
-  border-bottom-color: #1e293b;
+.dark .customer-table-card th:last-child,
+.dark .customer-table-card td:last-child {
+  background-color: #121212 !important;
 }
-
-.dark .customer-page tbody tr:hover {
-  background: #172033;
-}
-
-/* =========================================================
-   CUSTOMER ID
-========================================================= */
 
 .dark .customer-page .customer-id {
   color: #93c5fd;
 }
-
-/* =========================================================
-   CUSTOMER NAME + AVATAR
-========================================================= */
 
 .dark .customer-page .customer-name span {
   color: #f1f5f9;
@@ -1097,17 +802,13 @@
   color: #93c5fd;
 }
 
-/* =========================================================
-   LOAN TYPE
-========================================================= */
-
-.dark .customer-page .loan-type {
-  color: #cbd5e1;
+.dark .loan-type {
+  background-color: #242526 !important;
+  color: #e4e6eb !important;
+  border: 1px solid #3a3b3c !important;
+  padding: 4px 8px;
+  border-radius: 5px;
 }
-
-/* =========================================================
-   KYC STATUS
-========================================================= */
 
 .dark .customer-page .kyc-status {
   background: #172554;
@@ -1119,10 +820,6 @@
   color: #fcd34d;
 }
 
-/* =========================================================
-   CUSTOMER STATUS
-========================================================= */
-
 .dark .customer-page .customer-status {
   background: #14532d;
   color: #86efac;
@@ -1133,10 +830,6 @@
   color: #d4d4d8;
 }
 
-/* =========================================================
-   ACTION BUTTONS
-========================================================= */
-
 .dark .customer-page .customer-actions button {
   background: #0f172a;
   color: #94a3b8;
@@ -1146,21 +839,7 @@
 .dark .customer-page .customer-actions button:hover {
   background: #1e293b;
   color: #f8fafc;
-  border-color: #475569;
 }
-
-/* =========================================================
-   LOADING / EMPTY
-========================================================= */
-
-.dark .customer-page .table-loading {
-  color: #94a3b8;
-  background: #111827;
-}
-
-/* =========================================================
-   PAGINATION
-========================================================= */
 
 .dark .customer-page .pagination {
   border-top-color: #1e293b;
@@ -1175,7 +854,6 @@
 .dark .customer-page .pagination button:hover:not(:disabled) {
   background: #1e293b;
   color: #ffffff;
-  border-color: #475569;
 }
 
 .dark .customer-page .pagination button.active {
@@ -1184,76 +862,131 @@
   border-color: #2563eb;
 }
 
-.dark .customer-page .pagination button:disabled {
-  background: #111827;
-  color: #475569;
-  border-color: #1e293b;
+/* SCROLLBAR CUSTOMIZATION */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-.dark .customer-page ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
 }
 
-.dark .customer-page ::-webkit-scrollbar-track {
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-track {
   background: #0f172a;
 }
 
-.dark .customer-page ::-webkit-scrollbar-thumb {
+.dark ::-webkit-scrollbar-thumb {
   background: #334155;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
-.dark .customer-page ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
-
-.dark .customer-filters{
-  background: #0f172a ;
-  border-color:  #3d495a;
-}
-
-
-
-
-.dark table th,
-.dark .table-wrapper th {
-  background-color: #18191a !important;
-  color: #e4e6eb !important;
-  border-bottom: 1px solid #2f3336 !important;
-}
-
-
-.dark .loan-type {
-  background-color: #242526 !important;
-  color: #e4e6eb !important;
-  border: 1px solid #3a3b3c !important;
-  padding: 4px 10px;
-  border-radius: 6px;
+/* Ensure SVG Icons inherit text color and stay visible */
+.customer-actions button svg,
+.table-action-btn svg,
+.add-customer-btn svg,
+.customer-search svg {
   display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
 }
 
-.dark table td {
-  background-color: #121212 !important;
-  color: #e4e6eb !important;
-  border-bottom: 1px solid #2f3336 !important;
+.dark .customer-actions button svg,
+.dark .table-action-btn svg {
+  stroke: #cbd5e1;
 }
 
-.action-btn.delete-btn {
-  color: #ef4444;
-  background-color: #fef2f2;
-  border: 1px solid #fee2e2;
-  border-radius: 6px;
+/* ==========================================
+   1. FIX ICONS VISIBILITY (Lucide SVGs)
+   ========================================== */
+ .customer-page svg,
+.table-action-btn svg,
+.add-customer-btn svg,
+.customer-actions svg,
+.customer-search svg {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  flex-shrink: 0;
+  stroke: currentColor !important;
+}
+
+/* Ensure Action Buttons SVG has clear contrast */
+ .customer-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 6px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+} 
+
+.dark .customer-actions button {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
 }
 
-.action-btn.delete-btn:hover {
-  background-color: #dc2626;
-  color: #ffffff;
+
+/* ==========================================
+   2. COMPACT TABLE LAYOUT (No Overflow)
+   ========================================== */
+
+/* Make wrapper scrollable as fallback & contain width */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+/* Optimize Table font & cell padding */
+ .table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px; 
+  text-align: left;
+}
+
+/* Compact padding inside cells */
+ .table-wrapper th,
+.table-wrapper td {
+  padding: 8px 10px; 
+  white-space: nowrap; 
+  font-size: 13px;
+}  
+
+.table-wrapper th {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Reduce action column gap */
+.customer-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Reduced gap between Eye, Edit, Delete icons */
+}
+
+/* Compact Search Bar & Filter options */
+/* .customer-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+} */
+
+.customer-filters select,
+.customer-search input {
+  font-size: 13px;
+  padding: 6px 12px;
 }

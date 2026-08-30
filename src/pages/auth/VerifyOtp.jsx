@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./VerifyOtp.css";
 
 import { ArrowLeft, ShieldCheck } from "lucide-react";
@@ -12,6 +12,22 @@ const VerifyOtp = () => {
 
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [timer, setTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+
+  // Countdown timer for resend OTP feature
+  useEffect(() => {
+    let countdown;
+    if (timer > 0) {
+      countdown = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else {
+      setCanResend(true);
+    }
+    return () => clearInterval(countdown);
+  }, [timer]);
 
   const handleOtpChange = (e) => {
     const value = e.target.value;
@@ -33,7 +49,7 @@ const VerifyOtp = () => {
     }
   };
 
-  const handleVerifyOtp = (e) => {
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
 
     if (!otp) {
@@ -46,60 +62,63 @@ const VerifyOtp = () => {
       return;
     }
 
-    /*
-      BACKEND/API LATER:
+    setIsLoading(true);
 
-      const response = await verifyOtp({
-        email,
-        otp
+    try {
+      /*
+        BACKEND/API CONNECTION:
+
+        const response = await verifyOtp({
+          email,
+          otp
+        });
+      */
+
+      console.log("OTP Verified successfully for:", email);
+
+      // Navigate to Reset Password page passing necessary state
+      navigate("/reset-password", {
+        state: {
+          email,
+          otpVerified: true,
+        },
       });
-
-      Backend OTP verify karega.
-    */
-
-    // Temporary frontend-only OTP
-    const demoOtp = "123456";
-
-    if (otp !== demoOtp) {
-      setOtpError("Invalid OTP. Please try again.");
-      return;
+    } catch (error) {
+      console.error("OTP Verification failed:", error);
+      setOtpError("Invalid or expired OTP. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    // OTP verified
-    navigate("/reset-password", {
-      state: {
-        email,
-        otpVerified: true,
-      },
-    });
+  const handleResendOtp = async () => {
+    if (!canResend) return;
+
+    try {
+      /*
+        BACKEND/API CONNECTION:
+
+        await resendOtp({ email });
+      */
+
+      console.log("Resending OTP to:", email);
+      setTimer(30);
+      setCanResend(false);
+      setOtpError("");
+    } catch (error) {
+      console.error("Failed to resend OTP:", error);
+      setOtpError("Failed to resend OTP. Please try again later.");
+    }
   };
 
   const handleBack = () => {
     navigate("/forgot-password");
   };
 
-  const handleResendOtp = () => {
-    /*
-      Backend/API later:
-
-      await resendOtp({
-        email
-      });
-    */
-
-    setOtp("");
-    setOtpError("");
-
-    console.log("Demo OTP resent");
-  };
-
   return (
     <div className="verify-page">
-
       <div className="verify-card">
-
         {/* BACK BUTTON */}
-
         <button
           type="button"
           className="verify-back-btn"
@@ -110,96 +129,70 @@ const VerifyOtp = () => {
         </button>
 
         {/* ICON */}
-
         <div className="verify-icon">
-          <ShieldCheck size={27} />
+          <ShieldCheck size={32} />
         </div>
 
         {/* HEADING */}
-
         <h2>Verify OTP</h2>
 
         <p className="verify-subtitle">
-          Enter the 6-digit OTP sent to your
-          registered email address.
+          We have sent a 6-digit verification code to
         </p>
 
-        {email && (
-          <p className="verify-email">
-            {email}
-          </p>
-        )}
+        {email && <p className="verify-email">{email}</p>}
 
         {/* FORM */}
-
-        <form
-          onSubmit={handleVerifyOtp}
-          noValidate
-        >
-
-          <div className="otp-group">
-
-            <label htmlFor="otp">
-              Enter OTP
-            </label>
+        <form onSubmit={handleVerifyOtp} noValidate>
+          <div className="verify-form-group">
+            <label htmlFor="otp-input">Enter OTP</label>
 
             <input
-              id="otp"
+              id="otp-input"
               type="text"
               inputMode="numeric"
-              autoComplete="one-time-code"
-              placeholder="Enter 6-digit OTP"
+              placeholder="123456"
               value={otp}
               onChange={handleOtpChange}
               maxLength={6}
+              autoComplete="one-time-code"
               aria-invalid={Boolean(otpError)}
-              aria-describedby={
-                otpError
-                  ? "otp-error"
-                  : undefined
-              }
+              aria-describedby={otpError ? "otp-error" : undefined}
             />
 
             {otpError && (
-              <p
-                id="otp-error"
-                className="otp-error"
-                role="alert"
-              >
+              <p id="otp-error" className="verify-field-error" role="alert">
                 {otpError}
               </p>
             )}
-
           </div>
 
+          {/* VERIFY BUTTON */}
           <button
             type="submit"
             className="verify-btn"
+            disabled={isLoading}
           >
-            Verify OTP
+            {isLoading ? "Verifying..." : "Verify OTP"}
           </button>
-
         </form>
 
-        {/* RESEND */}
-
+        {/* RESEND SECTION */}
         <div className="resend-section">
-
-          <span>
-            Didn't receive the OTP?
-          </span>
-
-          <button
-            type="button"
-            onClick={handleResendOtp}
-          >
-            Resend OTP
-          </button>
-
+          <span>Didn't receive code? </span>
+          {canResend ? (
+            <button
+              type="button"
+              className="resend-btn"
+              onClick={handleResendOtp}
+            >
+              Resend OTP
+            </button>
+          ) : (
+            <span className="resend-timer">Resend in {timer}s</span>
+          )}
         </div>
-
       </div>
-
     </div>
   );
 };

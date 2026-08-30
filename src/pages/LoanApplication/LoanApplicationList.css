@@ -334,7 +334,18 @@ table td {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0; 
 }
+.table-actions-inline button svg,
+.dropdown-item svg {
+  width: 17px !important;
+  height: 17px !important;
+  min-width: 17px !important;
+  min-height: 17px !important;
+  display: block;
+  flex-shrink: 0;
+}
+
 
 .table-actions-inline button:hover {
   background: #f1f5f9;
@@ -389,6 +400,7 @@ table td {
   color: #334155 !important;
   transition: background 0.15s ease;
 }
+
 
 .dropdown-item:hover {
   background: #f1f5f9 !important;

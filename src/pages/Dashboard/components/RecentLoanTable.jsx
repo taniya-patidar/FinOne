@@ -3,21 +3,21 @@ import "./RecentLoanTable.css";
 import { Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import user1 from "../../../assets/users/user1.jpg";
-import user2 from "../../../assets/users/user2.jpg";
-import user3 from "../../../assets/users/user3.jpg";
-import user4 from "../../../assets/users/user4.jpg";
-import user5 from "../../../assets/users/user5.jpg";
-import user6 from "../../../assets/users/user6.jpg";
+// import user1 from "../../../assets/users/user1.jpg";
+// import user2 from "../../../assets/users/user2.jpg";
+// import user3 from "../../../assets/users/user3.jpg";
+// import user4 from "../../../assets/users/user4.jpg";
+// import user5 from "../../../assets/users/user5.jpg";
+// import user6 from "../../../assets/users/user6.jpg";
 
 const initialLoanData = [
-  { id: 1, customerId: "CUST-1001", image: user1, customer: "Rahul Sharma", loanType: "Personal", amount: "₹2,50,000", status: "Approved", date: "06 Aug 2026" },
-  { id: 2, customerId: "CUST-1002", image: user2, customer: "Priya Patel", loanType: "Home", amount: "₹15,00,000", status: "Pending", date: "05 Aug 2026" },
-  { id: 3, customerId: "CUST-1003", image: user3, customer: "Aman Verma", loanType: "Vehicle", amount: "₹8,20,000", status: "Rejected", date: "04 Aug 2026" },
-  { id: 4, customerId: "CUST-1004", image: user4, customer: "Neha Singh", loanType: "Education", amount: "₹4,00,000", status: "Approved", date: "03 Aug 2026" },
-  { id: 5, customerId: "CUST-1005", image: user5, customer: "Rohit Jain", loanType: "Business", amount: "₹12,00,000", status: "Pending", date: "02 Aug 2026" },
-  { id: 6, customerId: "CUST-1006", image: user6, customer: "Tanu Jain", loanType: "Business", amount: "₹12,00,000", status: "Pending", date: "02 Aug 2026" },
-  { id: 7, customerId: "CUST-1007", image: user3, customer: "Priti Jain", loanType: "Business", amount: "₹16,00,000", status: "Pending", date: "02 Aug 2026" },
+  { id: 1, customerId: "CUST-1001", customer: "Rahul Sharma", loanType: "Personal", amount: "₹2,50,000", status: "Approved", date: "06 Aug 2026" },
+  { id: 2, customerId: "CUST-1002", customer: "Priya Patel", loanType: "Home", amount: "₹15,00,000", status: "Pending", date: "05 Aug 2026" },
+  { id: 3, customerId: "CUST-1003", customer: "Aman Verma", loanType: "Vehicle", amount: "₹8,20,000", status: "Rejected", date: "04 Aug 2026" },
+  { id: 4, customerId: "CUST-1004", customer: "Neha Singh", loanType: "Education", amount: "₹4,00,000", status: "Approved", date: "03 Aug 2026" },
+  { id: 5, customerId: "CUST-1005", customer: "Rohit Jain", loanType: "Business", amount: "₹12,00,000", status: "Pending", date: "02 Aug 2026" },
+  { id: 6, customerId: "CUST-1006", customer: "Tanu Jain", loanType: "Business", amount: "₹12,00,000", status: "Pending", date: "02 Aug 2026" },
+  { id: 7, customerId: "CUST-1007",  customer: "Priti Jain", loanType: "Business", amount: "₹16,00,000", status: "Pending", date: "02 Aug 2026" },
 ];
 
 function RecentLoanTable() {
@@ -31,7 +31,7 @@ function RecentLoanTable() {
       const formatted = savedApps.map((app, idx) => ({
         id: app.id || idx + 1,
         customerId: app.customerId || `CUST-${1000 + (app.id || idx + 1)}`,
-        image: app.image || user1,
+        image: app.image ,
         customer: app.name || app.applicantName || "Applicant",
         loanType: app.loanType || "Personal",
         amount: typeof app.loanAmount === "number" ? `₹${app.loanAmount.toLocaleString("en-IN")}` : app.loanAmount || "₹0",

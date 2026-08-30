@@ -22,9 +22,11 @@ const LoanDistributionChart = () => {
   const [chartData, setChartData] = useState(defaultLoanTypeData);
 
   const calculateDistribution = () => {
-    const savedApps = JSON.parse(localStorage.getItem("loanApplications") || "[]");
+    const savedApps = JSON.parse(
+      localStorage.getItem("loanApplications") || "[]"
+    );
 
-    if (savedApps.length > 0) {
+    if (savedApps && savedApps.length > 0) {
       const counts = {
         Personal: 0,
         Home: 0,
@@ -34,11 +36,40 @@ const LoanDistributionChart = () => {
       };
 
       savedApps.forEach((app) => {
-        const type = app.loanType || "Personal";
-        if (counts[type] !== undefined) {
-          counts[type] += 1;
+        // Safe string parsing and cleanup
+        const rawType = (
+          app.loanType ||
+          app.type ||
+          app.category ||
+          ""
+        )
+          .toString()
+          .toLowerCase()
+          .trim();
+
+        // Flexibly match variations in spelling or casing
+        if (rawType.includes("home") || rawType.includes("house")) {
+          counts.Home += 1;
+        } else if (
+          rawType.includes("vehicle") ||
+          rawType.includes("car") ||
+          rawType.includes("auto")
+        ) {
+          counts.Vehicle += 1;
+        } else if (
+          rawType.includes("business") ||
+          rawType.includes("biz")
+        ) {
+          counts.Business += 1;
+        } else if (
+          rawType.includes("education") ||
+          rawType.includes("student") ||
+          rawType.includes("study")
+        ) {
+          counts.Education += 1;
         } else {
-          counts["Personal"] += 1;
+          // Default to Personal if empty or explicitly personal
+          counts.Personal += 1;
         }
       });
 
@@ -55,6 +86,8 @@ const LoanDistributionChart = () => {
 
   useEffect(() => {
     calculateDistribution();
+
+    // Listen to storage changes and window focus
     window.addEventListener("storage", calculateDistribution);
     window.addEventListener("focus", calculateDistribution);
 
@@ -79,22 +112,10 @@ const LoanDistributionChart = () => {
               layout="vertical"
               barCategoryGap="25%"
             >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                horizontal={false}
-              />
-
-              <XAxis type="number" />
-
-              <YAxis
-                type="category"
-                dataKey="type"
-              />
-
-              <Tooltip
-                formatter={(value) => `${value} Loans`}
-              />
-
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+              <XAxis type="number" allowDecimals={false} />
+              <YAxis type="category" dataKey="type" />
+              <Tooltip formatter={(value) => [`${value} Loans`, "Total"]} />
               <Bar
                 dataKey="loans"
                 fill="#2563eb"

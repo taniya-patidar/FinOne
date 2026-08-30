@@ -22,7 +22,7 @@ const Sidebar = ({ collapsed, currentPage, onPageChange }) => {
     { id: 'emiSchedule', label: 'EMI Schedule', icon: FileText },
     { id: 'reports', label: 'Reports & Charts', icon: BarChart3 },
     { id: 'notification', label: 'Notification', icon:Bell},
-    { id: 'profile', label: 'Profile & settings', icon: Settings },
+    // { id: 'profile', label: 'Profile & settings', icon: Settings },
   ];
 
   return (
@@ -62,6 +62,9 @@ const Sidebar = ({ collapsed, currentPage, onPageChange }) => {
                   }
                   if(item.id==='reports'){
                     navigate('/reports')
+                  }
+                  if(item.id==='notification'){
+                    navigate('/notifications')
                   }
                 }}
                 className={`nav-item ${isActive ? 'active' : ''}`}

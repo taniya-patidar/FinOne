@@ -59,7 +59,7 @@ function RecentNotification() {
       <div className="notification-header">
         <h3>Recent Notifications</h3>
 
-        <button className="view-all-btn" onClick={()=> navigate('/Notification')}>
+        <button className="view-all-btn" onClick={()=> navigate('/notifications')}>
           View All
         </button>
       </div>

@@ -396,22 +396,34 @@
   }
 
   .register-left {
-    width: 100%;
-    height: 180px;
-    min-height: 180px;
+     width: 40%;
+  height: 100%;
 
-    padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #04142e,
+    #041a3b
+  );
+
+  overflow: hidden;
   }
 
   .register-left img {
     width: 100%;
-    height: 100%;
+  height: 100%;
 
-    object-fit: contain;
+  display: block;
+
+  object-fit: contain;
+  object-position: center;
   }
 
   .register-right {
-    width: 100%;
+    width: 60%;
     min-height: auto;
 
     padding: 22px 18px;
@@ -419,7 +431,6 @@
 
   .register-card {
     max-width: 100%;
-
     padding: 26px 22px;
   }
 

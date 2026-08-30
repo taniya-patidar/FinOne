@@ -16,11 +16,11 @@ import {
   FileText,
 } from "lucide-react";
 
-import user1 from "../../assets/users/user1.jpg";
-import user2 from "../../assets/users/user2.jpg";
-import user3 from "../../assets/users/user3.jpg";
-import user4 from "../../assets/users/user4.jpg";
-import user5 from "../../assets/users/user5.jpg";
+// import user1 from "../../assets/users/user1.jpg";
+// import user2 from "../../assets/users/user2.jpg";
+// import user3 from "../../assets/users/user3.jpg";
+// import user4 from "../../assets/users/user4.jpg";
+// import user5 from "../../assets/users/user5.jpg";
 
 import "./LoanApplicationList.css";
 
@@ -29,7 +29,7 @@ const defaultLoanApplications = [
     id: "LA-10301",
     customerId: "CUST-10001",
     name: "Rahul Sharma",
-    avatar: user1,
+    // avatar: user1,
     mobile: "9876543210",
     email: "rahul.sharma@example.com",
     loanType: "Home Loan",
@@ -42,7 +42,7 @@ const defaultLoanApplications = [
     id: "LA-10302",
     customerId: "CUST-10002",
     name: "Neha Verma",
-    avatar: user2,
+    // avatar: user2,
     mobile: "9876543211",
     email: "neha.verma@example.com",
     loanType: "Personal Loan",
@@ -55,7 +55,7 @@ const defaultLoanApplications = [
     id: "LA-10303",
     customerId: "CUST-10003",
     name: "Amit Patel",
-    avatar: user3,
+    // avatar: user3,
     mobile: "9876543212",
     email: "amit.patel@example.com",
     loanType: "Business Loan",
@@ -69,7 +69,7 @@ const defaultLoanApplications = [
     id: "LA-10304",
     customerId: "CUST-10004",
     name: "Priya Singh",
-    avatar: user4,
+    // avatar: user4,
     mobile: "9876543213",
     email: "priya.singh@example.com",
     loanType: "Home Loan",
@@ -83,7 +83,7 @@ const defaultLoanApplications = [
     id: "LA-10305",
     customerId: "CUST-10005",
     name: "Rohit Kumar",
-    avatar: user5,
+    // avatar: user5,
     mobile: "9876543214",
     email: "rohit.kumar@example.com",
     loanType: "Vehicle Loan",
