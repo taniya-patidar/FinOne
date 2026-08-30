@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
-  Filter,
   Download,
   ChevronLeft,
   ChevronRight,
-  MoreVertical,
   Home,
   User,
   Briefcase,
@@ -81,25 +79,12 @@ const LoanApproval = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const [activeMenuId, setActiveMenuId] = useState(null);
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("loanApplications")) || [];
     setApplications(saved);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (
-        !e.target.closest(".actions-cell-wrapper") &&
-        !e.target.closest(".action-dropdown-menu")
-      ) {
-        setActiveMenuId(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -167,18 +152,13 @@ const LoanApproval = () => {
     const appName = app.name || app.applicantName || "";
     const appId = app.id || app.applicationId || "";
 
-    const matchesTab =
-      activeTab === "All" ||
-      (activeTab === "Pending" && appStatus === "Pending") ||
-      (activeTab === "Review" && appStatus === "Under Review") ||
-      (activeTab === "Approved" && appStatus === "Approved") ||
-      (activeTab === "Rejected" && appStatus === "Rejected");
+    const matchesStatus = appStatus === "Approved";
 
     const matchesSearch =
       appName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appId.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return matchesTab && matchesSearch;
+    return matchesStatus && matchesSearch;
   });
 
  const handleReviewClick = (app, creditScore) => {
@@ -236,36 +216,6 @@ const LoanApproval = () => {
     document.body.removeChild(link);
   };
 
-  // DYNAMIC SYNC LOGIC: Jab status Approved ho tab EMI schedule payload LocalStorage me save hota h
-  const handleStatusChange = (uniqueKey, newStatus) => {
-    let targetApp = null;
-
-    const updatedList = applications.map((item, idx) => {
-      const itemKey = item.id || `app-${idx}`;
-      if (itemKey === uniqueKey) {
-        targetApp = { ...item, status: newStatus };
-        return targetApp;
-      }
-      return item;
-    });
-
-    setApplications(updatedList);
-    localStorage.setItem("loanApplications", JSON.stringify(updatedList));
-
-    // Agar status Approved hua h, toh is Application ko Dynamic EMI Schedule me sync kar do
-    if (newStatus === "Approved" && targetApp) {
-      const existingEMI = JSON.parse(localStorage.getItem("approvedEMISchedules")) || [];
-      const newEmiEntry = createEMISchedulePayload(targetApp);
-
-      // Check ki kahin pehle se toh add nahi h
-      const filteredEMIs = existingEMI.filter((e) => e.id !== newEmiEntry.id);
-      const updatedEMIs = [newEmiEntry, ...filteredEMIs];
-
-      localStorage.setItem("approvedEMISchedules", JSON.stringify(updatedEMIs));
-    }
-
-    setActiveMenuId(null);
-  };
 
   return (
     <div className="finone-container">
@@ -505,37 +455,8 @@ const LoanApproval = () => {
                         >
                           Review
                         </button>
-                        <button
-                          className="btn-more"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveMenuId(activeMenuId === itemKey ? null : itemKey);
-                          }}
-                        >
-                          <MoreVertical size={16} />
-                        </button>
+                        
                       </div>
-
-                      {activeMenuId === itemKey && (
-                        <div
-                          className={`action-dropdown-menu ${
-                            index >= currentTableData.length - 2 ? "dropup" : ""
-                          }`}
-                        >
-                          <button onClick={() => handleStatusChange(itemKey, "Approved")}>
-                            <CheckCircle size={14} className="text-green" /> Mark Approved
-                          </button>
-                          <button onClick={() => handleStatusChange(itemKey, "Under Review")}>
-                            <Clock size={14} className="text-blue" /> Mark Under Review
-                          </button>
-                          <button
-                            className="text-red"
-                            onClick={() => handleStatusChange(itemKey, "Rejected")}
-                          >
-                            <XCircle size={14} /> Reject Application
-                          </button>
-                        </div>
-                      )}
                     </td>
                   </tr>
                 );

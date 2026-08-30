@@ -1,142 +1,319 @@
 // src/pages/Notifications/NotificationsPage.jsx
 
-import React, { useState, useEffect } from 'react';
-import { 
-  Bell, CheckCheck, Trash2, FileText, CheckCircle2, 
-  XCircle, Info, Filter 
-} from 'lucide-react';
-import { 
-  getNotifications, markAsRead, markAllAsRead, deleteNotification 
-} from '../../services/notificationService';
-import './Notifications.css';
+import React, { useEffect, useState } from "react";
+
+import {
+  Bell,
+  CheckCheck,
+  Trash2,
+  FileText,
+  CheckCircle2,
+  XCircle,
+  Info,
+} from "lucide-react";
+
+import {
+  getNotifications,
+  markAsRead,
+  markAllAsRead,
+  deleteNotification,
+} from "../../services/notificationService";
+
+import "./Notifications.css";
+
 
 const NotificationsPage = () => {
-  const [notifications, setNotifications] = useState([]);
-  const [filter, setFilter] = useState('all'); // 'all' | 'unread'
 
+  const [notifications, setNotifications] = useState([]);
+  const [filter, setFilter] = useState("all");
+
+
+  // Load notifications
   const loadNotifications = () => {
-    setNotifications(getNotifications());
+    const data = getNotifications();
+
+    setNotifications(data);
   };
 
+
+  // Initial load + live updates
   useEffect(() => {
+
     loadNotifications();
 
-    // Event listener for live updates
-    window.addEventListener("notificationsUpdated", loadNotifications);
-    return () => window.removeEventListener("notificationsUpdated", loadNotifications);
+    const handleNotificationsUpdate = () => {
+      loadNotifications();
+    };
+
+    window.addEventListener(
+      "notificationsUpdated",
+      handleNotificationsUpdate
+    );
+
+    return () => {
+      window.removeEventListener(
+        "notificationsUpdated",
+        handleNotificationsUpdate
+      );
+    };
+
   }, []);
 
+
+  // Mark single notification as read
   const handleMarkRead = (id) => {
+
     markAsRead(id);
+
     loadNotifications();
   };
 
+
+  // Mark all as read
   const handleMarkAllRead = () => {
+
     markAllAsRead();
+
     loadNotifications();
   };
 
-  const handleDelete = (id, e) => {
-    e.stopPropagation();
+
+  // Delete notification
+  const handleDelete = (id, event) => {
+
+    event.stopPropagation();
+
     deleteNotification(id);
+
     loadNotifications();
   };
 
-  const filteredList = notifications.filter(n => {
-    if (filter === 'unread') return !n.isRead;
-    return true;
-  });
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  // Filter notifications
+  const filteredNotifications =
+    notifications.filter((notification) => {
 
+      if (filter === "unread") {
+        return !notification.isRead;
+      }
+
+      return true;
+    });
+
+
+  // Unread count
+  const unreadCount =
+    notifications.filter(
+      (notification) => !notification.isRead
+    ).length;
+
+
+  // Notification icon
   const getIcon = (type) => {
+
     switch (type) {
-      case 'application':
-        return <div className="icon-box blue"><FileText size={18} /></div>;
-      case 'approved':
-        return <div className="icon-box green"><CheckCircle2 size={18} /></div>;
-      case 'rejected':
-        return <div className="icon-box red"><XCircle size={18} /></div>;
+
+      case "application":
+        return (
+          <div className="icon-box blue">
+            <FileText size={18} />
+          </div>
+        );
+
+
+      case "approved":
+        return (
+          <div className="icon-box green">
+            <CheckCircle2 size={18} />
+          </div>
+        );
+
+
+      case "rejected":
+        return (
+          <div className="icon-box red">
+            <XCircle size={18} />
+          </div>
+        );
+
+
       default:
-        return <div className="icon-box purple"><Info size={18} /></div>;
+        return (
+          <div className="icon-box purple">
+            <Info size={18} />
+          </div>
+        );
     }
   };
 
+
   return (
+
     <div className="notif-page-container">
+
       {/* Header */}
+
       <div className="notif-header">
+
         <div className="notif-title-area">
+
           <h2>Notifications</h2>
+
           {unreadCount > 0 && (
-            <span className="unread-badge-count">{unreadCount} Unread</span>
+            <span className="unread-badge-count">
+              {unreadCount} Unread
+            </span>
           )}
+
         </div>
+
 
         <div className="notif-header-actions">
-          <button className="btn-secondary" onClick={handleMarkAllRead}>
-            <CheckCheck size={16} /> Mark all as read
-          </button>
+
+          {unreadCount > 0 && (
+
+            <button
+              className="btn-secondary"
+              onClick={handleMarkAllRead}
+            >
+              <CheckCheck size={16} />
+
+              Mark all as read
+            </button>
+
+          )}
+
         </div>
+
       </div>
 
-      {/* Filter Tabs */}
+
+      {/* Filter */}
+
       <div className="notif-filter-bar">
-        <button 
-          className={`filter-tab ${filter === 'all' ? 'active' : ''}`}
-          onClick={() => setFilter('all')}
+
+        <button
+          className={`filter-tab ${
+            filter === "all" ? "active" : ""
+          }`}
+          onClick={() => setFilter("all")}
         >
           All ({notifications.length})
         </button>
-        <button 
-          className={`filter-tab ${filter === 'unread' ? 'active' : ''}`}
-          onClick={() => setFilter('unread')}
+
+
+        <button
+          className={`filter-tab ${
+            filter === "unread" ? "active" : ""
+          }`}
+          onClick={() => setFilter("unread")}
         >
           Unread ({unreadCount})
         </button>
+
       </div>
 
-      {/* Notifications List */}
+
+      {/* Notification List */}
+
       <div className="notif-list">
-        {filteredList.length === 0 ? (
+
+        {filteredNotifications.length === 0 ? (
+
           <div className="notif-empty-card">
-            <Bell size={36} className="text-muted" />
-            <p>No notifications to show</p>
+
+            <Bell
+              size={36}
+              className="text-muted"
+            />
+
+            <p>
+              {filter === "unread"
+                ? "No unread notifications"
+                : "No notifications to show"}
+            </p>
+
           </div>
+
         ) : (
-          filteredList.map((item) => (
-            <div 
-              key={item.id} 
-              className={`notif-card ${!item.isRead ? 'unread' : ''}`}
-              onClick={() => handleMarkRead(item.id)}
+
+          filteredNotifications.map((notification) => (
+
+            <div
+              key={notification.id}
+              className={`notif-card ${
+                !notification.isRead
+                  ? "unread"
+                  : ""
+              }`}
+              onClick={() =>
+                handleMarkRead(notification.id)
+              }
             >
+
               <div className="notif-left">
-                {getIcon(item.type)}
+
+                {getIcon(notification.type)}
+
+
                 <div className="notif-content">
+
                   <div className="notif-title-row">
-                    <h4>{item.title}</h4>
-                    {!item.isRead && <span className="blue-dot"></span>}
+
+                    <h4>
+                      {notification.title}
+                    </h4>
+
+
+                    {!notification.isRead && (
+                      <span className="blue-dot"></span>
+                    )}
+
                   </div>
-                  <p>{item.message}</p>
-                  <span className="notif-time">{item.timestamp}</span>
+
+
+                  <p>
+                    {notification.message}
+                  </p>
+
+
+                  <span className="notif-time">
+                    {notification.timestamp}
+                  </span>
+
                 </div>
+
               </div>
 
+
               <div className="notif-actions">
-                <button 
+
+                <button
                   className="btn-icon-delete"
                   title="Delete notification"
-                  onClick={(e) => handleDelete(item.id, e)}
+                  onClick={(event) =>
+                    handleDelete(
+                      notification.id,
+                      event
+                    )
+                  }
                 >
                   <Trash2 size={16} />
                 </button>
+
               </div>
+
             </div>
+
           ))
+
         )}
+
       </div>
+
     </div>
   );
 };
+
 
 export default NotificationsPage;

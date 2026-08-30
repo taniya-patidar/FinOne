@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import {
+  addNotification,
+} from "../../services/notificationService";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
@@ -16,12 +19,6 @@ import {
   FileText,
 } from "lucide-react";
 
-// import user1 from "../../assets/users/user1.jpg";
-// import user2 from "../../assets/users/user2.jpg";
-// import user3 from "../../assets/users/user3.jpg";
-// import user4 from "../../assets/users/user4.jpg";
-// import user5 from "../../assets/users/user5.jpg";
-
 import "./LoanApplicationList.css";
 
 const defaultLoanApplications = [
@@ -29,7 +26,6 @@ const defaultLoanApplications = [
     id: "LA-10301",
     customerId: "CUST-10001",
     name: "Rahul Sharma",
-    // avatar: user1,
     mobile: "9876543210",
     email: "rahul.sharma@example.com",
     loanType: "Home Loan",
@@ -42,7 +38,6 @@ const defaultLoanApplications = [
     id: "LA-10302",
     customerId: "CUST-10002",
     name: "Neha Verma",
-    // avatar: user2,
     mobile: "9876543211",
     email: "neha.verma@example.com",
     loanType: "Personal Loan",
@@ -55,7 +50,6 @@ const defaultLoanApplications = [
     id: "LA-10303",
     customerId: "CUST-10003",
     name: "Amit Patel",
-    // avatar: user3,
     mobile: "9876543212",
     email: "amit.patel@example.com",
     loanType: "Business Loan",
@@ -65,41 +59,48 @@ const defaultLoanApplications = [
     updatedOn: "15 May 2024",
     approvalDate: "15 May 2024",
   },
-  {
-    id: "LA-10304",
-    customerId: "CUST-10004",
-    name: "Priya Singh",
-    // avatar: user4,
-    mobile: "9876543213",
-    email: "priya.singh@example.com",
-    loanType: "Home Loan",
-    loanAmount: "₹ 30,00,000",
-    status: "Rejected",
-    appliedOn: "14 May 2024",
-    updatedOn: "14 May 2024",
-    rejectionDate: "14 May 2024",
-  },
-  {
-    id: "LA-10305",
-    customerId: "CUST-10005",
-    name: "Rohit Kumar",
-    // avatar: user5,
-    mobile: "9876543214",
-    email: "rohit.kumar@example.com",
-    loanType: "Vehicle Loan",
-    loanAmount: "₹ 8,00,000",
-    status: "Pending",
-    appliedOn: "12 May 2024",
-    updatedOn: "12 May 2024",
-  },
 ];
+
+const formatLoanItem = (item) => {
+  const rawName = item.name || item.fullName || item.applicantName || "N/A";
+  const rawAmount = item.loanAmount || item.amount || item.requestedAmount || "₹ 0";
+  const rawType = item.loanType || item.type || "Personal Loan";
+  const rawStatus = item.status || "Pending";
+  const todayFormatted = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  const rawAppliedDate = item.appliedOn || item.createdAt || todayFormatted;
+  const rawUpdatedDate = item.updatedOn || rawAppliedDate;
+
+  return {
+    ...item,
+    id: item.id || `LA-${Math.floor(10000 + Math.random() * 90000)}`,
+    name: rawName,
+    email: item.email || `${rawName.toLowerCase().replace(/\s+/g, ".")}@example.com`,
+    loanAmount:
+      typeof rawAmount === "number"
+        ? `₹ ${rawAmount.toLocaleString("en-IN")}`
+        : rawAmount.startsWith("₹")
+        ? rawAmount
+        : `₹ ${rawAmount}`,
+    loanType: rawType,
+    status: rawStatus,
+    appliedOn: rawAppliedDate,
+    updatedOn: rawUpdatedDate,
+    actionDate: item.actionDate || rawUpdatedDate,
+    approvalDate: item.approvalDate || (rawStatus === "Approved" ? rawUpdatedDate : null),
+    rejectionDate: item.rejectionDate || (rawStatus === "Rejected" ? rawUpdatedDate : null),
+    mobile: item.mobile || item.phone || item.contact || "",
+  };
+};
 
 const LoanApplication = () => {
   const navigate = useNavigate();
 
   const [customers, setCustomers] = useState([]);
-
-  // Primary State
   const [loans, setLoans] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Status");
@@ -107,10 +108,8 @@ const LoanApplication = () => {
   const [showColumns, setShowColumns] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-
-  // Dropdown Control State
   const [activeMenuId, setActiveMenuId] = useState(null);
-  const menuRef = useRef(null);
+  const [notification, setNotification] = useState(null);
 
   const applicationsPerPage = 5;
 
@@ -124,41 +123,11 @@ const LoanApplication = () => {
     actions: true,
   });
 
-  // UPDATED: Format Loan Item with dynamic date support
-  const formatLoanItem = (item) => {
-    const rawName = item.name || item.fullName || item.applicantName || "N/A";
-    const rawAmount = item.loanAmount || item.amount || item.requestedAmount || "₹ 0";
-    const rawType = item.loanType || item.type || "Personal Loan";
-    const rawStatus = item.status || "Pending";
-    const todayFormatted = new Date().toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-
-    const rawAppliedDate = item.appliedOn || item.createdAt || todayFormatted;
-    const rawUpdatedDate = item.updatedOn || rawAppliedDate;
-
-    return {
-      ...item,
-      id: item.id || `LA-${Math.floor(10000 + Math.random() * 90000)}`,
-      name: rawName,
-      email: item.email || `${rawName.toLowerCase().replace(/\s+/g, ".")}@example.com`,
-      loanAmount:
-        typeof rawAmount === "number"
-          ? `₹ ${rawAmount.toLocaleString("en-IN")}`
-          : rawAmount.startsWith("₹")
-          ? rawAmount
-          : `₹ ${rawAmount}`,
-      loanType: rawType,
-      status: rawStatus,
-      appliedOn: rawAppliedDate,
-      updatedOn: rawUpdatedDate,
-      actionDate: item.actionDate || rawUpdatedDate,
-      approvalDate: item.approvalDate || (rawStatus === "Approved" ? rawUpdatedDate : null),
-      rejectionDate: item.rejectionDate || (rawStatus === "Rejected" ? rawUpdatedDate : null),
-      mobile: item.mobile || item.phone || item.contact || "",
-    };
+  const triggerToast = (message, type = "success") => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
   };
 
   const loadLoanApplications = () => {
@@ -167,24 +136,34 @@ const LoanApplication = () => {
       if (savedCustomersRaw) {
         setCustomers(JSON.parse(savedCustomersRaw));
       }
+
       const savedLoansRaw = localStorage.getItem("loanApplications");
 
       if (!savedLoansRaw) {
         localStorage.setItem("loanApplications", JSON.stringify(defaultLoanApplications));
-        setLoans(defaultLoanApplications);
+        setLoans(defaultLoanApplications.map(formatLoanItem));
       } else {
         const parsed = JSON.parse(savedLoansRaw);
         if (Array.isArray(parsed)) {
-          const normalized = parsed.map(formatLoanItem);
-          setLoans(normalized);
+          setLoans(parsed.map(formatLoanItem));
         } else {
-          setLoans(defaultLoanApplications);
+          setLoans(defaultLoanApplications.map(formatLoanItem));
         }
       }
     } catch (err) {
       console.error("Error loading loan applications:", err);
-      setLoans(defaultLoanApplications);
+      setLoans(defaultLoanApplications.map(formatLoanItem));
     }
+  };
+
+  const saveLoansToStorage = (updatedLoans) => {
+    setLoans(updatedLoans);
+    try {
+      localStorage.setItem("loanApplications", JSON.stringify(updatedLoans));
+    } catch (err) {
+      console.error("Failed to update localStorage:", err);
+    }
+    window.dispatchEvent(new Event("loansUpdated"));
   };
 
   const getCustomerAvatar = (app) => {
@@ -199,14 +178,21 @@ const LoanApplication = () => {
   useEffect(() => {
     loadLoanApplications();
 
-    const handleFocus = () => loadLoanApplications();
-    window.addEventListener("focus", handleFocus);
-    return () => window.removeEventListener("focus", handleFocus);
+    const handleSync = () => loadLoanApplications();
+    window.addEventListener("focus", handleSync);
+    window.addEventListener("storage", handleSync);
+    window.addEventListener("loansUpdated", handleSync);
+
+    return () => {
+      window.removeEventListener("focus", handleSync);
+      window.removeEventListener("storage", handleSync);
+      window.removeEventListener("loansUpdated", handleSync);
+    };
   }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (!event.target.closest(".more-action-container")) {
         setActiveMenuId(null);
       }
     };
@@ -239,10 +225,10 @@ const LoanApplication = () => {
     });
   }, [loans, search, statusFilter, loanTypeFilter]);
 
+  const totalPages = Math.ceil(filteredLoans.length / applicationsPerPage);
   const indexOfLastItem = currentPage * applicationsPerPage;
   const indexOfFirstItem = indexOfLastItem - applicationsPerPage;
   const currentLoans = filteredLoans.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredLoans.length / applicationsPerPage);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -268,10 +254,9 @@ const LoanApplication = () => {
   const handleEditDetails = (id) => navigate(`/loans/${id}/edit`);
 
   const toggleMoreMenu = (id) => {
-    setActiveMenuId(activeMenuId === id ? null : id);
+    setActiveMenuId((prev) => (prev === id ? null : id));
   };
 
-  // UPDATED: Dynamic status update with current date handling
   const handleUpdateStatus = (id, newStatus) => {
     const todayDate = new Date().toLocaleDateString("en-GB", {
       day: "2-digit",
@@ -293,24 +278,41 @@ const LoanApplication = () => {
       return item;
     });
 
-    setLoans(updated);
-    localStorage.setItem("loanApplications", JSON.stringify(updated));
+    // LocalStorage me save karein
+    saveLoansToStorage(updated);
+
+ addNotification(
+  `Loan #${id} ${newStatus}`,
+  `Application #${id} status changed to ${newStatus}.`,
+  newStatus === "Approved"
+    ? "approved"
+    : newStatus === "Rejected"
+    ? "rejected"
+    : "application"
+);
+
     setActiveMenuId(null);
+    triggerToast(`Loan #${id} marked as ${newStatus}. Redirecting to Notifications...`, "success");
+
+    // Notifications page par redirect karein
+    setTimeout(() => {
+      navigate("/notifications");
+    }, 1000);
   };
 
   const handleDelete = (id) => {
-    if (window.confirm(`Kya aap loan application #${id} ko delete karna chahte hain?`)) {
+    if (window.confirm(`Are you sure you want to delete loan application #${id}?`)) {
       const updatedLoans = loans.filter((item) => String(item.id) !== String(id));
-      setLoans(updatedLoans);
-      localStorage.setItem("loanApplications", JSON.stringify(updatedLoans));
+      saveLoansToStorage(updatedLoans);
       setActiveMenuId(null);
+      triggerToast(`Loan #${id} deleted successfully.`, "danger");
     }
   };
 
   const handleDownloadReceipt = (app) => {
     const receiptContent = `
 ========================================
-       LOAN APPLICATION RECEIPT
+        LOAN APPLICATION RECEIPT
 ========================================
 Application ID : ${app.id}
 Customer Name  : ${app.name}
@@ -321,7 +323,6 @@ Requested Amt  : ${app.loanAmount}
 Current Status : ${app.status}
 Applied Date   : ${app.appliedOn}
 Last Updated   : ${app.updatedOn || "N/A"}
-Action Date    : ${app.actionDate || "N/A"}
 ========================================
 Generated On   : ${new Date().toLocaleString()}
     `;
@@ -386,6 +387,25 @@ Generated On   : ${new Date().toLocaleString()}
 
   return (
     <section className="loan-page">
+      {notification && (
+        <div
+          style={{
+            position: "fixed",
+            top: "20px",
+            right: "20px",
+            padding: "12px 20px",
+            borderRadius: "8px",
+            color: "#fff",
+            backgroundColor: notification.type === "danger" ? "#ef4444" : "#10b981",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            zIndex: 9999,
+            fontWeight: "bold",
+            transition: "all 0.3s ease",
+          }}
+        >
+          {notification.message}
+        </div>
+      )}
       <div className="loan-page-header">
         <div>
           <h1>Loan Application</h1>
@@ -457,7 +477,9 @@ Generated On   : ${new Date().toLocaleString()}
         <div className="table-top">
           <div>
             <h2>Loan Applications</h2>
-            <p>Showing {filteredLoans.length} of {totalCount} entries</p>
+            <p>
+              Showing {filteredLoans.length} of {totalCount} entries
+            </p>
           </div>
 
           <div className="table-actions">
@@ -599,10 +621,7 @@ Generated On   : ${new Date().toLocaleString()}
                             <Pencil size={17} />
                           </button>
 
-                          <div
-                            className="more-action-container"
-                            ref={activeMenuId === app.id ? menuRef : null}
-                          >
+                          <div className="more-action-container">
                             <button
                               title="More Options"
                               className={`more-btn ${

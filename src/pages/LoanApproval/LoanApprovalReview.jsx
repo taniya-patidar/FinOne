@@ -1,4 +1,5 @@
 import  { useState, useEffect } from "react";
+import { addNotification } from "../../services/notificationService";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import {
@@ -145,11 +146,40 @@ const LoanApprovalReview = () => {
       return app;
     });
 
+
     localStorage.setItem("loanApplications", JSON.stringify(updatedApps));
-    alert(`Application ${application.id} marked as "${statusType}" successfully!`);
+
+// 🔔 Create notification
+let notificationTitle = "";
+let notificationMessage = "";
+let notificationType = "application";
+
+if (statusType === "Approved") {
+  notificationTitle = "Loan Application Approved";
+  notificationMessage = `Application #${application.id} has been approved successfully.`;
+  notificationType = "approved";
+} else if (statusType === "Rejected") {
+  notificationTitle = "Loan Application Rejected";
+  notificationMessage = `Application #${application.id} has been rejected.`;
+  notificationType = "rejected";
+} else if (statusType === "Need More Information") {
+  notificationTitle = "More Information Required";
+  notificationMessage = `Additional information is required for Application #${application.id}.`;
+  notificationType = "application";
+}
+
+addNotification(
+  notificationTitle,
+  notificationMessage,
+  notificationType
+);
+
+alert(`Application ${application.id} marked as "${statusType}" successfully!`);
     setActiveModal(null);
     navigate("/loan-approval");
   };
+
+
 
   return (
     <div className="approval-review-container">
