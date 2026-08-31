@@ -253,6 +253,7 @@ const handleStatusUpdate = (applicationId, newStatus) => {
       "loanApplications",
       JSON.stringify([newApplication, ...existingLoans])
     );
+    window.dispatchEvent(new Event("loansUpdated"));
 
     navigate("/loanApplication");
   };

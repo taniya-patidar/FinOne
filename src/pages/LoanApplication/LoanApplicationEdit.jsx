@@ -86,6 +86,7 @@ const LoanApplicationEdit = () => {
       });
 
       localStorage.setItem("loanApplications", JSON.stringify(updatedLoans));
+      window.dispatchEvent(new Event("loansUpdated"));
       alert("Application updated successfully!");
       navigate("/loanApplication"); // Navigate back to list page
     } catch (err) {

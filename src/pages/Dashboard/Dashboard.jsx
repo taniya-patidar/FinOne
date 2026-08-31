@@ -46,11 +46,13 @@ const Dashboard = () => {
   useEffect(() => {
     calculateChartData();
     window.addEventListener('storage', calculateChartData);
-    window.addEventListener('notificationUpdated', calculateChartData);
+    window.addEventListener('notificationsUpdated', calculateChartData);
 
     return () => {
       window.removeEventListener('storage', calculateChartData);
-      window.removeEventListener('notificationUpdated', calculateChartData);
+      window.removeEventListener('notificationsUpdated', calculateChartData);
+      window.removeEventListener('loansUpdated', calculateChartData);
+      // window.addEventListener('loansUpdated', calculateChartData);
     };
   }, []);
 

@@ -148,6 +148,7 @@ const LoanApprovalReview = () => {
 
 
     localStorage.setItem("loanApplications", JSON.stringify(updatedApps));
+    window.dispatchEvent(new Event("loansUpdated"));
 
 // 🔔 Create notification
 let notificationTitle = "";

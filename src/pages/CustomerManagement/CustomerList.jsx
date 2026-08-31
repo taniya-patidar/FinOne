@@ -131,6 +131,7 @@ const CustomerList = () => {
 
     setCustomers(updatedCustomers);
     localStorage.setItem("customers", JSON.stringify(updatedCustomers));
+    window.dispatchEvent(new Event("customersUpdated"));
   };
 
   const toggleColumn = (column) => {

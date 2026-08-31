@@ -11,17 +11,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const fallbackData = [
-  { date: "01 May 2026", applications: 40, approved: 20, rejected: 5 },
-  { date: "08 May 2026", applications: 65, approved: 35, rejected: 8 },
-  { date: "15 May 2026", applications: 70, approved: 40, rejected: 10 },
-  { date: "22 May 2026", applications: 85, approved: 50, rejected: 12 },
-  { date: "29 May 2026", applications: 90, approved: 55, rejected: 15 },
-  { date: "02 Aug 2026", applications: 98, approved: 62, rejected: 20 },
-];
+
 
 const LoanApplicationChart = () => {
-  const [chartData, setChartData] = useState(fallbackData);
+  const [chartData, setChartData] = useState([]);
   // Default view ko 'Daily' rakha hai taaki exact date dikhe
   const [viewMode, setViewMode] = useState("Daily");
 
@@ -48,7 +41,7 @@ const LoanApplicationChart = () => {
     );
 
     if (!savedApps || savedApps.length === 0) {
-      setChartData(fallbackData);
+      setChartData([]);
       return;
     }
 
@@ -145,7 +138,7 @@ const LoanApplicationChart = () => {
       (a, b) => a.timestamp - b.timestamp
     );
 
-    setChartData(formattedData.length > 0 ? formattedData : fallbackData);
+    setChartData(formattedData);
   };
 
   useEffect(() => {
@@ -155,10 +148,12 @@ const LoanApplicationChart = () => {
   useEffect(() => {
     window.addEventListener("storage", calculateExactDynamicData);
     window.addEventListener("focus", calculateExactDynamicData);
+    window.addEventListener("loansUpdated", calculateExactDynamicData);
 
     return () => {
       window.removeEventListener("storage", calculateExactDynamicData);
       window.removeEventListener("focus", calculateExactDynamicData);
+      window.removeEventListener("loansUpdated", calculateExactDynamicData);
     };
   }, [viewMode]);
 
@@ -215,73 +210,97 @@ const LoanApplicationChart = () => {
           </div>
         </div>
 
-        <div className="chart-container">
-          <ResponsiveContainer width="100%" height={320}>
-            <LineChart
-              width={600}
-              height={320}
-              data={chartData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={true}
-                stroke="#e5e7eb"
-              />
+<div className="chart-container">
+  {chartData.length === 0 ? (
+    <div
+      style={{
+        height: 320,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#6b7280",
+      }}
+    >
+      No loan application data available
+    </div>
+  ) : (
+    <ResponsiveContainer width="100%" height={320}>
+      <LineChart data={chartData}>
+        <CartesianGrid
+          strokeDasharray="3 3"
+          vertical={true}
+          stroke="#e5e7eb"
+        />
 
-              <XAxis
-                dataKey="date"
-                tick={{ fontSize: 11, fill: "#4b5563" }}
-                interval="preserveStartEnd"
-                minTickGap={15}
-              />
+        <XAxis
+          dataKey="date"
+          tick={{ fontSize: 11, fill: "#4b5563" }}
+          interval="preserveStartEnd"
+          minTickGap={15}
+        />
 
-              <YAxis tick={{ fontSize: 12, fill: "#4b5563" }} />
+        <YAxis tick={{ fontSize: 12, fill: "#4b5563" }} />
 
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#ffffff",
-                  borderRadius: "8px",
-                  boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                  border: "1px solid #e5e7eb",
-                }}
-              />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: "#ffffff",
+            borderRadius: "8px",
+            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+            border: "1px solid #e5e7eb",
+          }}
+        />
 
-              <Legend wrapperStyle={{ paddingTop: "10px" }} />
+        <Legend wrapperStyle={{ paddingTop: "10px" }} />
 
-              <Line
-                type="monotone"
-                dataKey="applications"
-                name="Applications"
-                stroke="#2563eb"
-                strokeWidth={2}
-                dot={{ r: 4, stroke: "#2563eb", strokeWidth: 2, fill: "#ffffff" }}
-                activeDot={{ r: 6 }}
-              />
+        <Line
+          type="monotone"
+          dataKey="applications"
+          name="Applications"
+          stroke="#2563eb"
+          strokeWidth={2}
+          dot={{
+            r: 4,
+            stroke: "#2563eb",
+            strokeWidth: 2,
+            fill: "#ffffff",
+          }}
+          activeDot={{ r: 6 }}
+        />
 
-              <Line
-                type="monotone"
-                dataKey="approved"
-                name="Approved"
-                stroke="#22c55e"
-                strokeWidth={2}
-                dot={{ r: 4, stroke: "#22c55e", strokeWidth: 2, fill: "#ffffff" }}
-                activeDot={{ r: 6 }}
-              />
+        <Line
+          type="monotone"
+          dataKey="approved"
+          name="Approved"
+          stroke="#22c55e"
+          strokeWidth={2}
+          dot={{
+            r: 4,
+            stroke: "#22c55e",
+            strokeWidth: 2,
+            fill: "#ffffff",
+          }}
+          activeDot={{ r: 6 }}
+        />
 
-              <Line
-                type="monotone"
-                dataKey="rejected"
-                name="Rejected"
-                stroke="#ef4444"
-                strokeWidth={2}
-                dot={{ r: 4, stroke: "#ef4444", strokeWidth: 2, fill: "#ffffff" }}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+        <Line
+          type="monotone"
+          dataKey="rejected"
+          name="Rejected"
+          stroke="#ef4444"
+          strokeWidth={2}
+          dot={{
+            r: 4,
+            stroke: "#ef4444",
+            strokeWidth: 2,
+            fill: "#ffffff",
+          }}
+          activeDot={{ r: 6 }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  )}
+</div>
+       </div> 
     </section>
   );
 };

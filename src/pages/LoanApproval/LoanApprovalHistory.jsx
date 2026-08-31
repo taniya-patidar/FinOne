@@ -46,135 +46,42 @@ const LoanApprovalHistory = () => {
   // Modal / Drawer state for View details action
   const [selectedApp, setSelectedApp] = useState(null);
 
-  // Dummy fallback data if localStorage is empty for rich presentation
-  const mockHistoryData = [
-    {
-      id: "LA-10021",
-      name: "Rahul Sharma",
-      mobile: "9876543210",
-      loanType: "Home Loan",
-      loanAmount: "850000",
-      status: "Approved",
-      decisionBy: "Admin User",
-      decisionDate: "17 Aug 2025",
-      decisionTime: "02:45 PM",
-      remarks: "Good repayment capacity and stable salary income.",
-      creditScore: 780,
-    },
-    {
-      id: "LA-10018",
-      name: "Neha Verma",
-      mobile: "9876543211",
-      loanType: "Personal Loan",
-      loanAmount: "250000",
-      status: "Rejected",
-      decisionBy: "Admin User",
-      decisionDate: "16 Aug 2025",
-      decisionTime: "11:30 AM",
-      remarks: "High existing financial obligations.",
-      creditScore: 610,
-    },
-    {
-      id: "LA-10017",
-      name: "Amit Mishra",
-      mobile: "9876543212",
-      loanType: "Business Loan",
-      loanAmount: "1200000",
-      status: "Approved",
-      decisionBy: "Admin User",
-      decisionDate: "16 Aug 2025",
-      decisionTime: "10:15 AM",
-      remarks: "Meets all eligibility criteria and clear bank statement.",
-      creditScore: 765,
-    },
-    {
-      id: "LA-10016",
-      name: "Pooja Singh",
-      mobile: "9876543213",
-      loanType: "Education Loan",
-      loanAmount: "475000",
-      status: "Sent Back",
-      decisionBy: "Admin User",
-      decisionDate: "15 Aug 2025",
-      decisionTime: "04:20 PM",
-      remarks: "Please provide updated 6-month bank statement.",
-      creditScore: 690,
-    },
-    {
-      id: "LA-10015",
-      name: "Vikram Kumar",
-      mobile: "9876543214",
-      loanType: "Home Loan",
-      loanAmount: "1500000",
-      status: "Approved",
-      decisionBy: "Admin User",
-      decisionDate: "14 Aug 2025",
-      decisionTime: "03:10 PM",
-      remarks: "Strong profile and excellent credit score.",
-      creditScore: 810,
-    },
-    {
-      id: "LA-10014",
-      name: "Sunita Kapoor",
-      mobile: "9876543215",
-      loanType: "Personal Loan",
-      loanAmount: "180000",
-      status: "Rejected",
-      decisionBy: "Admin User",
-      decisionDate: "14 Aug 2025",
-      decisionTime: "01:05 PM",
-      remarks: "Low credit score below policy minimum threshold.",
-      creditScore: 580,
-    },
-    {
-      id: "LA-10013",
-      name: "Deepak Patel",
-      mobile: "9876543216",
-      loanType: "Business Loan",
-      loanAmount: "950000",
-      status: "Sent Back",
-      decisionBy: "Admin User",
-      decisionDate: "13 Aug 2025",
-      decisionTime: "05:40 PM",
-      remarks: "ITR document required for current fiscal year.",
-      creditScore: 670,
-    },
-    {
-      id: "LA-10012",
-      name: "Meera Rao",
-      mobile: "9876543217",
-      loanType: "Home Loan",
-      loanAmount: "680000",
-      status: "Approved",
-      decisionBy: "Admin User",
-      decisionDate: "13 Aug 2025",
-      decisionTime: "11:20 AM",
-      remarks: "Eligible and stable income record verified.",
-      creditScore: 750,
-    },
-  ];
 
-  useEffect(() => {
-    const savedApps = JSON.parse(localStorage.getItem("loanApplications")) || [];
 
-    // Filter only processed decisions
-    let history = savedApps.filter(
-      (app) => app.status && app.status !== "Pending Approval" && app.status !== "Pending"
+  const loadHistory = () => {
+  const savedApps = JSON.parse(localStorage.getItem("loanApplications")) || [];
+
+  // Filter only processed decisions
+  let history = savedApps.filter(
+    (app) =>
+      app.status &&
+      app.status !== "Pending Approval" &&
+      app.status !== "Pending"
+  );
+
+  if (customerIdFilter) {
+    history = history.filter(
+      (app) =>
+        app.customerId === customerIdFilter ||
+        app.id === customerIdFilter
     );
-
-    // If storage is empty, load initial mock data for seamless demo preview
-    if (history.length === 0) {
-      history = mockHistoryData;
-    }
-
-    if (customerIdFilter) {
-      history = history.filter(
-        (app) => String(app.customerId) === String(customerIdFilter)
-      );
-    }
+  }
 
     setHistoryList(history);
-  }, [customerIdFilter]);
+  };
+  useEffect(() => {
+  loadHistory();
+
+  window.addEventListener("storage", loadHistory);
+  window.addEventListener("focus", loadHistory);
+  window.addEventListener("loansUpdated", loadHistory);
+
+  return () => {
+    window.removeEventListener("storage", loadHistory);
+    window.removeEventListener("focus", loadHistory);
+    window.removeEventListener("loansUpdated", loadHistory);
+  };
+}, [customerIdFilter]);
 
   // Reset pagination when filter changes
   useEffect(() => {

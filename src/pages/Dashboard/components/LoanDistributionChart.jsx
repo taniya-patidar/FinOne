@@ -10,16 +10,10 @@ import {
 } from "recharts";
 import "./ChartsSection.css";
 
-const defaultLoanTypeData = [
-  { type: "Personal", loans: 120 },
-  { type: "Home", loans: 90 },
-  { type: "Business", loans: 65 },
-  { type: "Vehicle", loans: 40 },
-  { type: "Education", loans: 25 },
-];
+
 
 const LoanDistributionChart = () => {
-  const [chartData, setChartData] = useState(defaultLoanTypeData);
+  const [chartData, setChartData] = useState([]);
 
   const calculateDistribution = () => {
     const savedApps = JSON.parse(
@@ -80,8 +74,14 @@ const LoanDistributionChart = () => {
 
       setChartData(formatted);
     } else {
-      setChartData(defaultLoanTypeData);
-    }
+  setChartData([
+    { type: "Personal", loans: 0 },
+    { type: "Home", loans: 0 },
+    { type: "Business", loans: 0 },
+    { type: "Vehicle", loans: 0 },
+    { type: "Education", loans: 0 },
+  ]);
+}
   };
 
   useEffect(() => {
@@ -90,10 +90,12 @@ const LoanDistributionChart = () => {
     // Listen to storage changes and window focus
     window.addEventListener("storage", calculateDistribution);
     window.addEventListener("focus", calculateDistribution);
+    window.addEventListener("loansUpdated", calculateDistribution);
 
     return () => {
       window.removeEventListener("storage", calculateDistribution);
       window.removeEventListener("focus", calculateDistribution);
+      window.removeEventListener("loansUpdated", calculateDistribution);
     };
   }, []);
 

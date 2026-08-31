@@ -15,6 +15,7 @@ const ApplyLoanForm = () => {
     const existingApplications = JSON.parse(localStorage.getItem("loanApplications") || "[]");
     const newApplication = { id: Date.now(), ...formData, status: "Pending" };
     localStorage.setItem("loanApplications", JSON.stringify([newApplication, ...existingApplications]));
+    window.dispatchEvent(new Event("loansUpdated"));
 
     // 2. Trigger Notification
     addNotification(

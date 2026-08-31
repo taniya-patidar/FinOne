@@ -11,22 +11,13 @@ import {
   Bar,
 } from "recharts";
 
-const defaultDisbursementData = [
-  { month: "Jan", disbursed: 40, collected: 25 },
-  { month: "Feb", disbursed: 60, collected: 45 },
-  { month: "Mar", disbursed: 48, collected: 38 },
-  { month: "Apr", disbursed: 70, collected: 45 },
-  { month: "May", disbursed: 62, collected: 52 },
-  { month: "Jun", disbursed: 80, collected: 60 },
-  { month: "Jul", disbursed: 85, collected: 63 },
-  { month: "Aug", disbursed: 88, collected: 68 },
-];
+
 
 const DisbursementAndCollection = () => {
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [availableYears, setAvailableYears] = useState([currentYear]);
-  const [chartData, setChartData] = useState(defaultDisbursementData);
+  const [chartData, setChartData] = useState([]);
 
   const calculateDisbursementAndCollection = () => {
     const savedApps = JSON.parse(
@@ -130,19 +121,21 @@ const DisbursementAndCollection = () => {
         collected: parseFloat(monthlyBuckets[m].collected.toFixed(2)),
       }));
 
-      // Check if we have any non-zero values for this selected year
-      const hasData = dynamicFormattedData.some(
-        (item) => item.disbursed > 0 || item.collected > 0
-      );
+      
 
-      if (hasData) {
-        setChartData(dynamicFormattedData);
+      setChartData(dynamicFormattedData);
       } else {
-        setChartData(defaultDisbursementData);
-      }
-    } else {
-      setChartData(defaultDisbursementData);
-    }
+  setChartData(
+    [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ].map((month) => ({
+      month,
+      disbursed: 0,
+      collected: 0,
+    }))
+  );
+}
   };
 
   useEffect(() => {
@@ -150,10 +143,12 @@ const DisbursementAndCollection = () => {
 
     window.addEventListener("storage", calculateDisbursementAndCollection);
     window.addEventListener("focus", calculateDisbursementAndCollection);
+    window.addEventListener("loansUpdated",calculateDisbursementAndCollection);
 
     return () => {
       window.removeEventListener("storage", calculateDisbursementAndCollection);
       window.removeEventListener("focus", calculateDisbursementAndCollection);
+      window.removeEventListener("loansUpdated", calculateDisbursementAndCollection);
     };
   }, [selectedYear]);
 

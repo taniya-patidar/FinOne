@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./ChartsSection.css";
 
-const defaultTopLoanProducts = [
-  { id: 1, name: "Home Loan", amount: "₹10.25 Cr", percentage: 42 },
-  { id: 2, name: "Business Loan", amount: "₹6.80 Cr", percentage: 28 },
-  { id: 3, name: "Personal Loan", amount: "₹4.35 Cr", percentage: 18 },
-  { id: 4, name: "Vehicle Loan", amount: "₹2.30 Cr", percentage: 9 },
-  { id: 5, name: "Education Loan", amount: "₹0.88 Cr", percentage: 3 },
-];
+
 
 const TopLoanPRoducts = () => {
-  const [productsData, setProductsData] = useState(defaultTopLoanProducts);
+  const [productsData, setProductsData] = useState([]);
 
   const calculateTopProducts = () => {
     const savedApps = JSON.parse(
@@ -88,8 +82,22 @@ const TopLoanPRoducts = () => {
 
       setProductsData(dynamicProducts);
     } else {
-      setProductsData(defaultTopLoanProducts);
-    }
+  setProductsData(
+    Object.keys({
+      "Home Loan": true,
+      "Business Loan": true,
+      "Personal Loan": true,
+      "Vehicle Loan": true,
+      "Education Loan": true,
+    }).map((name, index) => ({
+      id: index + 1,
+      name,
+      amount: "₹0",
+      rawAmount: 0,
+      percentage: 0,
+    }))
+  );
+}
   };
 
   useEffect(() => {
@@ -97,10 +105,12 @@ const TopLoanPRoducts = () => {
 
     window.addEventListener("storage", calculateTopProducts);
     window.addEventListener("focus", calculateTopProducts);
+    window.addEventListener("loansUpdated", calculateTopProducts);
 
     return () => {
       window.removeEventListener("storage", calculateTopProducts);
       window.removeEventListener("focus", calculateTopProducts);
+      window.removeEventListener("loansUpdated", calculateTopProducts);
     };
   }, []);
 

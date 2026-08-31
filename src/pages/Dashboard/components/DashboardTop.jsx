@@ -29,7 +29,7 @@ const DashboardTop = () => {
     const rejectedCount = apps.filter(a => a.status?.toLowerCase() === 'rejected').length;
 
     setStatsData({
-      totalCustomers: customers.length || 1250, // Fallback if empty
+      totalCustomers: customers.length , // Fallback if empty
       totalApplications: apps.length,
       approved: approvedCount,
       pending: pendingCount,
@@ -42,11 +42,13 @@ const DashboardTop = () => {
     loadDynamicStats();
     // Real-time updates when state changes
     window.addEventListener('storage', loadDynamicStats);
-    window.addEventListener('notificationUpdated', loadDynamicStats);
+    window.addEventListener('notificationsUpdated', loadDynamicStats);
+    window.addEventListener('loansUpdated', loadDynamicStats);
 
     return () => {
       window.removeEventListener('storage', loadDynamicStats);
-      window.removeEventListener('notificationUpdated', loadDynamicStats);
+      window.removeEventListener('notificationsUpdated', loadDynamicStats);
+      window.removeEventListener('loansUpdated', loadDynamicStats);
     };
   }, []);
 
