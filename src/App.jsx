@@ -26,6 +26,7 @@ import ManageApplications from './pages/ManageApplications/ManageApplications';
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOtp from "./pages/auth/VerifyOtp";
 import ResetPassword from "./pages/auth/ResetPassword";
+import Logout from "./pages/auth/Logout";
 
 
 
@@ -94,6 +95,7 @@ const App = () => {
         <Route path="/apply-loan" element={<ApplyLoanForm />} />
         <Route path="/manage-applications" element={<ManageApplications />} />
         <Route path="/notifications" element={<NotificationsPage/>} />
+        <Route path="/logout" element={<Logout/>} />
 
        
 

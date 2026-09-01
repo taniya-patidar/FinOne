@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import "./Register.css";
 import finoneImage from "../../assets/FinOne.jpeg";
@@ -18,18 +19,22 @@ const Register = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
+  const [passwordStrength, setPasswordStrength] =
+    useState("");
 
   const checkPasswordStrength = (password) => {
     if (!password) {
       setPasswordStrength("");
       return;
     }
+
     if (password.length < 6) {
       setPasswordStrength("Weak");
       return;
     }
+
     if (
       password.length >= 8 &&
       /[A-Z]/.test(password) &&
@@ -40,6 +45,7 @@ const Register = () => {
       setPasswordStrength("Strong");
       return;
     }
+
     setPasswordStrength("Medium");
   };
 
@@ -62,7 +68,11 @@ const Register = () => {
       checkPasswordStrength(value);
     }
 
-    if (name === "confirmPassword" && value && value === formData.password) {
+    if (
+      name === "confirmPassword" &&
+      value &&
+      value === formData.password
+    ) {
       setErrors((previous) => ({
         ...previous,
         confirmPassword: "",
@@ -72,89 +82,183 @@ const Register = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    const { fullName, username, email, phone, password, confirmPassword } = formData;
+
+    const {
+      fullName,
+      username,
+      email,
+      phone,
+      password,
+      confirmPassword,
+    } = formData;
 
     if (!fullName.trim()) {
-      newErrors.fullName = "Please enter your full name";
+      newErrors.fullName =
+        "Please enter your full name";
     } else if (fullName.trim().length < 3) {
-      newErrors.fullName = "Name must be at least 3 characters";
+      newErrors.fullName =
+        "Name must be at least 3 characters";
     }
 
     if (!username.trim()) {
-      newErrors.username = "Please enter a username";
+      newErrors.username =
+        "Please enter a username";
     } else if (username.trim().length < 4) {
-      newErrors.username = "Username must be at least 4 characters";
-    } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      newErrors.username = "Username can contain letters, numbers and underscore only";
+      newErrors.username =
+        "Username must be at least 4 characters";
+    } else if (
+      !/^[a-zA-Z0-9_]+$/.test(username.trim())
+    ) {
+      newErrors.username =
+        "Username can contain letters, numbers and underscore only";
     }
 
     if (!email.trim()) {
-      newErrors.email = "Please enter your email address";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email =
+        "Please enter your email address";
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        email.trim()
+      )
+    ) {
+      newErrors.email =
+        "Please enter a valid email address";
     }
 
     if (!phone.trim()) {
-      newErrors.phone = "Please enter your phone number";
-    } else if (!/^[6-9]\d{9}$/.test(phone)) {
-      newErrors.phone = "Please enter a valid 10-digit phone number";
+      newErrors.phone =
+        "Please enter your phone number";
+    } else if (!/^[6-9]\d{9}$/.test(phone.trim())) {
+      newErrors.phone =
+        "Please enter a valid 10-digit phone number";
     }
 
     if (!password) {
-      newErrors.password = "Please enter a password";
+      newErrors.password =
+        "Please enter a password";
     } else if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+      newErrors.password =
+        "Password must be at least 8 characters";
     } else if (
       !/[A-Z]/.test(password) ||
       !/[a-z]/.test(password) ||
       !/[0-9]/.test(password) ||
       !/[^A-Za-z0-9]/.test(password)
     ) {
-      newErrors.password = "Use uppercase, lowercase, number and special character";
+      newErrors.password =
+        "Use uppercase, lowercase, number and special character";
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword =
+        "Please confirm your password";
     } else if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword =
+        "Passwords do not match";
     }
 
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
   const handleRegister = (e) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      const userData = {
-        fullName: formData.fullName,
-        username: formData.username,
-        email: formData.email,
-        phone: formData.phone,
-        password: formData.password,
-      };
+    if (!validateForm()) {
+      return;
+    }
 
-      localStorage.setItem("registeredUser", JSON.stringify(userData));
-      alert("Registration Successful! Please login.");
+    const userData = {
+      id: `USR-${Date.now()}`,
+      fullName: formData.fullName.trim(),
+      username: formData.username.trim(),
+      email: formData.email.trim().toLowerCase(),
+      phone: formData.phone.trim(),
+      password: formData.password,
+
+      // Frontend-only authentication metadata
+      authProvider: "local",
+
+      // Useful later when backend is connected
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    try {
+      /*
+       * Temporary frontend database.
+       *
+       * Later this will be replaced with:
+       * POST /api/auth/register
+       */
+      localStorage.setItem(
+        "registeredUser",
+        JSON.stringify(userData)
+      );
+
+      /*
+       * Make sure a newly registered user
+       * does not accidentally inherit an
+       * older logged-in session.
+       */
+      localStorage.removeItem("currentUser");
+
+      window.dispatchEvent(
+        new Event("currentUserUpdated")
+      );
+
+      alert(
+        "Registration Successful! Please login."
+      );
+
       navigate("/");
+    } catch (error) {
+      console.error(
+        "Registration error:",
+        error
+      );
+
+      alert(
+        "Unable to complete registration. Please try again."
+      );
     }
   };
 
   return (
     <div className="register-page">
+
       <div className="register-left">
-        <img src={finoneImage} alt="FinOne Loan Management System" />
+        <img
+          src={finoneImage}
+          alt="FinOne Loan Management System"
+        />
       </div>
 
       <div className="register-right">
-        <div className="register-card">
-          <h2>Create Account</h2>
-          <p className="register-subtitle">Create your account to get started with FinOne</p>
 
-          <form onSubmit={handleRegister} noValidate>
+        <div className="register-card">
+
+          <h2>Create Account</h2>
+
+          <p className="register-subtitle">
+            Create your account to get started
+            with FinOne
+          </p>
+
+          <form
+            onSubmit={handleRegister}
+            noValidate
+          >
+
+            {/* Full Name */}
+
             <div className="register-form-group">
-              <label htmlFor="fullName">Full Name</label>
+
+              <label htmlFor="fullName">
+                Full Name
+              </label>
+
               <input
                 id="fullName"
                 name="fullName"
@@ -163,14 +267,29 @@ const Register = () => {
                 value={formData.fullName}
                 onChange={handleChange}
                 autoComplete="name"
-                aria-invalid={Boolean(errors.fullName)}
+                aria-invalid={Boolean(
+                  errors.fullName
+                )}
               />
-              {errors.fullName && <p className="register-field-error">{errors.fullName}</p>}
+
+              {errors.fullName && (
+                <p className="register-field-error">
+                  {errors.fullName}
+                </p>
+              )}
+
             </div>
 
+            {/* Username + Email */}
+
             <div className="register-row">
+
               <div className="register-form-group">
-                <label htmlFor="username">Username</label>
+
+                <label htmlFor="username">
+                  Username
+                </label>
+
                 <input
                   id="username"
                   name="username"
@@ -179,13 +298,25 @@ const Register = () => {
                   value={formData.username}
                   onChange={handleChange}
                   autoComplete="username"
-                  aria-invalid={Boolean(errors.username)}
+                  aria-invalid={Boolean(
+                    errors.username
+                  )}
                 />
-                {errors.username && <p className="register-field-error">{errors.username}</p>}
+
+                {errors.username && (
+                  <p className="register-field-error">
+                    {errors.username}
+                  </p>
+                )}
+
               </div>
 
               <div className="register-form-group">
-                <label htmlFor="email">Email</label>
+
+                <label htmlFor="email">
+                  Email
+                </label>
+
                 <input
                   id="email"
                   name="email"
@@ -194,14 +325,29 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                   autoComplete="email"
-                  aria-invalid={Boolean(errors.email)}
+                  aria-invalid={Boolean(
+                    errors.email
+                  )}
                 />
-                {errors.email && <p className="register-field-error">{errors.email}</p>}
+
+                {errors.email && (
+                  <p className="register-field-error">
+                    {errors.email}
+                  </p>
+                )}
+
               </div>
+
             </div>
 
+            {/* Phone */}
+
             <div className="register-form-group">
-              <label htmlFor="phone">Phone Number</label>
+
+              <label htmlFor="phone">
+                Phone Number
+              </label>
+
               <input
                 id="phone"
                 name="phone"
@@ -212,82 +358,177 @@ const Register = () => {
                 maxLength={10}
                 inputMode="numeric"
                 autoComplete="tel"
-                aria-invalid={Boolean(errors.phone)}
+                aria-invalid={Boolean(
+                  errors.phone
+                )}
               />
-              {errors.phone && <p className="register-field-error">{errors.phone}</p>}
+
+              {errors.phone && (
+                <p className="register-field-error">
+                  {errors.phone}
+                </p>
+              )}
+
             </div>
 
+            {/* Password + Confirm Password */}
+
             <div className="register-row">
+
               <div className="register-form-group">
-                <label htmlFor="password">Password</label>
+
+                <label htmlFor="password">
+                  Password
+                </label>
+
                 <div className="register-password-wrapper">
+
                   <input
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"}
+                    type={
+                      showPassword
+                        ? "text"
+                        : "password"
+                    }
                     placeholder="Create password"
                     value={formData.password}
                     onChange={handleChange}
                     autoComplete="new-password"
-                    aria-invalid={Boolean(errors.password)}
+                    aria-invalid={Boolean(
+                      errors.password
+                    )}
                   />
+
                   <button
                     type="button"
                     className="register-password-toggle"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    onClick={() =>
+                      setShowPassword(
+                        (previous) =>
+                          !previous
+                      )
+                    }
+                    aria-label={
+                      showPassword
+                        ? "Hide password"
+                        : "Show password"
+                    }
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
                   </button>
+
                 </div>
 
                 {passwordStrength && (
-                  <p className={`register-password-strength ${passwordStrength.toLowerCase()}`}>
+                  <p
+                    className={`register-password-strength ${passwordStrength.toLowerCase()}`}
+                  >
                     {passwordStrength} password
                   </p>
                 )}
-                {errors.password && <p className="register-field-error">{errors.password}</p>}
+
+                {errors.password && (
+                  <p className="register-field-error">
+                    {errors.password}
+                  </p>
+                )}
+
               </div>
 
               <div className="register-form-group">
-                <label htmlFor="confirmPassword">Confirm Password</label>
+
+                <label htmlFor="confirmPassword">
+                  Confirm Password
+                </label>
+
                 <div className="register-password-wrapper">
+
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
+                    type={
+                      showConfirmPassword
+                        ? "text"
+                        : "password"
+                    }
                     placeholder="Confirm password"
-                    value={formData.confirmPassword}
+                    value={
+                      formData.confirmPassword
+                    }
                     onChange={handleChange}
                     autoComplete="new-password"
-                    aria-invalid={Boolean(errors.confirmPassword)}
+                    aria-invalid={Boolean(
+                      errors.confirmPassword
+                    )}
                   />
+
                   <button
                     type="button"
                     className="register-password-toggle"
-                    onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    onClick={() =>
+                      setShowConfirmPassword(
+                        (previous) =>
+                          !previous
+                      )
+                    }
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
                   >
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
                   </button>
+
                 </div>
-                {errors.confirmPassword && <p className="register-field-error">{errors.confirmPassword}</p>}
+
+                {errors.confirmPassword && (
+                  <p className="register-field-error">
+                    {errors.confirmPassword}
+                  </p>
+                )}
+
               </div>
+
             </div>
 
-            <button type="submit" className="register-btn">
+            <button
+              type="submit"
+              className="register-btn"
+            >
               Create Account
             </button>
+
           </form>
 
           <div className="register-login-link">
-            <span>Already have an account?</span>
-            <button type="button" onClick={() => navigate("/")}>
+
+            <span>
+              Already have an account?
+            </span>
+
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+            >
               Login
             </button>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
   );
 };

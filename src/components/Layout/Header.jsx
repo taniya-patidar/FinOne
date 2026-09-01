@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+
+import React, {
+  useEffect,
+  useState,
+} from "react";
 
 import {
   Menu,
@@ -17,7 +21,6 @@ import {
 
 import "./Header.css";
 
-
 const Header = ({
   onToggleSidebar,
   darkMode,
@@ -26,64 +29,200 @@ const Header = ({
 
   const navigate = useNavigate();
 
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCount, setUnreadCount] =
+    useState(0);
 
+  const [currentUser, setCurrentUser] =
+    useState(null);
 
-  // Load unread notification count
-  const loadUnreadCount = () => {
+  /*
+   * ============================================================
+   * LOAD CURRENT USER
+   * ============================================================
+   */
 
-    const count = getUnreadCount();
+  const loadCurrentUser = () => {
 
-    setUnreadCount(count);
+    try {
+
+      const savedUser =
+        localStorage.getItem(
+          "currentUser"
+        );
+
+      if (!savedUser) {
+
+        setCurrentUser(null);
+
+        return;
+      }
+
+      const parsedUser =
+        JSON.parse(savedUser);
+
+      setCurrentUser(parsedUser);
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load current user:",
+        error
+      );
+
+      setCurrentUser(null);
+    }
   };
 
+  /*
+   * ============================================================
+   * LOAD UNREAD NOTIFICATIONS
+   * ============================================================
+   */
 
-  // Initial load + live updates
+  const loadUnreadCount = () => {
+
+    try {
+
+      const count =
+        getUnreadCount();
+
+      setUnreadCount(
+        Number.isFinite(count)
+          ? count
+          : 0
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load unread notifications:",
+        error
+      );
+
+      setUnreadCount(0);
+    }
+  };
+
+  /*
+   * ============================================================
+   * INITIAL LOAD + LIVE SYNC
+   * ============================================================
+   */
+
   useEffect(() => {
 
+    loadCurrentUser();
     loadUnreadCount();
 
-    const handleNotificationsUpdate = () => {
-      loadUnreadCount();
-    };
+    const handleNotificationsUpdate =
+      () => {
+        loadUnreadCount();
+      };
+
+    const handleCurrentUserUpdate =
+      () => {
+        loadCurrentUser();
+      };
 
     window.addEventListener(
       "notificationsUpdated",
       handleNotificationsUpdate
     );
 
+    window.addEventListener(
+      "currentUserUpdated",
+      handleCurrentUserUpdate
+    );
+
+    window.addEventListener(
+      "storage",
+      handleCurrentUserUpdate
+    );
+
     return () => {
+
       window.removeEventListener(
         "notificationsUpdated",
         handleNotificationsUpdate
+      );
+
+      window.removeEventListener(
+        "currentUserUpdated",
+        handleCurrentUserUpdate
+      );
+
+      window.removeEventListener(
+        "storage",
+        handleCurrentUserUpdate
       );
     };
 
   }, []);
 
+  /*
+   * ============================================================
+   * NOTIFICATION CLICK
+   * ============================================================
+   */
 
-  // Open notification page
   const handleNotificationClick = () => {
 
-    navigate("/notifications");
+    navigate(
+      "/notifications"
+    );
   };
 
+  /*
+   * ============================================================
+   * USER DISPLAY NAME
+   * ============================================================
+   */
+
+  const displayName =
+    currentUser?.fullName ||
+    currentUser?.name ||
+    currentUser?.username ||
+    currentUser?.email?.split("@")[0] ||
+    "Admin";
+
+  /*
+   * ============================================================
+   * USER INITIAL
+   * ============================================================
+   */
+
+  const userInitial =
+    displayName
+      .trim()
+      .charAt(0)
+      .toUpperCase() || "U";
+
+  /*
+   * ============================================================
+   * RENDER
+   * ============================================================
+   */
 
   return (
 
     <header className="header">
 
-      {/* Left Section */}
+      {/* ======================================================
+          LEFT SECTION
+          ====================================================== */}
 
       <div className="header-left">
 
         <button
-          onClick={onToggleSidebar}
+          onClick={
+            onToggleSidebar
+          }
           className="icon-btn"
+          title="Toggle Sidebar"
+          aria-label="Toggle Sidebar"
         >
           <Menu className="icon" />
         </button>
-
 
         <div className="search-container">
 
@@ -99,18 +238,33 @@ const Header = ({
 
       </div>
 
-
-      {/* Right Section */}
+      {/* ======================================================
+          RIGHT SECTION
+          ====================================================== */}
 
       <div className="header-right">
 
-        {/* Dark Mode */}
+        {/* ====================================================
+            DARK MODE
+            ==================================================== */}
 
         <button
           onClick={() =>
-            setDarkMode(!darkMode)
+            setDarkMode(
+              !darkMode
+            )
           }
           className="icon-btn"
+          title={
+            darkMode
+              ? "Switch to Light Mode"
+              : "Switch to Dark Mode"
+          }
+          aria-label={
+            darkMode
+              ? "Switch to Light Mode"
+              : "Switch to Dark Mode"
+          }
         >
 
           {darkMode ? (
@@ -121,49 +275,76 @@ const Header = ({
 
         </button>
 
-
-        {/* Notifications */}
+        {/* ====================================================
+            NOTIFICATIONS
+            ==================================================== */}
 
         <button
           className="icon-btn notification-btn"
-          onClick={handleNotificationClick}
+          onClick={
+            handleNotificationClick
+          }
           title="Notifications"
+          aria-label="Notifications"
         >
 
           <Bell className="icon" />
 
-
           {unreadCount > 0 && (
 
             <span className="badge">
+
               {unreadCount > 99
                 ? "99+"
                 : unreadCount}
+
             </span>
 
           )}
 
         </button>
 
+        {/* ====================================================
+            USER PROFILE
+            ==================================================== */}
 
-        {/* User */}
-
-        <div className="user-profile">
+        <div
+          className="user-profile"
+          title={`Logged in as ${displayName}`}
+        >
 
           <div className="avatar">
 
-            <User
-              style={{
-                width: "1rem",
-                height: "1rem",
-              }}
-            />
+            {currentUser?.avatar ? (
+
+              <img
+                src={currentUser.avatar}
+                alt={displayName}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+
+            ) : (
+
+              <span
+                style={{
+                  fontSize: "0.9rem",
+                  fontWeight: 600,
+                }}
+              >
+                {userInitial}
+              </span>
+
+            )}
 
           </div>
 
-
           <span className="user-name">
-            Admin
+            {displayName}
           </span>
 
         </div>
@@ -174,5 +355,5 @@ const Header = ({
   );
 };
 
-
 export default Header;
+

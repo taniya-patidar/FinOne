@@ -80,7 +80,7 @@ const Sidebar = ({ collapsed, currentPage, onPageChange }) => {
 
       {/* Footer Section */}
       <div className="sidebar-footer">
-        <button className="footer-btn" title={collapsed ? 'Logout' : ''}>
+        <button onClick={()=> navigate("/logout") } className="footer-btn" title={collapsed ? 'Logout' : ''}>
           <LogOut className="nav-icon" />
           {!collapsed && <span>Logout</span>}
         </button>

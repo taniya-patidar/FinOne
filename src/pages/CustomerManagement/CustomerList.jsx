@@ -121,7 +121,7 @@ const CustomerList = () => {
 
   const handleDeleteCustomer = (id) => {
     const confirmDelete = window.confirm(
-      "Kya aap is customer ko delete karna chahte hain?"
+      "Do you want to delete this Customer?"
     );
     if (!confirmDelete) return;
 
