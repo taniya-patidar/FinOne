@@ -10,6 +10,7 @@ import {
 import './Dashboard.css';
 
 const DashboardTop = () => {
+  const [currentUser, setCurrentUser] = useState(null);
   const [statsData, setStatsData] = useState({
     totalCustomers: 0,
     totalApplications: 0,
@@ -19,8 +20,32 @@ const DashboardTop = () => {
     active: 0
   });
 
+  /*
+   * ============================================================
+   * LOAD CURRENT USER FROM LOCALSTORAGE
+   * ============================================================
+   */
+  const loadCurrentUser = () => {
+    try {
+      const savedUser = localStorage.getItem("currentUser");
+      if (!savedUser) {
+        setCurrentUser(null);
+        return;
+      }
+      const parsedUser = JSON.parse(savedUser);
+      setCurrentUser(parsedUser);
+    } catch (error) {
+      console.error("Failed to load current user:", error);
+      setCurrentUser(null);
+    }
+  };
+
+  /*
+   * ============================================================
+   * LOAD DYNAMIC STATS
+   * ============================================================
+   */
   const loadDynamicStats = () => {
-    // Fetch live applications & customers from localStorage
     const apps = JSON.parse(localStorage.getItem('loanApplications') || '[]');
     const customers = JSON.parse(localStorage.getItem('customers') || '[]');
 
@@ -29,28 +54,53 @@ const DashboardTop = () => {
     const rejectedCount = apps.filter(a => a.status?.toLowerCase() === 'rejected').length;
 
     setStatsData({
-      totalCustomers: customers.length , // Fallback if empty
+      totalCustomers: customers.length,
       totalApplications: apps.length,
       approved: approvedCount,
       pending: pendingCount,
       rejected: rejectedCount,
-      active: approvedCount // Active loans typically match approved
+      active: approvedCount
     });
   };
 
+  /*
+   * ============================================================
+   * INITIAL LOAD + LIVE LISTENERS
+   * ============================================================
+   */
   useEffect(() => {
+    loadCurrentUser();
     loadDynamicStats();
-    // Real-time updates when state changes
-    window.addEventListener('storage', loadDynamicStats);
-    window.addEventListener('notificationsUpdated', loadDynamicStats);
-    window.addEventListener('loansUpdated', loadDynamicStats);
+
+    const handleCurrentUserUpdate = () => {
+      loadCurrentUser();
+    };
+
+    const handleStatsUpdate = () => {
+      loadDynamicStats();
+    };
+
+    // Events for live updating
+    window.addEventListener('currentUserUpdated', handleCurrentUserUpdate);
+    window.addEventListener('storage', handleCurrentUserUpdate);
+    window.addEventListener('notificationsUpdated', handleStatsUpdate);
+    window.addEventListener('loansUpdated', handleStatsUpdate);
 
     return () => {
-      window.removeEventListener('storage', loadDynamicStats);
-      window.removeEventListener('notificationsUpdated', loadDynamicStats);
-      window.removeEventListener('loansUpdated', loadDynamicStats);
+      window.removeEventListener('currentUserUpdated', handleCurrentUserUpdate);
+      window.removeEventListener('storage', handleCurrentUserUpdate);
+      window.removeEventListener('notificationsUpdated', handleStatsUpdate);
+      window.removeEventListener('loansUpdated', handleStatsUpdate);
     };
   }, []);
+
+  // Display Name Priority Logic
+  const displayName =
+    currentUser?.fullName ||
+    currentUser?.name ||
+    currentUser?.username ||
+    currentUser?.email?.split("@")[0] ||
+    "Admin";
 
   const today = new Date();
   const formattedDate = today.toLocaleDateString('en-GB', {
@@ -72,7 +122,7 @@ const DashboardTop = () => {
     <main className="dashboard">
       <section className="welcome-card">
         <div className="welcome-content">
-          <h1>Good Morning, Admin 👋</h1>
+          <h1>Good Morning, {displayName}👋</h1>
           <p>Welcome back! Here's your loan portfolio overview.</p>
         </div>
 
