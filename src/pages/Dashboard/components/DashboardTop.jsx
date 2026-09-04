@@ -123,7 +123,7 @@ const DashboardTop = () => {
       <section className="welcome-card">
         <div className="welcome-content">
           <h1>Good Morning, {displayName}👋</h1>
-          <p>Welcome back! Here's your loan portfolio overview.</p>
+          <p>Monitor your lending operations, customer pipeline and collections from one workspace.</p>
         </div>
 
         <div className="welcome-info">

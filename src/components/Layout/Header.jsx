@@ -1,359 +1,84 @@
+import React, { useEffect, useState } from 'react';
+import { Menu, Search, Bell, Sun, Moon, ChevronDown } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getUnreadCount } from '../../services/notificationService';
+import './Header.css';
 
-import React, {
-  useEffect,
-  useState,
-} from "react";
+const titleMap = [
+  ['/dashboard', 'Dashboard', 'Portfolio overview'],
+  ['/customers', 'Customers', 'Customer management'],
+  ['/loanApplication', 'Loan Applications', 'Applications and pipeline'],
+  ['/loan-approval', 'Loan Approval', 'Review and decisioning'],
+  ['/EmiSchedule', 'EMI Schedule', 'Collections and repayments'],
+  ['/reports', 'Reports & Analytics', 'Performance insights'],
+  ['/notifications', 'Notifications', 'Updates and alerts'],
+];
 
-import {
-  Menu,
-  Search,
-  Bell,
-  Sun,
-  Moon,
-  User,
-} from "lucide-react";
-
-import { useNavigate } from "react-router-dom";
-
-import {
-  getUnreadCount,
-} from "../../services/notificationService";
-
-import "./Header.css";
-
-const Header = ({
-  onToggleSidebar,
-  darkMode,
-  setDarkMode,
-}) => {
-
+const Header = ({ onToggleSidebar, darkMode, setDarkMode }) => {
   const navigate = useNavigate();
-
-  const [unreadCount, setUnreadCount] =
-    useState(0);
-
-  const [currentUser, setCurrentUser] =
-    useState(null);
-
-  /*
-   * ============================================================
-   * LOAD CURRENT USER
-   * ============================================================
-   */
-
-  const loadCurrentUser = () => {
-
-    try {
-
-      const savedUser =
-        localStorage.getItem(
-          "currentUser"
-        );
-
-      if (!savedUser) {
-
-        setCurrentUser(null);
-
-        return;
-      }
-
-      const parsedUser =
-        JSON.parse(savedUser);
-
-      setCurrentUser(parsedUser);
-
-    } catch (error) {
-
-      console.error(
-        "Failed to load current user:",
-        error
-      );
-
-      setCurrentUser(null);
-    }
-  };
-
-  /*
-   * ============================================================
-   * LOAD UNREAD NOTIFICATIONS
-   * ============================================================
-   */
-
-  const loadUnreadCount = () => {
-
-    try {
-
-      const count =
-        getUnreadCount();
-
-      setUnreadCount(
-        Number.isFinite(count)
-          ? count
-          : 0
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Failed to load unread notifications:",
-        error
-      );
-
-      setUnreadCount(0);
-    }
-  };
-
-  /*
-   * ============================================================
-   * INITIAL LOAD + LIVE SYNC
-   * ============================================================
-   */
+  const location = useLocation();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   useEffect(() => {
-
-    loadCurrentUser();
-    loadUnreadCount();
-
-    const handleNotificationsUpdate =
-      () => {
-        loadUnreadCount();
-      };
-
-    const handleCurrentUserUpdate =
-      () => {
-        loadCurrentUser();
-      };
-
-    window.addEventListener(
-      "notificationsUpdated",
-      handleNotificationsUpdate
-    );
-
-    window.addEventListener(
-      "currentUserUpdated",
-      handleCurrentUserUpdate
-    );
-
-    window.addEventListener(
-      "storage",
-      handleCurrentUserUpdate
-    );
-
-    return () => {
-
-      window.removeEventListener(
-        "notificationsUpdated",
-        handleNotificationsUpdate
-      );
-
-      window.removeEventListener(
-        "currentUserUpdated",
-        handleCurrentUserUpdate
-      );
-
-      window.removeEventListener(
-        "storage",
-        handleCurrentUserUpdate
-      );
+    const load = () => {
+      try { setCurrentUser(JSON.parse(localStorage.getItem('currentUser') || 'null')); } catch { setCurrentUser(null); }
+      try { setUnreadCount(Number(getUnreadCount()) || 0); } catch { setUnreadCount(0); }
     };
-
+    load();
+    const sync = () => load();
+    window.addEventListener('storage', sync);
+    window.addEventListener('currentUserUpdated', sync);
+    window.addEventListener('notificationsUpdated', sync);
+    return () => {
+      window.removeEventListener('storage', sync);
+      window.removeEventListener('currentUserUpdated', sync);
+      window.removeEventListener('notificationsUpdated', sync);
+    };
   }, []);
 
-  /*
-   * ============================================================
-   * NOTIFICATION CLICK
-   * ============================================================
-   */
-
-  const handleNotificationClick = () => {
-
-    navigate(
-      "/notifications"
-    );
-  };
-
-  /*
-   * ============================================================
-   * USER DISPLAY NAME
-   * ============================================================
-   */
-
-  const displayName =
-    currentUser?.fullName ||
-    currentUser?.name ||
-    currentUser?.username ||
-    currentUser?.email?.split("@")[0] ||
-    "Admin";
-
-  /*
-   * ============================================================
-   * USER INITIAL
-   * ============================================================
-   */
-
-  const userInitial =
-    displayName
-      .trim()
-      .charAt(0)
-      .toUpperCase() || "U";
-
-  /*
-   * ============================================================
-   * RENDER
-   * ============================================================
-   */
+  const match = [...titleMap].reverse().find(([path]) => location.pathname === path || location.pathname.startsWith(`${path}/`));
+  const pageTitle = match?.[1] || 'FinOne';
+  const pageSubtitle = match?.[2] || 'Loan operations workspace';
+  const displayName = currentUser?.fullName || currentUser?.name || currentUser?.username || currentUser?.email?.split('@')[0] || 'Admin';
+  const initial = displayName.trim().charAt(0).toUpperCase() || 'A';
 
   return (
-
     <header className="header">
-
-      {/* ======================================================
-          LEFT SECTION
-          ====================================================== */}
-
       <div className="header-left">
-
-        <button
-          onClick={
-            onToggleSidebar
-          }
-          className="icon-btn"
-          title="Toggle Sidebar"
-          aria-label="Toggle Sidebar"
-        >
-          <Menu className="icon" />
-        </button>
-
-        <div className="search-container">
-
-          <Search className="search-icon" />
-
-          <input
-            type="text"
-            placeholder="Search..."
-            className="search-input"
-          />
-
-        </div>
-
+        <button onClick={onToggleSidebar} className="icon-btn menu-btn" aria-label="Toggle sidebar"><Menu /></button>
+        <div className="header-title"><h1>{pageTitle}</h1><span>{pageSubtitle}</span></div>
       </div>
 
-      {/* ======================================================
-          RIGHT SECTION
-          ====================================================== */}
-
-      <div className="header-right">
-
-        {/* ====================================================
-            DARK MODE
-            ==================================================== */}
-
-        <button
-          onClick={() =>
-            setDarkMode(
-              !darkMode
-            )
-          }
-          className="icon-btn"
-          title={
-            darkMode
-              ? "Switch to Light Mode"
-              : "Switch to Dark Mode"
-          }
-          aria-label={
-            darkMode
-              ? "Switch to Light Mode"
-              : "Switch to Dark Mode"
-          }
-        >
-
-          {darkMode ? (
-            <Sun className="icon sun-icon" />
-          ) : (
-            <Moon className="icon" />
-          )}
-
-        </button>
-
-        {/* ====================================================
-            NOTIFICATIONS
-            ==================================================== */}
-
-        <button
-          className="icon-btn notification-btn"
-          onClick={
-            handleNotificationClick
-          }
-          title="Notifications"
-          aria-label="Notifications"
-        >
-
-          <Bell className="icon" />
-
-          {unreadCount > 0 && (
-
-            <span className="badge">
-
-              {unreadCount > 99
-                ? "99+"
-                : unreadCount}
-
-            </span>
-
-          )}
-
-        </button>
-
-        {/* ====================================================
-            USER PROFILE
-            ==================================================== */}
-
-        <div
-          className="user-profile"
-          title={`Logged in as ${displayName}`}
-        >
-
-          <div className="avatar">
-
-            {currentUser?.avatar ? (
-
-              <img
-                src={currentUser.avatar}
-                alt={displayName}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
-              />
-
-            ) : (
-
-              <span
-                style={{
-                  fontSize: "0.9rem",
-                  fontWeight: 600,
-                }}
-              >
-                {userInitial}
-              </span>
-
-            )}
-
-          </div>
-
-          <span className="user-name">
-            {displayName}
-          </span>
-
+      <div className="header-actions">
+        <div className="header-search">
+          <Search size={16} />
+          <input aria-label="Search" placeholder="Search customers, loans..." />
+          <kbd>⌘ K</kbd>
         </div>
-
+        <button className="icon-btn" onClick={() => setDarkMode(!darkMode)} aria-label="Toggle theme">
+          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+        <button className="icon-btn notification-btn" onClick={() => navigate('/notifications')} aria-label="Notifications">
+          <Bell size={18} />
+          {unreadCount > 0 && <span className="badge">{unreadCount > 99 ? '99+' : unreadCount}</span>}
+        </button>
+        <div className="profile-wrap">
+          <button className="user-profile" onClick={() => setProfileOpen(!profileOpen)} aria-expanded={profileOpen}>
+            <span className="avatar">{initial}</span>
+            <span className="user-copy"><strong>{displayName}</strong><small>Administrator</small></span>
+            <ChevronDown size={15} />
+          </button>
+          {profileOpen && (
+            <div className="profile-menu">
+              <div className="profile-menu-head"><span className="avatar large">{initial}</span><div><strong>{displayName}</strong><small>{currentUser?.email || 'Administrator'}</small></div></div>
+              <button onClick={() => navigate('/logout')}>Sign out</button>
+            </div>
+          )}
+        </div>
       </div>
-
     </header>
   );
 };
-
 export default Header;
-

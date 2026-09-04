@@ -1007,3 +1007,246 @@
   position: relative !important;
   z-index: 100 !important;
 }
+
+
+/* =========================================================
+   EMI TABLE - PROFESSIONAL COLUMN CONTROL
+========================================================= */
+
+/*
+  Keep the table stable even when customer names,
+  loan types, or other text are very long.
+*/
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+/*
+  Fixed layout prevents one long name from
+  expanding and pushing Status / Actions.
+*/
+.emi-main-table {
+  width: 100%;
+  min-width: 1450px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/*
+  Every cell is allowed to stay inside
+  its assigned column.
+*/
+.emi-main-table th,
+.emi-main-table td {
+  overflow: hidden;
+}
+
+/* =========================================================
+   CUSTOMER NAME COLUMN
+========================================================= */
+
+.emi-main-table th:nth-child(2),
+.emi-main-table td:nth-child(2) {
+  width: 190px;
+  max-width: 190px;
+}
+
+.cust-info {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  overflow: hidden;
+}
+
+.cust-name {
+  display: block;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  /*
+    Long names wrap inside the cell.
+  */
+  white-space: normal;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+
+  line-height: 1.35;
+}
+
+.cust-phone {
+  display: block;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  /*
+    Phone number stays on one line.
+    If somehow too long, show ellipsis.
+  */
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  line-height: 1.3;
+}
+
+/* =========================================================
+   LOAN TYPE COLUMN
+========================================================= */
+
+.emi-main-table th:nth-child(3),
+.emi-main-table td:nth-child(3) {
+  width: 150px;
+  max-width: 150px;
+}
+
+.loan-type-pill {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  overflow: hidden;
+}
+
+.loan-type-pill span {
+  min-width: 0;
+  max-width: 100%;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   LOAN ID
+========================================================= */
+
+.emi-main-table th:nth-child(1),
+.emi-main-table td:nth-child(1) {
+  width: 110px;
+  max-width: 110px;
+}
+
+.loan-id-cell {
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   AMOUNT COLUMNS
+========================================================= */
+
+.emi-main-table th:nth-child(4),
+.emi-main-table td:nth-child(4),
+.emi-main-table th:nth-child(6),
+.emi-main-table td:nth-child(6),
+.emi-main-table th:nth-child(7),
+.emi-main-table td:nth-child(7),
+.emi-main-table th:nth-child(8),
+.emi-main-table td:nth-child(8) {
+  white-space: nowrap;
+}
+
+.amount-cell,
+.sub-amount {
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   DATE COLUMNS
+========================================================= */
+
+.emi-main-table th:nth-child(5),
+.emi-main-table td:nth-child(5),
+.emi-main-table th:nth-child(10),
+.emi-main-table td:nth-child(10) {
+  width: 125px;
+  max-width: 125px;
+}
+
+.date-cell {
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.emi-main-table th:nth-child(9),
+.emi-main-table td:nth-child(9) {
+  width: 105px;
+  max-width: 105px;
+
+  white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  max-width: 100%;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.emi-main-table th:nth-child(11),
+.emi-main-table td:nth-child(11) {
+  width: 100px;
+  max-width: 100px;
+}
+
+.action-cell {
+  white-space: nowrap;
+
+  overflow: visible !important;
+}
+
+.action-cell .btn-icon-action {
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   MOBILE / SMALL SCREEN
+========================================================= */
+
+@media (max-width: 1200px) {
+  .emi-main-table {
+    min-width: 1450px;
+  }
+}

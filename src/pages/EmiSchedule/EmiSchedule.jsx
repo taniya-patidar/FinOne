@@ -41,22 +41,83 @@ const NOTIFICATIONS_KEY = "notifications";
 const readStorageArray = (key) => {
   try {
     const saved = localStorage.getItem(key);
+
     if (!saved) return [];
 
     const parsed = JSON.parse(saved);
+
     return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
-    console.error(`Unable to read localStorage key: ${key}`, error);
+    console.error(
+      `Unable to read localStorage key: ${key}`,
+      error
+    );
+
     return [];
   }
 };
 
 const writeStorageArray = (key, data) => {
   try {
-    localStorage.setItem(key, JSON.stringify(data));
+    localStorage.setItem(
+      key,
+      JSON.stringify(data)
+    );
   } catch (error) {
-    console.error(`Unable to write localStorage key: ${key}`, error);
+    console.error(
+      `Unable to write localStorage key: ${key}`,
+      error
+    );
   }
+};
+
+/* =========================================================
+   MONEY HELPERS
+========================================================= */
+
+const parseMoney = (value) => {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return 0;
+  }
+
+  if (typeof value === "number") {
+    return Number.isFinite(value)
+      ? value
+      : 0;
+  }
+
+  const cleaned = String(value)
+    .replace(/₹/g, "")
+    .replace(/,/g, "")
+    .replace(/\s/g, "")
+    .trim();
+
+  const number = Number(cleaned);
+
+  return Number.isFinite(number)
+    ? number
+    : 0;
+};
+
+const roundMoney = (value) => {
+  return (
+    Math.round(
+      (Number(value) || 0) * 100
+    ) / 100
+  );
+};
+
+const formatMoney = (value) => {
+  return Number(
+    value || 0
+  ).toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 };
 
 /* =========================================================
@@ -73,16 +134,24 @@ const normalizeDate = (dateValue) => {
   }
 
   date.setHours(0, 0, 0, 0);
+
   return date;
 };
 
-const getEMIStatus = (dueDateStr, paymentDateStr) => {
+const getEMIStatus = (
+  dueDateStr,
+  paymentDateStr
+) => {
   if (paymentDateStr) {
     return "Paid";
   }
 
-  const today = normalizeDate(new Date());
-  const dueDate = normalizeDate(dueDateStr);
+  const today = normalizeDate(
+    new Date()
+  );
+
+  const dueDate =
+    normalizeDate(dueDateStr);
 
   if (!dueDate) {
     return "Upcoming";
@@ -92,21 +161,31 @@ const getEMIStatus = (dueDateStr, paymentDateStr) => {
     return "Overdue";
   }
 
-  if (dueDate.getTime() === today.getTime()) {
+  if (
+    dueDate.getTime() ===
+    today.getTime()
+  ) {
     return "Pending";
   }
 
   return "Upcoming";
 };
 
-const getDaysDifference = (dateValue) => {
-  const today = normalizeDate(new Date());
-  const targetDate = normalizeDate(dateValue);
+const getDaysDifference = (
+  dateValue
+) => {
+  const today = normalizeDate(
+    new Date()
+  );
+
+  const targetDate =
+    normalizeDate(dateValue);
 
   if (!targetDate) return null;
 
   return Math.ceil(
-    (targetDate.getTime() - today.getTime()) /
+    (targetDate.getTime() -
+      today.getTime()) /
       (1000 * 60 * 60 * 24)
   );
 };
@@ -116,46 +195,186 @@ const getDaysDifference = (dateValue) => {
 ========================================================= */
 
 const getApprovedLoans = () => {
-  const applications = readStorageArray(LOAN_APPLICATIONS_KEY);
+  const applications =
+    readStorageArray(
+      LOAN_APPLICATIONS_KEY
+    );
 
   /*
-    Primary source:
-    loanApplications
-
-    Only Approved loans are allowed.
+    loanApplications is the primary
+    source of truth.
   */
   if (applications.length > 0) {
     return applications.filter(
       (loan) =>
-        String(loan.status || "").trim().toLowerCase() ===
+        String(
+          loan.status || ""
+        )
+          .trim()
+          .toLowerCase() ===
         "approved"
     );
   }
 
   /*
-    Backward compatibility:
-    If the project currently only has approvedEMISchedules,
-    use those records as fallback.
-
-    Since these are already in the approved EMI collection,
-    records without an explicit status are considered approved.
+    Keep backward compatibility only
+    when loanApplications does not exist.
   */
-  const approvedEMIs = readStorageArray(APPROVED_EMI_KEY);
-
-  return approvedEMIs.filter((loan) => {
-    if (!loan.status) return true;
-
-    return (
-      String(loan.status).trim().toLowerCase() === "approved"
+  const approvedEMIs =
+    readStorageArray(
+      APPROVED_EMI_KEY
     );
-  });
+
+  return approvedEMIs.filter(
+    (loan) => {
+      if (!loan.status) {
+        return true;
+      }
+
+      return (
+        String(loan.status)
+          .trim()
+          .toLowerCase() ===
+        "approved"
+      );
+    }
+  );
+};
+
+/* =========================================================
+   CALCULATE FIRST EMI BREAKDOWN
+========================================================= */
+
+const calculateFirstEMIBreakdown = ({
+  loanAmount,
+  interestRate,
+  emiAmount,
+}) => {
+  const principalAmount =
+    parseMoney(loanAmount);
+
+  const annualRate =
+    Number(interestRate) || 0;
+
+  const emi =
+    parseMoney(emiAmount);
+
+  if (
+    principalAmount <= 0 ||
+    annualRate <= 0 ||
+    emi <= 0
+  ) {
+    return {
+      principal: 0,
+      interest: 0,
+    };
+  }
+
+  /*
+    Example:
+
+    Annual rate = 12%
+    Monthly rate = 12 / 12 / 100
+                 = 0.01
+  */
+  const monthlyRate =
+    annualRate / 12 / 100;
+
+  /*
+    First EMI interest
+    = Loan amount × monthly rate
+  */
+  const interest =
+    roundMoney(
+      principalAmount *
+        monthlyRate
+    );
+
+  /*
+    EMI consists of:
+
+    Principal + Interest = EMI
+
+    Therefore:
+
+    Principal = EMI - Interest
+  */
+  const principal =
+    roundMoney(
+      Math.max(
+        emi - interest,
+        0
+      )
+    );
+
+  return {
+    principal,
+    interest,
+  };
 };
 
 /* =========================================================
    MAP LOAN DATA FOR EMI TABLE
 ========================================================= */
 
-const mapLoanToEMIRow = (loan) => {
+const mapLoanToEMIRow = (
+  loan
+) => {
+  /*
+    Your localStorage currently has:
+
+    loanAmount: "₹ 5,99,959"
+    interestRate: "12"
+    loanTenure: "38"
+    emi: "19055.60"
+
+    These are converted into usable
+    numbers here.
+  */
+
+  const loanAmount =
+    parseMoney(
+      loan.loanAmount ||
+        loan.amount ||
+        loan.requestedAmount ||
+        0
+    );
+
+  const interestRate =
+    Number(
+      loan.interestRate ||
+        loan.rate ||
+        0
+    );
+
+  const loanTenure =
+    Number(
+      loan.loanTenure ||
+        loan.tenureMonths ||
+        loan.tenure ||
+        loan.tenureInMonths ||
+        0
+    );
+
+  const emiAmount =
+    parseMoney(
+      loan.emiAmount ||
+        loan.emi ||
+        loan.monthlyEMI ||
+        0
+    );
+
+  /*
+    Calculate Principal + Interest
+    for the first EMI.
+  */
+  const breakdown =
+    calculateFirstEMIBreakdown({
+      loanAmount,
+      interestRate,
+      emiAmount,
+    });
+
   return {
     ...loan,
 
@@ -187,37 +406,23 @@ const mapLoanToEMIRow = (loan) => {
       loan.type ||
       "Loan",
 
-    loanAmount:
-      Number(
-        loan.loanAmount ||
-          loan.amount ||
-          loan.requestedAmount ||
-          0
-      ),
+    loanAmount,
 
-    interestRate:
-      Number(
-        loan.interestRate ||
-          loan.rate ||
-          0
-      ),
+    interestRate,
 
-    loanTenure:
-      Number(
-        loan.loanTenure ||
-          loan.tenureMonths ||
-          loan.tenure ||
-          loan.tenureInMonths ||
-          0
-      ),
+    loanTenure,
 
-    emiAmount:
-      Number(
-        loan.emiAmount ||
-          loan.emi ||
-          loan.monthlyEMI ||
-          0
-      ),
+    emiAmount,
+
+    /*
+      FIX:
+      These properties were previously missing.
+    */
+    principal:
+      breakdown.principal,
+
+    interest:
+      breakdown.interest,
 
     dueDate:
       loan.dueDate ||
@@ -253,13 +458,17 @@ const createNotification = ({
   type = "application",
   uniqueKey,
 }) => {
-  const notifications = readStorageArray(NOTIFICATIONS_KEY);
+  const notifications =
+    readStorageArray(
+      NOTIFICATIONS_KEY
+    );
 
   if (
     uniqueKey &&
     notifications.some(
       (notification) =>
-        notification.uniqueKey === uniqueKey
+        notification.uniqueKey ===
+        uniqueKey
     )
   ) {
     return;
@@ -269,21 +478,34 @@ const createNotification = ({
     id: `NOTIF-${Date.now()}-${Math.floor(
       Math.random() * 10000
     )}`,
+
     title,
+
     message,
+
     type,
-    uniqueKey: uniqueKey || null,
+
+    uniqueKey:
+      uniqueKey || null,
+
     read: false,
-    createdAt: new Date().toISOString(),
+
+    createdAt:
+      new Date().toISOString(),
   };
 
-  writeStorageArray(NOTIFICATIONS_KEY, [
-    notification,
-    ...notifications,
-  ]);
+  writeStorageArray(
+    NOTIFICATIONS_KEY,
+    [
+      notification,
+      ...notifications,
+    ]
+  );
 
   window.dispatchEvent(
-    new CustomEvent("notificationsUpdated")
+    new CustomEvent(
+      "notificationsUpdated"
+    )
   );
 };
 
@@ -296,46 +518,73 @@ const EMISchedule = () => {
      EMI DATA
   ------------------------------------------------------- */
 
-  const [emiData, setEmiData] = useState(() =>
-    getApprovedLoans().map(mapLoanToEMIRow)
-  );
+  const [emiData, setEmiData] =
+    useState(() =>
+      getApprovedLoans().map(
+        mapLoanToEMIRow
+      )
+    );
 
   /* -------------------------------------------------------
      VIEW STATE
   ------------------------------------------------------- */
 
-  const [viewMode, setViewMode] = useState("list");
-  const [selectedLoan, setSelectedLoan] = useState(null);
+  const [viewMode, setViewMode] =
+    useState("list");
+
+  const [selectedLoan, setSelectedLoan] =
+    useState(null);
 
   /* -------------------------------------------------------
      FILTER STATE
   ------------------------------------------------------- */
 
-  const [activeTab, setActiveTab] = useState("All EMIs");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLoanId, setSelectedLoanId] =
-    useState("All Loans");
-  const [selectedLoanType, setSelectedLoanType] =
-    useState("All Types");
-  const [selectedStatusFilter, setSelectedStatusFilter] =
-    useState("All Status");
-  const [showAdvancedFilters, setShowAdvancedFilters] =
-    useState(false);
+  const [activeTab, setActiveTab] =
+    useState("All EMIs");
+
+  const [searchTerm, setSearchTerm] =
+    useState("");
+
+  const [
+    selectedLoanId,
+    setSelectedLoanId,
+  ] = useState("All Loans");
+
+  const [
+    selectedLoanType,
+    setSelectedLoanType,
+  ] = useState("All Types");
+
+  const [
+    selectedStatusFilter,
+    setSelectedStatusFilter,
+  ] = useState("All Status");
+
+  const [
+    showAdvancedFilters,
+    setShowAdvancedFilters,
+  ] = useState(false);
 
   /* -------------------------------------------------------
      PAGINATION
   ------------------------------------------------------- */
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] =
+    useState(1);
+
   const rowsPerPage = 5;
 
   /* -------------------------------------------------------
      ACTION MENU / MODALS
   ------------------------------------------------------- */
 
-  const [isCalcOpen, setIsCalcOpen] = useState(false);
-  const [activeActionMenuId, setActiveActionMenuId] =
-    useState(null);
+  const [isCalcOpen, setIsCalcOpen] =
+    useState(false);
+
+  const [
+    activeActionMenuId,
+    setActiveActionMenuId,
+  ] = useState(null);
 
   /* -------------------------------------------------------
      CALCULATOR
@@ -350,40 +599,46 @@ const EMISchedule = () => {
   const [calcTenure, setCalcTenure] =
     useState(24);
 
-  const [calcResult, setCalcResult] = useState({
-    emi: 23448,
-    interest: 62761,
-    total: 562761,
-  });
+  const [calcResult, setCalcResult] =
+    useState({
+      emi: 23448,
+      interest: 62761,
+      total: 562761,
+    });
 
-  const dropdownRef = useRef(null);
+  const dropdownRef =
+    useRef(null);
 
   /* =======================================================
      LOAD APPROVED LOANS
   ======================================================= */
 
-  const loadApprovedLoans = () => {
-    const approvedLoans = getApprovedLoans();
+  const loadApprovedLoans =
+    () => {
+      const approvedLoans =
+        getApprovedLoans();
 
-    const mappedLoans =
-      approvedLoans.map(mapLoanToEMIRow);
+      const mappedLoans =
+        approvedLoans.map(
+          mapLoanToEMIRow
+        );
 
-    setEmiData(mappedLoans);
+      setEmiData(mappedLoans);
 
-    /*
-      If currently selected loan was rejected/removed,
-      automatically leave details page.
-    */
-    if (
-      selectedLoan &&
-      !mappedLoans.some(
-        (loan) => String(loan.id) === String(selectedLoan.id)
-      )
-    ) {
-      setSelectedLoan(null);
-      setViewMode("list");
-    }
-  };
+      if (
+        selectedLoan &&
+        !mappedLoans.some(
+          (loan) =>
+            String(loan.id) ===
+            String(
+              selectedLoan.id
+            )
+        )
+      ) {
+        setSelectedLoan(null);
+        setViewMode("list");
+      }
+    };
 
   /* =======================================================
      INITIAL + WINDOW FOCUS SYNC
@@ -392,17 +647,19 @@ const EMISchedule = () => {
   useEffect(() => {
     loadApprovedLoans();
 
-    const handleStorageChange = () => {
-      loadApprovedLoans();
-    };
+    const handleStorageChange =
+      () => {
+        loadApprovedLoans();
+      };
 
     const handleFocus = () => {
       loadApprovedLoans();
     };
 
-    const handleLoanStatusUpdated = () => {
-      loadApprovedLoans();
-    };
+    const handleLoanStatusUpdated =
+      () => {
+        loadApprovedLoans();
+      };
 
     window.addEventListener(
       "storage",
@@ -442,14 +699,19 @@ const EMISchedule = () => {
   ======================================================= */
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
-        setActiveActionMenuId(null);
-      }
-    };
+    const handleClickOutside =
+      (event) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(
+            event.target
+          )
+        ) {
+          setActiveActionMenuId(
+            null
+          );
+        }
+      };
 
     document.addEventListener(
       "mousedown",
@@ -469,33 +731,55 @@ const EMISchedule = () => {
   ======================================================= */
 
   useEffect(() => {
-    if (!emiData.length) return;
+    if (!emiData.length) {
+      return;
+    }
 
-    emiData.forEach((loan) => {
-      if (!loan.dueDate) return;
+    emiData.forEach(
+      (loan) => {
+        if (!loan.dueDate) {
+          return;
+        }
 
-      const status = getEMIStatus(
-        loan.dueDate,
-        loan.paymentDate
-      );
+        const status =
+          getEMIStatus(
+            loan.dueDate,
+            loan.paymentDate
+          );
 
-      if (status === "Paid") return;
+        if (status === "Paid") {
+          return;
+        }
 
-      const days = getDaysDifference(loan.dueDate);
+        const days =
+          getDaysDifference(
+            loan.dueDate
+          );
 
-      if (days === 3 || days === 1) {
-        createNotification({
-          title: "Upcoming EMI Reminder",
-          message: `Loan #${loan.id} EMI of ₹${Number(
-            loan.emiAmount || 0
-          ).toLocaleString(
-            "en-IN"
-          )} is due on ${formatDate(loan.dueDate)}.`,
-          type: "application",
-          uniqueKey: `EMI-DUE-${loan.id}-${loan.dueDate}-${days}`,
-        });
+        if (
+          days === 3 ||
+          days === 1
+        ) {
+          createNotification({
+            title:
+              "Upcoming EMI Reminder",
+
+            message: `Loan #${
+              loan.id
+            } EMI of ₹${formatMoney(
+              loan.emiAmount
+            )} is due on ${formatDate(
+              loan.dueDate
+            )}.`,
+
+            type:
+              "application",
+
+            uniqueKey: `EMI-DUE-${loan.id}-${loan.dueDate}-${days}`,
+          });
+        }
       }
-    });
+    );
   }, [emiData]);
 
   /* =======================================================
@@ -516,237 +800,329 @@ const EMISchedule = () => {
      EMI CALCULATOR
   ======================================================= */
 
-  const handleCalculate = () => {
-    const P = Number(calcAmount) || 0;
-    const r =
-      (Number(calcRate) || 0) /
-      12 /
-      100;
-    const n = Number(calcTenure) || 0;
+  const handleCalculate =
+    () => {
+      const P =
+        Number(calcAmount) ||
+        0;
 
-    if (P > 0 && r > 0 && n > 0) {
-      const emi = Math.round(
-        (P *
-          r *
-          Math.pow(1 + r, n)) /
-          (Math.pow(1 + r, n) - 1)
-      );
+      const r =
+        (Number(calcRate) ||
+          0) /
+        12 /
+        100;
 
-      const total = emi * n;
-      const interest = total - P;
+      const n =
+        Number(calcTenure) ||
+        0;
 
-      setCalcResult({
-        emi,
-        interest,
-        total,
-      });
-    }
-  };
+      if (
+        P > 0 &&
+        r > 0 &&
+        n > 0
+      ) {
+        const emi =
+          Math.round(
+            (P *
+              r *
+              Math.pow(
+                1 + r,
+                n
+              )) /
+              (Math.pow(
+                1 + r,
+                n
+              ) - 1)
+          );
+
+        const total =
+          emi * n;
+
+        const interest =
+          total - P;
+
+        setCalcResult({
+          emi,
+          interest,
+          total,
+        });
+      }
+    };
 
   /* =======================================================
      PROCESS STATUS
   ======================================================= */
 
-  const processedData = useMemo(() => {
-    return emiData.map((item) => ({
-      ...item,
-      computedStatus: getEMIStatus(
-        item.dueDate,
-        item.paymentDate
-      ),
-    }));
-  }, [emiData]);
+  const processedData =
+    useMemo(() => {
+      return emiData.map(
+        (item) => ({
+          ...item,
+
+          computedStatus:
+            getEMIStatus(
+              item.dueDate,
+              item.paymentDate
+            ),
+        })
+      );
+    }, [emiData]);
 
   /* =======================================================
      UNIQUE LOAN IDS
   ======================================================= */
 
-  const uniqueLoanIds = useMemo(() => {
-    const ids = processedData
-      .map((item) => item.id)
-      .filter(Boolean);
+  const uniqueLoanIds =
+    useMemo(() => {
+      const ids =
+        processedData
+          .map(
+            (item) => item.id
+          )
+          .filter(Boolean);
 
-    return Array.from(new Set(ids));
-  }, [processedData]);
+      return Array.from(
+        new Set(ids)
+      );
+    }, [processedData]);
 
   /* =======================================================
      SUMMARY METRICS
   ======================================================= */
 
-  const summaryMetrics = useMemo(() => {
-    const totalLoans = processedData.length;
+  const summaryMetrics =
+    useMemo(() => {
+      const totalLoans =
+        processedData.length;
 
-    let paidCount = 0;
-    let pendingCount = 0;
-    let overdueCount = 0;
-    let totalEMI = 0;
+      let paidCount = 0;
+      let pendingCount = 0;
+      let overdueCount = 0;
+      let totalEMI = 0;
 
-    processedData.forEach((item) => {
-      totalEMI += Number(item.emiAmount) || 0;
+      processedData.forEach(
+        (item) => {
+          totalEMI +=
+            Number(
+              item.emiAmount
+            ) || 0;
 
-      if (item.computedStatus === "Paid") {
-        paidCount++;
-      } else if (
-        item.computedStatus === "Overdue"
-      ) {
-        overdueCount++;
-      } else {
-        pendingCount++;
-      }
-    });
+          if (
+            item.computedStatus ===
+            "Paid"
+          ) {
+            paidCount++;
+          } else if (
+            item.computedStatus ===
+            "Overdue"
+          ) {
+            overdueCount++;
+          } else {
+            pendingCount++;
+          }
+        }
+      );
 
-    const paidPercentage =
-      totalLoans > 0
-        ? ((paidCount / totalLoans) * 100).toFixed(2)
-        : "0.00";
+      const paidPercentage =
+        totalLoans > 0
+          ? (
+              (paidCount /
+                totalLoans) *
+              100
+            ).toFixed(2)
+          : "0.00";
 
-    const pendingPercentage =
-      totalLoans > 0
-        ? ((pendingCount / totalLoans) * 100).toFixed(2)
-        : "0.00";
+      const pendingPercentage =
+        totalLoans > 0
+          ? (
+              (pendingCount /
+                totalLoans) *
+              100
+            ).toFixed(2)
+          : "0.00";
 
-    const overduePercentage =
-      totalLoans > 0
-        ? ((overdueCount / totalLoans) * 100).toFixed(2)
-        : "0.00";
+      const overduePercentage =
+        totalLoans > 0
+          ? (
+              (overdueCount /
+                totalLoans) *
+              100
+            ).toFixed(2)
+          : "0.00";
 
-    const nextDueItem = [...processedData]
-      .filter(
-        (item) =>
-          item.computedStatus !== "Paid"
-      )
-      .sort(
-        (a, b) =>
-          new Date(a.dueDate) -
-          new Date(b.dueDate)
-      )[0];
+      const nextDueItem =
+        [...processedData]
+          .filter(
+            (item) =>
+              item.computedStatus !==
+              "Paid"
+          )
+          .sort(
+            (a, b) =>
+              new Date(
+                a.dueDate
+              ) -
+              new Date(
+                b.dueDate
+              )
+          )[0];
 
-    return {
-      totalLoans,
-      totalEMI,
-      paidEMI: paidCount,
-      pendingEMI: pendingCount,
-      overdueEMI: overdueCount,
-      paidPercentage,
-      pendingPercentage,
-      overduePercentage,
+      return {
+        totalLoans,
 
-      nextDueAmount: nextDueItem
-        ? `₹${Number(
-            nextDueItem.emiAmount
-          ).toLocaleString("en-IN")}`
-        : "N/A",
+        totalEMI,
 
-      nextDueDate: nextDueItem
-        ? formatDate(nextDueItem.dueDate)
-        : "N/A",
-    };
-  }, [processedData]);
+        paidEMI:
+          paidCount,
+
+        pendingEMI:
+          pendingCount,
+
+        overdueEMI:
+          overdueCount,
+
+        paidPercentage,
+
+        pendingPercentage,
+
+        overduePercentage,
+
+        nextDueAmount:
+          nextDueItem
+            ? `₹${formatMoney(
+                nextDueItem.emiAmount
+              )}`
+            : "N/A",
+
+        nextDueDate:
+          nextDueItem
+            ? formatDate(
+                nextDueItem.dueDate
+              )
+            : "N/A",
+      };
+    }, [processedData]);
 
   /* =======================================================
      FILTER DATA
   ======================================================= */
 
-  const filteredData = useMemo(() => {
-    return processedData.filter((item) => {
-      /* TAB FILTER */
-      if (
-        activeTab !== "All" &&
-        activeTab !== "All EMIs"
-      ) {
-        if (
-          activeTab === "Paid" &&
-          item.computedStatus !== "Paid"
-        ) {
-          return false;
+  const filteredData =
+    useMemo(() => {
+      return processedData.filter(
+        (item) => {
+          if (
+            activeTab !== "All" &&
+            activeTab !== "All EMIs"
+          ) {
+            if (
+              activeTab ===
+                "Paid" &&
+              item.computedStatus !==
+                "Paid"
+            ) {
+              return false;
+            }
+
+            if (
+              activeTab ===
+                "Pending" &&
+              item.computedStatus !==
+                "Pending"
+            ) {
+              return false;
+            }
+
+            if (
+              activeTab ===
+                "Overdue" &&
+              item.computedStatus !==
+                "Overdue"
+            ) {
+              return false;
+            }
+
+            if (
+              activeTab ===
+                "Upcoming" &&
+              item.computedStatus !==
+                "Upcoming"
+            ) {
+              return false;
+            }
+          }
+
+          if (
+            selectedLoanId !==
+              "All Loans" &&
+            String(item.id) !==
+              String(
+                selectedLoanId
+              )
+          ) {
+            return false;
+          }
+
+          if (
+            selectedStatusFilter !==
+              "All Status" &&
+            item.computedStatus !==
+              selectedStatusFilter
+          ) {
+            return false;
+          }
+
+          if (
+            selectedLoanType !==
+              "All Types" &&
+            item.loanType !==
+              selectedLoanType
+          ) {
+            return false;
+          }
+
+          if (searchTerm) {
+            const query =
+              searchTerm.toLowerCase();
+
+            const matchesId =
+              String(
+                item.id || ""
+              )
+                .toLowerCase()
+                .includes(query);
+
+            const matchesName =
+              String(
+                item.customerName ||
+                  ""
+              )
+                .toLowerCase()
+                .includes(query);
+
+            const matchesPhone =
+              String(
+                item.phone || ""
+              ).includes(query);
+
+            return (
+              matchesId ||
+              matchesName ||
+              matchesPhone
+            );
+          }
+
+          return true;
         }
-
-        if (
-          activeTab === "Pending" &&
-          item.computedStatus !== "Pending"
-        ) {
-          return false;
-        }
-
-        if (
-          activeTab === "Overdue" &&
-          item.computedStatus !== "Overdue"
-        ) {
-          return false;
-        }
-
-        if (
-          activeTab === "Upcoming" &&
-          item.computedStatus !== "Upcoming"
-        ) {
-          return false;
-        }
-      }
-
-      /* LOAN ID */
-      if (
-        selectedLoanId !== "All Loans" &&
-        String(item.id) !==
-          String(selectedLoanId)
-      ) {
-        return false;
-      }
-
-      /* STATUS */
-      if (
-        selectedStatusFilter !== "All Status" &&
-        item.computedStatus !==
-          selectedStatusFilter
-      ) {
-        return false;
-      }
-
-      /* LOAN TYPE */
-      if (
-        selectedLoanType !== "All Types" &&
-        item.loanType !== selectedLoanType
-      ) {
-        return false;
-      }
-
-      /* SEARCH */
-      if (searchTerm) {
-        const query =
-          searchTerm.toLowerCase();
-
-        const matchesId = String(
-          item.id || ""
-        )
-          .toLowerCase()
-          .includes(query);
-
-        const matchesName = String(
-          item.customerName || ""
-        )
-          .toLowerCase()
-          .includes(query);
-
-        const matchesPhone = String(
-          item.phone || ""
-        ).includes(query);
-
-        return (
-          matchesId ||
-          matchesName ||
-          matchesPhone
-        );
-      }
-
-      return true;
-    });
-  }, [
-    processedData,
-    activeTab,
-    selectedLoanId,
-    selectedStatusFilter,
-    selectedLoanType,
-    searchTerm,
-  ]);
+      );
+    }, [
+      processedData,
+      activeTab,
+      selectedLoanId,
+      selectedStatusFilter,
+      selectedLoanType,
+      searchTerm,
+    ]);
 
   /* =======================================================
      PAGINATION
@@ -754,22 +1130,25 @@ const EMISchedule = () => {
 
   const totalPages =
     Math.ceil(
-      filteredData.length / rowsPerPage
+      filteredData.length /
+        rowsPerPage
     ) || 1;
 
-  const paginatedData = useMemo(() => {
-    const startIndex =
-      (currentPage - 1) *
-      rowsPerPage;
+  const paginatedData =
+    useMemo(() => {
+      const startIndex =
+        (currentPage - 1) *
+        rowsPerPage;
 
-    return filteredData.slice(
-      startIndex,
-      startIndex + rowsPerPage
-    );
-  }, [
-    filteredData,
-    currentPage,
-  ]);
+      return filteredData.slice(
+        startIndex,
+        startIndex +
+          rowsPerPage
+      );
+    }, [
+      filteredData,
+      currentPage,
+    ]);
 
   /* =======================================================
      ACTIONS
@@ -779,21 +1158,31 @@ const EMISchedule = () => {
     actionType,
     item
   ) => {
-    setActiveActionMenuId(null);
+    setActiveActionMenuId(
+      null
+    );
 
     /* -----------------------------------------------------
        SEND PAYMENT LINK
     ----------------------------------------------------- */
 
-    if (actionType === "sendLink") {
+    if (
+      actionType ===
+      "sendLink"
+    ) {
       alert(
         `Payment link dispatched to ${item.customerName} (${item.phone}).`
       );
 
       createNotification({
-        title: "Payment Link Sent",
+        title:
+          "Payment Link Sent",
+
         message: `Payment link sent for Loan #${item.id}.`,
-        type: "application",
+
+        type:
+          "application",
+
         uniqueKey: `PAYMENT-LINK-${item.id}-${Date.now()}`,
       });
 
@@ -804,22 +1193,32 @@ const EMISchedule = () => {
        MARK PAID
     ----------------------------------------------------- */
 
-    if (actionType === "markPaid") {
+    if (
+      actionType ===
+      "markPaid"
+    ) {
       const paymentDate =
         new Date()
           .toISOString()
           .slice(0, 10);
 
       const payments =
-        readStorageArray(PAYMENTS_KEY);
+        readStorageArray(
+          PAYMENTS_KEY
+        );
 
       const paymentExists =
         payments.some(
           (payment) =>
-            String(payment.loanId) ===
+            String(
+              payment.loanId
+            ) ===
               String(item.id) &&
-            Number(payment.emiNo) === 1 &&
-            payment.status === "Paid"
+            Number(
+              payment.emiNo
+            ) === 1 &&
+            payment.status ===
+              "Paid"
         );
 
       if (!paymentExists) {
@@ -828,20 +1227,24 @@ const EMISchedule = () => {
             Math.random() * 10000
           )}`,
 
-          loanId: item.id,
+          loanId:
+            item.id,
+
           emiNo: 1,
+
           amount:
-            Number(item.emiAmount) || 0,
+            Number(
+              item.emiAmount
+            ) || 0,
 
           paymentDate,
 
           paymentMethod:
             "Manual",
 
-          referenceNo:
-            `MAN${Date.now()
-              .toString()
-              .slice(-8)}`,
+          referenceNo: `MAN${Date.now()
+            .toString()
+            .slice(-8)}`,
 
           status: "Paid",
 
@@ -851,33 +1254,36 @@ const EMISchedule = () => {
 
         writeStorageArray(
           PAYMENTS_KEY,
-          [payment, ...payments]
+          [
+            payment,
+            ...payments,
+          ]
         );
       }
 
-      const updated = emiData.map(
-        (e) =>
-          String(e.id) ===
-          String(item.id)
-            ? {
-                ...e,
-                paymentDate,
-              }
-            : e
-      );
+      const updated =
+        emiData.map(
+          (e) =>
+            String(e.id) ===
+            String(item.id)
+              ? {
+                  ...e,
+                  paymentDate,
+                }
+              : e
+        );
 
       setEmiData(updated);
 
-      /*
-        Keep backward compatibility
-        with the existing approvedEMISchedules.
-      */
       const existingApproved =
         readStorageArray(
           APPROVED_EMI_KEY
         );
 
-      if (existingApproved.length > 0) {
+      if (
+        existingApproved.length >
+        0
+      ) {
         const updatedApproved =
           existingApproved.map(
             (e) =>
@@ -900,18 +1306,23 @@ const EMISchedule = () => {
       }
 
       createNotification({
-        title: "EMI Payment Successful",
-        message: `EMI payment of ₹${Number(
-          item.emiAmount || 0
-        ).toLocaleString(
-          "en-IN"
+        title:
+          "EMI Payment Successful",
+
+        message: `EMI payment of ₹${formatMoney(
+          item.emiAmount
         )} received for Loan #${item.id}. Receipt generated.`,
-        type: "approved",
+
+        type:
+          "approved",
+
         uniqueKey: `PAYMENT-SUCCESS-${item.id}-${paymentDate}`,
       });
 
       window.dispatchEvent(
-        new CustomEvent("emiPaymentUpdated")
+        new CustomEvent(
+          "emiPaymentUpdated"
+        )
       );
 
       alert(
@@ -926,9 +1337,11 @@ const EMISchedule = () => {
     ----------------------------------------------------- */
 
     if (
-      actionType === "downloadInvoice"
+      actionType ===
+      "downloadInvoice"
     ) {
       handleOpenDetails(item);
+
       return;
     }
   };
@@ -937,84 +1350,121 @@ const EMISchedule = () => {
      OPEN DETAILS
   ======================================================= */
 
-  const handleOpenDetails = (row) => {
-    setSelectedLoan(row);
-    setViewMode("details");
-  };
+  const handleOpenDetails =
+    (row) => {
+      setSelectedLoan(row);
+
+      setViewMode(
+        "details"
+      );
+    };
 
   /* =======================================================
      CSV EXPORT
   ======================================================= */
 
-  const handleExportCSV = () => {
-    if (!filteredData.length) {
-      alert(
-        "No data available to export."
+  const handleExportCSV =
+    () => {
+      if (
+        !filteredData.length
+      ) {
+        alert(
+          "No data available to export."
+        );
+
+        return;
+      }
+
+      const headers = [
+        "Loan ID",
+        "Customer Name",
+        "Phone",
+        "Loan Type",
+        "EMI Amount",
+        "Due Date",
+        "Principal",
+        "Interest",
+        "Status",
+        "Payment Date",
+      ];
+
+      const rows =
+        filteredData.map(
+          (item) => [
+            item.id,
+
+            `"${item.customerName}"`,
+
+            item.phone,
+
+            `"${item.loanType}"`,
+
+            formatMoney(
+              item.emiAmount
+            ),
+
+            item.dueDate,
+
+            formatMoney(
+              item.principal
+            ),
+
+            formatMoney(
+              item.interest
+            ),
+
+            item.computedStatus,
+
+            item.paymentDate ||
+              "-",
+          ]
+        );
+
+      const csvContent =
+        "data:text/csv;charset=utf-8," +
+        [
+          headers.join(","),
+          ...rows.map(
+            (row) =>
+              row.join(",")
+          ),
+        ].join("\n");
+
+      const encodedUri =
+        encodeURI(
+          csvContent
+        );
+
+      const link =
+        document.createElement(
+          "a"
+        );
+
+      link.setAttribute(
+        "href",
+        encodedUri
       );
-      return;
-    }
 
-    const headers = [
-      "Loan ID",
-      "Customer Name",
-      "Phone",
-      "Loan Type",
-      "EMI Amount",
-      "Due Date",
-      "Principal",
-      "Interest",
-      "Status",
-      "Payment Date",
-    ];
+      link.setAttribute(
+        "download",
+        `EMI_Schedule_Export_${new Date()
+          .toISOString()
+          .slice(
+            0,
+            10
+          )}.csv`
+      );
 
-    const rows = filteredData.map(
-      (item) => [
-        item.id,
-        `"${item.customerName}"`,
-        item.phone,
-        `"${item.loanType}"`,
-        item.emiAmount,
-        item.dueDate,
-        item.principal || 0,
-        item.interest || 0,
-        item.computedStatus,
-        item.paymentDate || "-",
-      ]
-    );
+      document.body.appendChild(
+        link
+      );
 
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      [
-        headers.join(","),
-        ...rows.map((row) =>
-          row.join(",")
-        ),
-      ].join("\n");
+      link.click();
 
-    const encodedUri =
-      encodeURI(csvContent);
-
-    const link =
-      document.createElement("a");
-
-    link.setAttribute(
-      "href",
-      encodedUri
-    );
-
-    link.setAttribute(
-      "download",
-      `EMI_Schedule_Export_${new Date()
-        .toISOString()
-        .slice(0, 10)}.csv`
-    );
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-  };
+      document.body.removeChild(
+        link
+      );
+    };
 
   /* =======================================================
      LOAN ICON
@@ -1035,7 +1485,9 @@ const EMISchedule = () => {
     }
 
     if (
-      type.includes("Personal")
+      type.includes(
+        "Personal"
+      )
     ) {
       return (
         <User
@@ -1046,7 +1498,9 @@ const EMISchedule = () => {
     }
 
     if (
-      type.includes("Business")
+      type.includes(
+        "Business"
+      )
     ) {
       return (
         <Briefcase
@@ -1057,7 +1511,9 @@ const EMISchedule = () => {
     }
 
     if (
-      type.includes("Education")
+      type.includes(
+        "Education"
+      )
     ) {
       return (
         <GraduationCap
@@ -1152,7 +1608,8 @@ const EMISchedule = () => {
   ======================================================= */
 
   if (
-    viewMode === "details" &&
+    viewMode ===
+      "details" &&
     selectedLoan
   ) {
     return (
@@ -1160,8 +1617,14 @@ const EMISchedule = () => {
         loanData={selectedLoan}
         onBack={() => {
           loadApprovedLoans();
-          setViewMode("list");
-          setSelectedLoan(null);
+
+          setViewMode(
+            "list"
+          );
+
+          setSelectedLoan(
+            null
+          );
         }}
       />
     );
@@ -1183,8 +1646,9 @@ const EMISchedule = () => {
           </h1>
 
           <p className="page-subtitle">
-            View and manage EMI schedules
-            for all approved loans
+            View and manage EMI
+            schedules for all
+            approved loans
           </p>
         </div>
 
@@ -1192,10 +1656,14 @@ const EMISchedule = () => {
           <button
             className="btn-secondary"
             onClick={() =>
-              setIsCalcOpen(true)
+              setIsCalcOpen(
+                true
+              )
             }
           >
-            <Calculator size={16} />
+            <Calculator
+              size={16}
+            />
             EMI Calculator
           </button>
 
@@ -1205,7 +1673,9 @@ const EMISchedule = () => {
               handleExportCSV
             }
           >
-            <Download size={16} />
+            <Download
+              size={16}
+            />
             Export CSV
           </button>
         </div>
@@ -1222,16 +1692,21 @@ const EMISchedule = () => {
             </span>
 
             <div className="metric-icon icon-blue">
-              <Calendar size={18} />
+              <Calendar
+                size={18}
+              />
             </div>
           </div>
 
           <div className="metric-value">
-            {summaryMetrics.totalLoans}
+            {
+              summaryMetrics.totalLoans
+            }
           </div>
 
           <div className="metric-subtext">
-            All active approved loans
+            All active approved
+            loans
           </div>
         </div>
 
@@ -1242,14 +1717,16 @@ const EMISchedule = () => {
             </span>
 
             <div className="metric-icon icon-green">
-              <CheckCircle2 size={18} />
+              <CheckCircle2
+                size={18}
+              />
             </div>
           </div>
 
           <div className="metric-value">
             ₹
-            {summaryMetrics.totalEMI.toLocaleString(
-              "en-IN"
+            {formatMoney(
+              summaryMetrics.totalEMI
             )}
           </div>
 
@@ -1265,17 +1742,23 @@ const EMISchedule = () => {
             </span>
 
             <div className="metric-icon icon-amber">
-              <TrendingUp size={18} />
+              <TrendingUp
+                size={18}
+              />
             </div>
           </div>
 
           <div className="metric-value">
-            {summaryMetrics.paidEMI}
+            {
+              summaryMetrics.paidEMI
+            }
           </div>
 
           <div className="metric-subtext green-text">
-            {summaryMetrics.paidPercentage}%
-            of total
+            {
+              summaryMetrics.paidPercentage
+            }
+            % of total
           </div>
         </div>
 
@@ -1291,12 +1774,16 @@ const EMISchedule = () => {
           </div>
 
           <div className="metric-value">
-            {summaryMetrics.pendingEMI}
+            {
+              summaryMetrics.pendingEMI
+            }
           </div>
 
           <div className="metric-subtext red-text">
-            {summaryMetrics.pendingPercentage}%
-            of total
+            {
+              summaryMetrics.pendingPercentage
+            }
+            % of total
           </div>
         </div>
 
@@ -1307,17 +1794,23 @@ const EMISchedule = () => {
             </span>
 
             <div className="metric-icon icon-purple">
-              <AlertCircle size={18} />
+              <AlertCircle
+                size={18}
+              />
             </div>
           </div>
 
           <div className="metric-value">
-            {summaryMetrics.overdueEMI}
+            {
+              summaryMetrics.overdueEMI
+            }
           </div>
 
           <div className="metric-subtext purple-text">
-            {summaryMetrics.overduePercentage}%
-            of total
+            {
+              summaryMetrics.overduePercentage
+            }
+            % of total
           </div>
         </div>
 
@@ -1333,11 +1826,15 @@ const EMISchedule = () => {
           </div>
 
           <div className="metric-value">
-            {summaryMetrics.nextDueAmount}
+            {
+              summaryMetrics.nextDueAmount
+            }
           </div>
 
           <div className="metric-subtext green-text">
-            {summaryMetrics.nextDueDate}
+            {
+              summaryMetrics.nextDueDate
+            }
           </div>
         </div>
       </div>
@@ -1372,7 +1869,9 @@ const EMISchedule = () => {
             </label>
 
             <select
-              value={selectedLoanId}
+              value={
+                selectedLoanId
+              }
               onChange={(e) =>
                 setSelectedLoanId(
                   e.target.value
@@ -1402,7 +1901,9 @@ const EMISchedule = () => {
             </label>
 
             <select
-              value={selectedLoanType}
+              value={
+                selectedLoanType
+              }
               onChange={(e) =>
                 setSelectedLoanType(
                   e.target.value
@@ -1494,7 +1995,9 @@ const EMISchedule = () => {
           <p className="filter-hint">
             Active Filters Applied:{" "}
             <strong>
-              {filteredData.length}
+              {
+                filteredData.length
+              }
             </strong>{" "}
             matching records found.
           </p>
@@ -1502,13 +2005,18 @@ const EMISchedule = () => {
           <button
             className="btn-reset-filters"
             onClick={() => {
-              setSearchTerm("");
+              setSearchTerm(
+                ""
+              );
+
               setSelectedLoanId(
                 "All Loans"
               );
+
               setSelectedLoanType(
                 "All Types"
               );
+
               setSelectedStatusFilter(
                 "All Status"
               );
@@ -1530,83 +2038,136 @@ const EMISchedule = () => {
             "Pending",
             "Overdue",
             "Upcoming",
-          ].map((tab) => (
-            <button
-              key={tab}
-              className={`tab-btn ${
-                activeTab === tab
-                  ? "active"
-                  : ""
-              }`}
-              onClick={() =>
-                setActiveTab(tab)
-              }
-            >
-              {tab}
-            </button>
-          ))}
+          ].map(
+            (tab) => (
+              <button
+                key={tab}
+                className={`tab-btn ${
+                  activeTab ===
+                  tab
+                    ? "active"
+                    : ""
+                }`}
+                onClick={() =>
+                  setActiveTab(
+                    tab
+                  )
+                }
+              >
+                {tab}
+              </button>
+            )
+          )}
         </div>
 
         <div className="table-responsive">
+
           <table className="emi-main-table">
 
             <thead>
               <tr>
-                <th>Loan ID</th>
-                <th>Customer Name</th>
-                <th>Loan Type</th>
-                <th>EMI Amount</th>
-                <th>Due Date</th>
-                <th>Principal (₹)</th>
-                <th>Interest (₹)</th>
-                <th>Total EMI (₹)</th>
-                <th>Status</th>
-                <th>Payment Date</th>
-                <th>Actions</th>
+                <th>
+                  Loan ID
+                </th>
+
+                <th>
+                  Customer Name
+                </th>
+
+                <th>
+                  Loan Type
+                </th>
+
+                <th>
+                  EMI Amount
+                </th>
+
+                <th>
+                  Due Date
+                </th>
+
+                <th>
+                  Principal (₹)
+                </th>
+
+                <th>
+                  Interest (₹)
+                </th>
+
+                <th>
+                  Total EMI (₹)
+                </th>
+
+                <th>
+                  Status
+                </th>
+
+                <th>
+                  Payment Date
+                </th>
+
+                <th>
+                  Actions
+                </th>
               </tr>
             </thead>
 
             <tbody>
 
-              {paginatedData.length > 0 ? (
+              {paginatedData.length >
+              0 ? (
                 paginatedData.map(
                   (row) => (
-                    <tr key={row.id}>
+                    <tr
+                      key={
+                        row.id
+                      }
+                    >
 
                       <td className="loan-id-cell">
-                        {row.id}
+                        {
+                          row.id
+                        }
                       </td>
 
                       <td>
                         <div className="cust-info">
+
                           <span className="cust-name">
-                            {row.customerName}
+                            {
+                              row.customerName
+                            }
                           </span>
 
                           <span className="cust-phone">
-                            {row.phone}
+                            {
+                              row.phone
+                            }
                           </span>
+
                         </div>
                       </td>
 
                       <td>
                         <div className="loan-type-pill">
+
                           {getLoanIcon(
                             row.loanType
                           )}
 
                           <span>
-                            {row.loanType}
+                            {
+                              row.loanType
+                            }
                           </span>
+
                         </div>
                       </td>
 
                       <td className="amount-cell">
                         ₹
-                        {Number(
-                          row.emiAmount || 0
-                        ).toLocaleString(
-                          "en-IN"
+                        {formatMoney(
+                          row.emiAmount
                         )}
                       </td>
 
@@ -1616,30 +2177,30 @@ const EMISchedule = () => {
                         )}
                       </td>
 
-                      <td className="sub-amount">
-                        ₹
-                        {Number(
-                          row.principal || 0
-                        ).toLocaleString(
-                          "en-IN"
-                        )}
-                      </td>
+                      {/* PRINCIPAL */}
 
                       <td className="sub-amount">
                         ₹
-                        {Number(
-                          row.interest || 0
-                        ).toLocaleString(
-                          "en-IN"
+                        {formatMoney(
+                          row.principal
                         )}
                       </td>
+
+                      {/* INTEREST */}
+
+                      <td className="sub-amount">
+                        ₹
+                        {formatMoney(
+                          row.interest
+                        )}
+                      </td>
+
+                      {/* TOTAL EMI */}
 
                       <td className="amount-cell">
                         ₹
-                        {Number(
-                          row.emiAmount || 0
-                        ).toLocaleString(
-                          "en-IN"
+                        {formatMoney(
+                          row.emiAmount
                         )}
                       </td>
 
@@ -1666,7 +2227,9 @@ const EMISchedule = () => {
                             )
                           }
                         >
-                          <Eye size={18} />
+                          <Eye
+                            size={18}
+                          />
                         </button>
 
                         <div
@@ -1752,9 +2315,11 @@ const EMISchedule = () => {
 
                             </div>
                           )}
+
                         </div>
 
                       </td>
+
                     </tr>
                   )
                 )
@@ -1771,6 +2336,7 @@ const EMISchedule = () => {
 
             </tbody>
           </table>
+
         </div>
 
         {/* PAGINATION */}
@@ -1779,8 +2345,10 @@ const EMISchedule = () => {
 
           <span className="pagination-info">
             Showing{" "}
-            {filteredData.length > 0
-              ? (currentPage - 1) *
+            {filteredData.length >
+            0
+              ? (currentPage -
+                  1) *
                   rowsPerPage +
                 1
               : 0}{" "}
@@ -1791,7 +2359,9 @@ const EMISchedule = () => {
               filteredData.length
             )}{" "}
             of{" "}
-            {filteredData.length}{" "}
+            {
+              filteredData.length
+            }{" "}
             entries
           </span>
 
@@ -1800,7 +2370,8 @@ const EMISchedule = () => {
             <button
               className="page-arrow"
               disabled={
-                currentPage === 1
+                currentPage ===
+                1
               }
               onClick={() =>
                 setCurrentPage(
@@ -1819,28 +2390,35 @@ const EMISchedule = () => {
 
             {Array.from(
               {
-                length: totalPages,
+                length:
+                  totalPages,
               },
               (_, index) =>
                 index + 1
-            ).map((pageNum) => (
-              <button
-                key={pageNum}
-                className={`page-num ${
-                  currentPage ===
-                  pageNum
-                    ? "active"
-                    : ""
-                }`}
-                onClick={() =>
-                  setCurrentPage(
+            ).map(
+              (pageNum) => (
+                <button
+                  key={
                     pageNum
-                  )
-                }
-              >
-                {pageNum}
-              </button>
-            ))}
+                  }
+                  className={`page-num ${
+                    currentPage ===
+                    pageNum
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setCurrentPage(
+                      pageNum
+                    )
+                  }
+                >
+                  {
+                    pageNum
+                  }
+                </button>
+              )
+            )}
 
             <button
               className="page-arrow"
@@ -1874,9 +2452,12 @@ const EMISchedule = () => {
         <div
           className="modal-overlay"
           onClick={() =>
-            setIsCalcOpen(false)
+            setIsCalcOpen(
+              false
+            )
           }
         >
+
           <div
             className="calc-modal"
             onClick={(e) =>
@@ -1893,7 +2474,9 @@ const EMISchedule = () => {
               <button
                 className="btn-close"
                 onClick={() =>
-                  setIsCalcOpen(false)
+                  setIsCalcOpen(
+                    false
+                  )
                 }
               >
                 <X size={18} />
@@ -1910,7 +2493,9 @@ const EMISchedule = () => {
 
                 <input
                   type="number"
-                  value={calcAmount}
+                  value={
+                    calcAmount
+                  }
                   onChange={(e) =>
                     setCalcAmount(
                       e.target.value
@@ -1921,13 +2506,16 @@ const EMISchedule = () => {
 
               <div className="calc-input-field">
                 <label>
-                  Interest Rate (% p.a.)
+                  Interest Rate (%
+                  p.a.)
                 </label>
 
                 <input
                   type="number"
                   step="0.1"
-                  value={calcRate}
+                  value={
+                    calcRate
+                  }
                   onChange={(e) =>
                     setCalcRate(
                       e.target.value
@@ -1943,7 +2531,9 @@ const EMISchedule = () => {
 
                 <input
                   type="number"
-                  value={calcTenure}
+                  value={
+                    calcTenure
+                  }
                   onChange={(e) =>
                     setCalcTenure(
                       e.target.value
