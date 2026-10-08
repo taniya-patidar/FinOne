@@ -28,7 +28,7 @@ import ReportsPage from "./pages/Reports/ReportsPage";
 import NotificationsPage from "./pages/Notifications/NotificationsPage";
 import ApplyLoanForm from "./pages/ApplyLoan/ApplyLoanForm";
 import ManageApplications from "./pages/ManageApplications/ManageApplications";
-import EMISchedule from "./pages/EmiSchedule/EMISchedule";
+import EMISchedule from "./pages/EmiSchedule/EmiSchedule";
 
 const App = () => {
   return (
